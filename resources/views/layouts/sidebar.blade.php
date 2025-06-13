@@ -58,8 +58,8 @@
                     </a>
                     <div class="collapse" id="termin">
                         <ul class="nav nav-collapse">
-                            <li><a href="{{ url('/list-termin') }}"><span class="sub-item">List Termin</span></a></li>
-                            <li><a href="{{ url('/list-termin/create') }}"><span class="sub-item">Create Termin</span></a></li>
+                            <li><a href="{{ url('/termins') }}"><span class="sub-item">List Termin</span></a></li>
+                            <li><a href="{{ url('/termins/create') }}"><span class="sub-item">Create Termin</span></a></li>
                         </ul>
                     </div>
                 </li>
