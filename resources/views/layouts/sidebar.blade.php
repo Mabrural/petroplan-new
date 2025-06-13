@@ -86,8 +86,8 @@
                     </a>
                     <div class="collapse" id="forms">
                         <ul class="nav nav-collapse">
-                            <li><a href="{{ url('/vessel-list') }}"><span class="sub-item">Vessel List</span></a></li>
-                            <li><a href="{{ url('/vessel-list/create') }}"><span class="sub-item">Add New Vessel</span></a></li>
+                            <li><a href="{{ url('/vessels') }}"><span class="sub-item">Vessel List</span></a></li>
+                            <li><a href="{{ url('/vessels/create') }}"><span class="sub-item">Add New Vessel</span></a></li>
                         </ul>
                     </div>
                 </li>
