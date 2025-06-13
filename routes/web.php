@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PeriodeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +38,9 @@ Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {
 
     Route::post('/user-management/{user:slug}/deactivate', [UserController::class, 'deactivate'])
         ->name('user-management.deactivate');
+
+    Route::resource('period-list', PeriodeController::class);
+
 });
 
 
