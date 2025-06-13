@@ -23,73 +23,39 @@
         <div class="sidebar-content">
             <ul class="nav nav-secondary">
 
-                <li class="nav-item active">
-                    <a data-bs-toggle="collapse" href="#dashboard" class="collapsed" aria-expanded="false">
+                <li class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                    <a href="{{ route('dashboard') }}">
                         <i class="fas fa-tachometer-alt"></i>
                         <p>Dashboard</p>
-                        <span class="caret"></span>
                     </a>
-                    <div class="collapse" id="dashboard">
-                        <ul class="nav nav-collapse">
-                            <li><a href="{{ url('/dashboard') }}"><span class="sub-item">Dashboard</span></a></li>
-                        </ul>
-                    </div>
                 </li>
 
-                <li class="nav-item">
-                    <a data-bs-toggle="collapse" href="#period">
+                <li class="nav-item {{ request()->routeIs('period-list.*') ? 'active' : '' }}">
+                    <a href="{{ route('period-list.index') }}">
                         <i class="fas fa-calendar-check"></i>
                         <p>Period Management</p>
-                        <span class="caret"></span>
                     </a>
-                    <div class="collapse" id="period">
-                        <ul class="nav nav-collapse">
-                            <li><a href="{{ url('/period-list') }}"><span class="sub-item">List Period</span></a></li>
-                            <li><a href="{{ url('/period-list/create') }}"><span class="sub-item">Add New Period</span></a></li>
-                        </ul>
-                    </div>
                 </li>
 
-                <li class="nav-item">
-                    <a data-bs-toggle="collapse" href="#termin">
+                <li class="nav-item {{ request()->routeIs('termins.*') ? 'active' : '' }}">
+                    <a href="{{ route('termins.index') }}">
                         <i class="fas fa-calendar-alt"></i>
                         <p>Termin Management</p>
-                        <span class="caret"></span>
                     </a>
-                    <div class="collapse" id="termin">
-                        <ul class="nav nav-collapse">
-                            <li><a href="{{ url('/termins') }}"><span class="sub-item">List Termin</span></a></li>
-                            <li><a href="{{ url('/termins/create') }}"><span class="sub-item">Create Termin</span></a></li>
-                        </ul>
-                    </div>
                 </li>
 
-                <li class="nav-item">
-                    <a data-bs-toggle="collapse" href="#tables">
+                <li class="nav-item {{ request()->routeIs('spks.*') ? 'active' : '' }}">
+                    <a href="{{ route('spks.index') }}">
                         <i class="fas fa-file-contract"></i>
                         <p>SPK Management</p>
-                        <span class="caret"></span>
                     </a>
-                    <div class="collapse" id="tables">
-                        <ul class="nav nav-collapse">
-                            <li><a href="{{ url('/spks') }}"><span class="sub-item">List SPK</span></a></li>
-                            <li><a href="{{ url('/spks/create') }}"><span class="sub-item">Upload SPK File</span></a></li>
-                        </ul>
-                    </div>
                 </li>
 
-                <li class="nav-item">
-                    <a data-bs-toggle="collapse" href="#forms">
+                <li class="nav-item {{ request()->routeIs('vessels.*') ? 'active' : '' }}">
+                    <a href="{{ route('vessels.index') }}">
                         <i class="fas fa-ship"></i>
                         <p>Vessel Registry</p>
-                        <span class="caret"></span>
                     </a>
-                    <div class="collapse" id="forms">
-                        <ul class="nav nav-collapse">
-                            <li><a href="{{ url('/vessels') }}"><span class="sub-item">Vessel List</span></a></li>
-                            <li><a href="{{ url('/vessels/create') }}"><span class="sub-item">Add New Vessel</span></a></li>
-                        </ul>
-                    </div>
                 </li>
 
                 <li class="nav-item">
@@ -120,18 +86,11 @@
                     </div>
                 </li>
 
-                <li class="nav-item">
-                    <a data-bs-toggle="collapse" href="#fuelType">
+                <li class="nav-item {{ request()->routeIs('fuels.*') ? 'active' : '' }}">
+                    <a href="{{ route('fuels.index') }}">
                         <i class="fas fa-gas-pump"></i>
                         <p>Fuel Types</p>
-                        <span class="caret"></span>
                     </a>
-                    <div class="collapse" id="fuelType">
-                        <ul class="nav nav-collapse">
-                            <li><a href="{{ url('/fuels') }}"><span class="sub-item">Fuel List</span></a></li>
-                            <li><a href="{{ url('/fuels/create') }}"><span class="sub-item">Add New Fuel</span></a></li>
-                        </ul>
-                    </div>
                 </li>
 
                 <li class="nav-item">
