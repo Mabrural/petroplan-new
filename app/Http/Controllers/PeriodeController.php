@@ -90,4 +90,22 @@ class PeriodeController extends Controller
 
         return redirect()->route('period-list.index')->with('success', 'Period successfully deleted.');
     }
+
+    public function activate($id)
+    {
+        $periode = Periode::findOrFail($id);
+        $periode->is_active = true;
+        $periode->save();
+
+        return redirect()->back()->with('success', 'Periode ' . $periode->name . ' has been activated.');
+    }
+
+    public function deactivate($id)
+    {
+        $periode = Periode::findOrFail($id);
+        $periode->is_active = false;
+        $periode->save();
+
+        return redirect()->back()->with('success', 'Periode ' . $periode->name . ' has been deactivated.');
+    }
 }

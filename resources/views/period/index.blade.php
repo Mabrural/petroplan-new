@@ -58,6 +58,24 @@
                                                         </a>
                                                     </li>
                                                     <li>
+                                                        @if ($periode->is_active)
+                                                            <form action="{{ route('period-list.deactivate', $periode->id) }}" method="POST" class="deactivate-form">
+                                                                @csrf
+                                                                <button type="submit" class="dropdown-item text-warning">
+                                                                    <i class="fas fa-ban me-1"></i> Deactivate
+                                                                </button>
+                                                            </form>
+                                                        @else
+                                                            <form action="{{ route('period-list.activate', $periode->id) }}" method="POST" class="activate-form">
+                                                                @csrf
+                                                                <button type="submit" class="dropdown-item text-success">
+                                                                    <i class="fas fa-check-circle me-1"></i> Activate
+                                                                </button>
+                                                            </form>
+                                                        @endif
+                                                    </li>
+
+                                                    <li>
                                                         <form action="{{ route('period-list.destroy', $periode->id) }}" method="POST" onsubmit="return confirmDelete(event)">
                                                             @csrf
                                                             @method('DELETE')

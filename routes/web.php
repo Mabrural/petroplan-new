@@ -40,6 +40,9 @@ Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {
         ->name('user-management.deactivate');
 
     Route::resource('period-list', PeriodeController::class);
+    Route::post('/period/{id}/activate', [PeriodeController::class, 'activate'])->name('period-list.activate');
+    Route::post('/period/{id}/deactivate', [PeriodeController::class, 'deactivate'])->name('period-list.deactivate');
+
 
 });
 
