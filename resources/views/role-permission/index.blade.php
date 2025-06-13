@@ -36,7 +36,8 @@
                                         <td>
                                             @if ($user->rolePermissions->isNotEmpty())
                                                 @foreach ($user->rolePermissions as $permission)
-                                                    <span class="badge bg-info">{{ $permission->permission_name ?? 'No Permission' }}</span>
+                                                    <span
+                                                        class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $permission->permission)) }}</span>
                                                 @endforeach
                                             @else
                                                 <span class="badge bg-secondary">No Roles Assigned</span>
@@ -44,24 +45,31 @@
                                         </td>
                                         <td>
                                             <div class="dropdown">
-                                                <button class="btn btn-link text-dark" type="button" data-bs-toggle="dropdown">
+                                                <button class="btn btn-link text-dark" type="button"
+                                                    data-bs-toggle="dropdown">
                                                     <i class="fas fa-ellipsis-v"></i>
                                                 </button>
                                                 <ul class="dropdown-menu">
-                                                    <li>
-                                                        <a class="dropdown-item text-primary" href="{{ route('role-permissions.create', $user->slug) }}">
-                                                            <i class="fas fa-user-edit me-1"></i> Manage Roles
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <form action="{{ route('role-permissions.destroy', $user->slug) }}" method="POST" onsubmit="return confirmDelete(event)">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="dropdown-item text-danger">
-                                                                <i class="fas fa-user-times me-1"></i> Revoke Access
-                                                            </button>
-                                                        </form>
-                                                    </li>
+                                                    @if ($user->rolePermissions->isEmpty())
+                                                        <li>
+                                                            <a class="dropdown-item text-primary"
+                                                                href="{{ url('role-permissions/create/' . $user->slug) }}">
+                                                                <i class="fas fa-user-edit me-1"></i> Manage Roles
+                                                            </a>
+                                                        </li>
+                                                    @else
+                                                        <li>
+                                                            <form
+                                                                action="{{ route('role-permissions.destroy', $user->slug) }}"
+                                                                method="POST" onsubmit="return confirmDelete(event)">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="dropdown-item text-danger">
+                                                                    <i class="fas fa-user-times me-1"></i> Revoke Access
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                    @endif
                                                 </ul>
                                             </div>
                                         </td>
@@ -85,10 +93,11 @@
                                     <div class="mt-2">
                                         @if ($user->rolePermissions->isNotEmpty())
                                             @foreach ($user->rolePermissions as $role)
-                                                <span class="badge bg-info text-dark">{{ ucfirst(str_replace('_', ' ', $role->permission)) }}</span>
+                                                <span
+                                                    class="badge bg-info text-dark">{{ ucfirst(str_replace('_', ' ', $role->permission)) }}</span>
                                             @endforeach
                                         @else
-                                            <span class="badge bg-secondary">No Roles</span>
+                                            <span class="badge bg-secondary">No Roles Assigned</span>
                                         @endif
                                     </div>
                                 </div>
@@ -97,20 +106,25 @@
                                         <i class="fas fa-ellipsis-v"></i>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li>
-                                            <a class="dropdown-item text-primary" href="{{ route('user-management.edit', $user->slug) }}">
-                                                <i class="fas fa-user-edit me-2"></i> Manage Roles
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <form action="{{ route('user-management.destroy', $user->slug) }}" method="POST" onsubmit="return confirmDelete(event)">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="dropdown-item text-danger">
-                                                    <i class="fas fa-user-times me-2"></i> Revoke
-                                                </button>
-                                            </form>
-                                        </li>
+                                        @if ($user->rolePermissions->isEmpty())
+                                            <li>
+                                                <a class="dropdown-item text-primary"
+                                                    href="{{ url('role-permissions/create/' . $user->slug) }}">
+                                                    <i class="fas fa-user-edit me-2"></i> Manage Roles
+                                                </a>
+                                            </li>
+                                        @else
+                                            <li>
+                                                <form action="{{ route('role-permissions.destroy', $user->slug) }}"
+                                                    method="POST" onsubmit="return confirmDelete(event)">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="dropdown-item text-danger">
+                                                        <i class="fas fa-user-times me-2"></i> Revoke
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </div>
                             </div>

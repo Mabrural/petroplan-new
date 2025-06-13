@@ -42,8 +42,15 @@ Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {
 
 Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {
     // Resource route untuk RolePermission
-    Route::resource('role-permissions', RolePermissionController::class)
-        ->parameters(['role-permissions' => 'role_permission:slug']);
+    // Manual override untuk create dengan slug
+    Route::get('role-permissions/create/{slug}', [RolePermissionController::class, 'create'])
+        ->name('role-permissions.create');
+
+    Route::post('role-permissions/{slug}', [RolePermissionController::class, 'store'])
+        ->name('role-permissions.store');
+
+    Route::resource('role-permissions', RolePermissionController::class)->except(['store'])
+    ->parameters(['role-permissions' => 'role_permission:slug']);
 });
 
 require __DIR__.'/auth.php';

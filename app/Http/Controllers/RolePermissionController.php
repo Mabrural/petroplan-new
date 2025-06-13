@@ -20,18 +20,34 @@ class RolePermissionController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($slug)
     {
-        //
+        $user = User::where('slug', $slug)->firstOrFail();
+        return view('role-permission.create', compact('user'));
     }
+
+
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $slug)
     {
-        //
+        $request->validate([
+            'permission' => 'required|string|max:255',
+        ]);
+
+        $user = User::where('slug', $slug)->firstOrFail();
+
+        RolePermission::create([
+            'user_id' => $user->id,
+            'permission' => $request->permission,
+        ]);
+
+        return redirect()->route('role-permissions.index')->with('success', 'Role assigned successfully.');
     }
+
+
 
     /**
      * Display the specified resource.
@@ -60,8 +76,15 @@ class RolePermissionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(RolePermission $rolePermission)
+    public function destroy($slug)
     {
-        //
+        // Cari user berdasarkan slug
+        $user = User::where('slug', $slug)->firstOrFail();
+
+        // Hapus semua rolePermissions milik user tersebut
+        $user->rolePermissions()->delete();
+
+        return redirect()->route('role-permissions.index')->with('success', 'All roles and permissions have been revoked.');
     }
+
 }
