@@ -31,22 +31,61 @@ class RolePermissionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    // public function store(Request $request, $slug)
+    // {
+    //     $request->validate([
+    //         'permission' => 'required|string|max:255',
+    //     ]);
+
+    //     $user = User::where('slug', $slug)->firstOrFail();
+
+    //     RolePermission::create([
+    //         'user_id' => $user->id,
+    //         'permission' => $request->permission,
+    //     ]);
+
+    //     return redirect()->route('role-permissions.index')->with('success', 'Role assigned successfully.');
+    // }
+
     public function store(Request $request, $slug)
     {
         $request->validate([
-            'permission' => 'required|string|max:255',
+            'permission' => 'required|string|in:admin_officer,operasion', // Added enum validation
         ]);
 
-        $user = User::where('slug', $slug)->firstOrFail();
+        try {
+            $user = User::where('slug', $slug)->firstOrFail();
 
-        RolePermission::create([
-            'user_id' => $user->id,
-            'permission' => $request->permission,
-        ]);
+            // Check if user already has a permission
+            if ($user->rolePermissions()->exists()) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with('error', 'This user already has a role assigned. Please revoke it first.');
+            }
 
-        return redirect()->route('role-permissions.index')->with('success', 'Role assigned successfully.');
+            // Create new role permission
+            RolePermission::create([
+                'user_id' => $user->id,
+                'permission' => $request->permission,
+            ]);
+
+            return redirect()
+                ->route('role-permissions.index')
+                ->with('success', 'Role assigned successfully.');
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()
+                ->route('role-permissions.index')
+                ->with('error', 'User not found.');
+                
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Failed to assign role: ' . $e->getMessage());
+        }
     }
-
 
 
     /**
