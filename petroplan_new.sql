@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jun 13, 2025 at 09:06 AM
+-- Generation Time: Jun 13, 2025 at 09:34 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.3.6
 
@@ -147,7 +147,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (9, '2025_06_13_024815_create_periodes_table', 5),
 (10, '2025_06_13_080034_create_fuels_table', 6),
 (11, '2025_06_13_082027_create_vessels_table', 7),
-(12, '2025_06_13_084725_create_termins_table', 8);
+(12, '2025_06_13_084725_create_termins_table', 8),
+(13, '2025_06_13_091124_create_spks_table', 9);
 
 -- --------------------------------------------------------
 
@@ -256,8 +257,32 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('9KTfq9mNLIO9Whj4Fiofv5JMOvWFEzexYTx8ROcV', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoicjloV1Q2UXBnbmlvbzNKandTTEZKUW4wd1RFakMwZzRCQmM5WnpTNCI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQwOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvcGVyaW9kLWxpc3QvY3JlYXRlIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Mjt9', 1749805341),
-('C7J1qjf9cjQ5EaXrNXanNaQxVujiTrh36VNYVsDe', 2, '192.168.1.2', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoia1J3SUV3V2pjNXpwUkR2R0RDZTBVakJoS0ppR2w0Q3RlQVZBMmZTWiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly8xOTIuMTY4LjEuNjo4MDAwL3Rlcm1pbnMiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=', 1749805290);
+('9KTfq9mNLIO9Whj4Fiofv5JMOvWFEzexYTx8ROcV', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoicjloV1Q2UXBnbmlvbzNKandTTEZKUW4wd1RFakMwZzRCQmM5WnpTNCI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjI2OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvc3BrcyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==', 1749807210),
+('C7J1qjf9cjQ5EaXrNXanNaQxVujiTrh36VNYVsDe', 2, '192.168.1.2', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoia1J3SUV3V2pjNXpwUkR2R0RDZTBVakJoS0ppR2w0Q3RlQVZBMmZTWiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjg6Imh0dHA6Ly8xOTIuMTY4LjEuNjo4MDAwL3Nwa3MiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=', 1749807193);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `spks`
+--
+
+CREATE TABLE `spks` (
+  `id` bigint UNSIGNED NOT NULL,
+  `period_id` bigint UNSIGNED NOT NULL,
+  `spk_number` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `spk_date` date NOT NULL,
+  `spk_file` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_by` bigint UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `spks`
+--
+
+INSERT INTO `spks` (`id`, `period_id`, `spk_number`, `spk_date`, `spk_file`, `created_by`, `created_at`, `updated_at`) VALUES
+(2, 6, 'B-161/OP.03.04/VI/2025', '2025-06-13', 'spk_files/lFMdrlEihoUZnoTD0BEHr6qVdM9OMUgf2JCXvDlh.pdf', 2, '2025-06-13 02:31:23', '2025-06-13 02:33:09');
 
 -- --------------------------------------------------------
 
@@ -412,6 +437,14 @@ ALTER TABLE `sessions`
   ADD KEY `sessions_last_activity_index` (`last_activity`);
 
 --
+-- Indexes for table `spks`
+--
+ALTER TABLE `spks`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `spks_period_id_foreign` (`period_id`),
+  ADD KEY `spks_created_by_foreign` (`created_by`);
+
+--
 -- Indexes for table `termins`
 --
 ALTER TABLE `termins`
@@ -460,7 +493,7 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `periodes`
@@ -479,6 +512,12 @@ ALTER TABLE `personal_access_tokens`
 --
 ALTER TABLE `role_permissions`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT for table `spks`
+--
+ALTER TABLE `spks`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `termins`
@@ -519,6 +558,13 @@ ALTER TABLE `periodes`
 --
 ALTER TABLE `role_permissions`
   ADD CONSTRAINT `role_permissions_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `spks`
+--
+ALTER TABLE `spks`
+  ADD CONSTRAINT `spks_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `spks_period_id_foreign` FOREIGN KEY (`period_id`) REFERENCES `periodes` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `termins`
