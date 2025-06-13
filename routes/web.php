@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FuelController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\UserController;
@@ -43,6 +44,7 @@ Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {
     Route::post('/period/{id}/activate', [PeriodeController::class, 'activate'])->name('period-list.activate');
     Route::post('/period/{id}/deactivate', [PeriodeController::class, 'deactivate'])->name('period-list.deactivate');
 
+    Route::resource('fuels', FuelController::class);
 
 });
 

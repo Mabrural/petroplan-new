@@ -128,8 +128,8 @@
                     </a>
                     <div class="collapse" id="fuelType">
                         <ul class="nav nav-collapse">
-                            <li><a href="{{ url('/bbm-list') }}"><span class="sub-item">BBM List</span></a></li>
-                            <li><a href="{{ url('/bbm-list/create') }}"><span class="sub-item">Add New BBM</span></a></li>
+                            <li><a href="{{ url('/fuels') }}"><span class="sub-item">Fuel List</span></a></li>
+                            <li><a href="{{ url('/fuels/create') }}"><span class="sub-item">Add New Fuel</span></a></li>
                         </ul>
                     </div>
                 </li>
