@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jun 12, 2025 at 03:45 AM
+-- Generation Time: Jun 13, 2025 at 08:38 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.3.6
 
@@ -64,6 +64,29 @@ CREATE TABLE `failed_jobs` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `fuels`
+--
+
+CREATE TABLE `fuels` (
+  `id` bigint UNSIGNED NOT NULL,
+  `fuel_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_by` bigint UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `fuels`
+--
+
+INSERT INTO `fuels` (`id`, `fuel_type`, `created_by`, `created_at`, `updated_at`) VALUES
+(2, 'Biosolar', 2, '2025-06-13 01:12:48', '2025-06-13 01:12:48'),
+(3, 'Pertadex', 2, '2025-06-13 01:13:06', '2025-06-13 01:13:06'),
+(4, 'Dexlite', 2, '2025-06-13 01:15:01', '2025-06-13 01:15:01');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `jobs`
 --
 
@@ -120,7 +143,10 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (5, '2025_06_05_044128_add_slug_to_users_table', 3),
 (6, '2025_06_05_072009_create_personal_access_tokens_table', 3),
 (7, '2025_06_05_074734_add_is_admin_to_users_table', 3),
-(8, '2025_06_05_100817_create_role_permissions_table', 4);
+(8, '2025_06_05_100817_create_role_permissions_table', 4),
+(9, '2025_06_13_024815_create_periodes_table', 5),
+(10, '2025_06_13_080034_create_fuels_table', 6),
+(11, '2025_06_13_082027_create_vessels_table', 7);
 
 -- --------------------------------------------------------
 
@@ -140,6 +166,31 @@ CREATE TABLE `password_reset_tokens` (
 
 INSERT INTO `password_reset_tokens` (`email`, `token`, `created_at`) VALUES
 ('mabrur@petrolindo.com', '$2y$12$8isPBdCQFC/u9fI8KSn6PORwJDB7UyNNFstj8HNFY5stW.OznhOrC', '2025-06-04 01:01:45');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `periodes`
+--
+
+CREATE TABLE `periodes` (
+  `id` bigint UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `year` year NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_by` bigint UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `periodes`
+--
+
+INSERT INTO `periodes` (`id`, `name`, `year`, `start_date`, `end_date`, `is_active`, `created_by`, `created_at`, `updated_at`) VALUES
+(6, 'Periode 2025', '2025', '2025-01-01', '2025-12-31', 1, 2, '2025-06-12 20:30:42', '2025-06-12 21:42:29');
 
 -- --------------------------------------------------------
 
@@ -175,6 +226,15 @@ CREATE TABLE `role_permissions` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `role_permissions`
+--
+
+INSERT INTO `role_permissions` (`id`, `slug`, `user_id`, `permission`, `created_at`, `updated_at`) VALUES
+(16, '02420958-f071-4e28-8472-9b05a19d1161', 19, 'operasion', '2025-06-12 19:22:12', '2025-06-12 19:22:12'),
+(20, '83244e3c-994d-4ea3-bc0e-b093b6d6b286', 2, 'admin_officer', '2025-06-12 19:30:38', '2025-06-12 19:30:38'),
+(22, '45f4632d-4394-4c1b-9970-9f6a3d0781b7', 21, 'operasion', '2025-06-13 00:05:11', '2025-06-13 00:05:11');
+
 -- --------------------------------------------------------
 
 --
@@ -195,7 +255,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('UF8qHArY6dKH9zMlg9Xu7hTESHhHlqNrUrcR6hLX', 2, '192.168.1.6', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 Edg/137.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiTXNUd1djTFc4SUlsRHo5VzRHOWphdzBvcndHUXpZVldzOEk2MXRpNiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6ODU6Imh0dHA6Ly8xOTIuMTY4LjEuNjo4MDAwL3JvbGUtcGVybWlzc2lvbnMvY3JlYXRlP2ExYjJjM2Q0LWU1ZjYtNGE3Yi04YzlkLTBlMWYyYTNiNGM1ZD0iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=', 1749699895);
+('9KTfq9mNLIO9Whj4Fiofv5JMOvWFEzexYTx8ROcV', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoicjloV1Q2UXBnbmlvbzNKandTTEZKUW4wd1RFakMwZzRCQmM5WnpTNCI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjI5OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvdmVzc2VscyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==', 1749803862),
+('C7J1qjf9cjQ5EaXrNXanNaQxVujiTrh36VNYVsDe', 2, '192.168.1.2', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoia1J3SUV3V2pjNXpwUkR2R0RDZTBVakJoS0ppR2w0Q3RlQVZBMmZTWiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly8xOTIuMTY4LjEuNjo4MDAwL3Zlc3NlbHMvY3JlYXRlIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Mjt9', 1749803795);
 
 -- --------------------------------------------------------
 
@@ -223,8 +284,23 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `slug`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `is_admin`, `is_active`, `created_at`, `updated_at`) VALUES
 (2, 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d', 'Muhammad Mabrur Al Mutaqi', 'mabruralmutaqi@gmail.com', NULL, '$2y$12$gxXV6B8BYf3M1rT5K4RgAO38S2o01EmcQcATxO9u0eTn6cIa5Dp2S', NULL, 1, 1, '2025-06-04 03:15:46', '2025-06-05 03:01:14'),
-(17, '71598fe0-0822-49dd-907f-4cbe47138d12', 'Triyanto Bayu Widhiatmoko', 'bayu@petrolindo.com', NULL, '$2y$12$GxVI7Jrpx12FU.sojNI9HOwzlxCoFgB45XxTTS2pcsqjX.0m7vo1y', NULL, 0, 1, '2025-06-05 03:25:54', '2025-06-05 03:25:54'),
-(19, 'dbc5d73c-4c06-4066-819a-8ff3b29957c4', 'Michael Kawilarang', 'michael@mitramaritim.com', NULL, '$2y$12$R2mwHYOiiNWMqQP6ZZdNq.nC07iYeSDKGyZcg0SC9WBv7RvjOY3TW', NULL, 0, 1, '2025-06-05 03:44:10', '2025-06-05 03:44:10');
+(19, 'dbc5d73c-4c06-4066-819a-8ff3b29957c4', 'Michael Kawilarang', 'michael@mitramaritim.com', NULL, '$2y$12$R2mwHYOiiNWMqQP6ZZdNq.nC07iYeSDKGyZcg0SC9WBv7RvjOY3TW', NULL, 0, 1, '2025-06-05 03:44:10', '2025-06-05 03:44:10'),
+(21, '26bd0553-12e8-4181-8198-8ccdc43b2cd9', 'Triyanto Bayu Widhiatmoko', 'bayu@petrolindo.com', NULL, '$2y$12$FApQQypS75wvtk5z9pCvTOvtWy/AyRcXO8SXkQsbH0sQXV7gLWNsq', NULL, 0, 1, '2025-06-12 19:15:24', '2025-06-12 20:35:09');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vessels`
+--
+
+CREATE TABLE `vessels` (
+  `id` bigint UNSIGNED NOT NULL,
+  `vessel_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_by` bigint UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Indexes for dumped tables
@@ -250,6 +326,13 @@ ALTER TABLE `failed_jobs`
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
 
 --
+-- Indexes for table `fuels`
+--
+ALTER TABLE `fuels`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fuels_created_by_foreign` (`created_by`);
+
+--
 -- Indexes for table `jobs`
 --
 ALTER TABLE `jobs`
@@ -273,6 +356,13 @@ ALTER TABLE `migrations`
 --
 ALTER TABLE `password_reset_tokens`
   ADD PRIMARY KEY (`email`);
+
+--
+-- Indexes for table `periodes`
+--
+ALTER TABLE `periodes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `periodes_created_by_foreign` (`created_by`);
 
 --
 -- Indexes for table `personal_access_tokens`
@@ -307,6 +397,13 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `slug` (`slug`);
 
 --
+-- Indexes for table `vessels`
+--
+ALTER TABLE `vessels`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `vessels_created_by_foreign` (`created_by`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -315,6 +412,12 @@ ALTER TABLE `users`
 --
 ALTER TABLE `failed_jobs`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `fuels`
+--
+ALTER TABLE `fuels`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `jobs`
@@ -326,7 +429,13 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `periodes`
+--
+ALTER TABLE `periodes`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -338,23 +447,47 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `role_permissions`
 --
 ALTER TABLE `role_permissions`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
+-- AUTO_INCREMENT for table `vessels`
+--
+ALTER TABLE `vessels`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
 --
 
 --
+-- Constraints for table `fuels`
+--
+ALTER TABLE `fuels`
+  ADD CONSTRAINT `fuels_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `periodes`
+--
+ALTER TABLE `periodes`
+  ADD CONSTRAINT `periodes_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `role_permissions`
 --
 ALTER TABLE `role_permissions`
   ADD CONSTRAINT `role_permissions_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `vessels`
+--
+ALTER TABLE `vessels`
+  ADD CONSTRAINT `vessels_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
