@@ -1,0 +1,89 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Spk;
+use App\Models\Periode;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+
+class SpkController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $spks = Spk::with(['period', 'creator'])->latest()->get();
+        return view('spks.index', compact('spks'));
+    }
+
+    public function create()
+    {
+        $periodes = Periode::all();
+        return view('spks.create', compact('periodes'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'period_id' => 'required|exists:periodes,id',
+            'spk_number' => 'required|string',
+            'spk_date' => 'required|date',
+            'spk_file' => 'required|mimes:pdf|max:2048',
+        ]);
+
+        $filePath = $request->file('spk_file')->store('spk_files', 'public');
+
+        Spk::create([
+            'period_id' => $request->period_id,
+            'spk_number' => $request->spk_number,
+            'spk_date' => $request->spk_date,
+            'spk_file' => $filePath,
+            'created_by' => Auth::id(),
+        ]);
+
+        return redirect()->route('spks.index')->with('success', 'SPK created successfully.');
+    }
+
+    public function edit(Spk $spk)
+    {
+        $periodes = Periode::all();
+        return view('spks.edit', compact('spk', 'periodes'));
+    }
+
+    public function update(Request $request, Spk $spk)
+    {
+        $request->validate([
+            'period_id' => 'required|exists:periodes,id',
+            'spk_number' => 'required|string',
+            'spk_date' => 'required|date',
+            'spk_file' => 'nullable|mimes:pdf|max:2048',
+        ]);
+
+        $data = $request->only(['period_id', 'spk_number', 'spk_date']);
+
+        if ($request->hasFile('spk_file')) {
+            if ($spk->spk_file) {
+                Storage::disk('public')->delete($spk->spk_file);
+            }
+            $data['spk_file'] = $request->file('spk_file')->store('spk_files', 'public');
+        }
+
+        $spk->update($data);
+
+        return redirect()->route('spks.index')->with('success', 'SPK updated successfully.');
+    }
+
+    public function destroy(Spk $spk)
+    {
+        if ($spk->spk_file) {
+            Storage::disk('public')->delete($spk->spk_file);
+        }
+
+        $spk->delete();
+
+        return redirect()->route('spks.index')->with('success', 'SPK deleted successfully.');
+    }
+}

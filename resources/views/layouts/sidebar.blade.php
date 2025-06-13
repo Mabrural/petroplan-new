@@ -72,8 +72,8 @@
                     </a>
                     <div class="collapse" id="tables">
                         <ul class="nav nav-collapse">
-                            <li><a href="{{ url('/list-spk') }}"><span class="sub-item">List SPK</span></a></li>
-                            <li><a href="{{ url('/list-spk/create') }}"><span class="sub-item">Upload SPK File</span></a></li>
+                            <li><a href="{{ url('/spks') }}"><span class="sub-item">List SPK</span></a></li>
+                            <li><a href="{{ url('/spks/create') }}"><span class="sub-item">Upload SPK File</span></a></li>
                         </ul>
                     </div>
                 </li>

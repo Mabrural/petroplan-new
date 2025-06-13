@@ -1,0 +1,228 @@
+@extends('layouts.main')
+
+@section('container')
+    <div class="container">
+        <div class="page-inner">
+            <div id="alertContainer" style="position: fixed; top: 20px; right: 20px; z-index: 9999; width: 350px;"></div>
+
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center py-3">
+                <div>
+                    <h3 class="fw-bold mb-0">SPK Management</h3>
+                    <p class="text-muted mb-0">Manage available SPKs</p>
+                </div>
+                <div>
+                    <a href="{{ route('spks.create') }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus me-1"></i>Add SPK
+                    </a>
+                </div>
+            </div>
+
+            <!-- Desktop Table -->
+            <div class="card d-none d-lg-block mt-3">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>SPK Number</th>
+                                    <th>SPK Date</th>
+                                    <th>Period</th>
+                                    <th>Created By</th>
+                                    <th>File</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($spks as $spk)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $spk->spk_number }}</td>
+                                        <td>{{ $spk->spk_date }}</td>
+                                        <td>{{ $spk->period->name ?? '-' }}</td>
+                                        <td>{{ $spk->creator->name ?? '-' }}</td>
+                                        <td>
+                                            <a href="{{ asset('storage/' . $spk->spk_file) }}" target="_blank" class="text-primary">View</a>
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn btn-link text-dark" type="button" data-bs-toggle="dropdown">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a class="dropdown-item text-primary" href="{{ route('spks.edit', $spk->id) }}">
+                                                            <i class="fas fa-edit me-1"></i> Edit
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <form action="{{ route('spks.destroy', $spk->id) }}" method="POST" onsubmit="return confirmDelete(event)">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="dropdown-item text-danger">
+                                                                <i class="fas fa-trash-alt me-1"></i> Delete
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="7" class="text-center py-4">
+                                            <div class="d-flex flex-column align-items-center">
+                                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state" style="height: 120px; opacity: 0.7;" class="mb-3">
+                                                <h5 class="text-muted">No SPKs Found</h5>
+                                                <p class="text-muted mb-3">You haven't added any SPKs yet</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Card List -->
+            <div class="d-lg-none mt-3">
+                @forelse ($spks as $spk)
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-1">{{ $spk->spk_number }}</h6>
+                            <p class="text-muted mb-1">Date: {{ $spk->spk_date }}</p>
+                            <p class="text-muted mb-1">Period: {{ $spk->period->name ?? '-' }}</p>
+                            <p class="text-muted mb-1">Created by: {{ $spk->creator->name ?? '-' }}</p>
+                            <p class="text-muted mb-2">
+                                <a href="{{ asset('storage/' . $spk->spk_file) }}" target="_blank" class="text-primary">View PDF</a>
+                            </p>
+                            <div class="dropdown float-end">
+                                <button class="btn btn-link text-dark" type="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item text-primary" href="{{ route('spks.edit', $spk->id) }}">
+                                            <i class="fas fa-edit me-1"></i> Edit
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <form action="{{ route('spks.destroy', $spk->id) }}" method="POST" onsubmit="return confirmDelete(event)">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="dropdown-item text-danger">
+                                                <i class="fas fa-trash-alt me-1"></i> Delete
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="card">
+                        <div class="card-body text-center py-4">
+                            <div class="d-flex flex-column align-items-center">
+                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state" style="height: 100px; opacity: 0.7;" class="mb-3">
+                                <h5 class="text-muted">No SPKs Available</h5>
+                                <p class="text-muted mb-3">Get started by adding a new SPK</p>
+                            </div>
+                        </div>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+
+    <!-- SweetAlert Confirmation -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        @if (session('success'))
+            showAlert('success', '{{ session('success') }}');
+        @endif
+        @if (session('error'))
+            showAlert('error', '{{ session('error') }}');
+        @endif
+        @if ($errors->any())
+            showAlert('error', '{{ $errors->first() }}');
+        @endif
+
+        function showAlert(type, message) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertId = 'alert-' + Date.now();
+            const alertEl = document.createElement('div');
+
+            alertEl.id = alertId;
+            alertEl.className = `alert alert-${type} alert-dismissible fade show shadow-sm`;
+            alertEl.role = 'alert';
+            alertEl.style.cssText = `
+                position: relative;
+                overflow: hidden;
+                border: none;
+                border-left: 4px solid ${type === 'success' ? '#28a745' : '#dc3545'};
+                animation: slideIn 0.3s ease-out forwards;
+                margin-bottom: 10px;
+            `;
+
+            let icon = type === 'success'
+                ? '<i class="fas fa-check-circle me-2"></i>'
+                : '<i class="fas fa-exclamation-circle me-2"></i>';
+
+            alertEl.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <div style="font-size: 1.5rem; color: ${type === 'success' ? '#28a745' : '#dc3545'};">
+                        ${icon}
+                    </div>
+                    <div><strong>${type.charAt(0).toUpperCase() + type.slice(1)}!</strong> ${message}</div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+
+            alertContainer.appendChild(alertEl);
+
+            setTimeout(() => {
+                const alert = document.getElementById(alertId);
+                if (alert) {
+                    alert.style.animation = 'fadeOut 0.3s ease-out forwards';
+                    setTimeout(() => alert.remove(), 300);
+                }
+            }, 5000);
+        }
+
+        function confirmDelete(event) {
+            event.preventDefault();
+            const form = event.target.closest('form');
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This action cannot be undone!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+                customClass: { popup: 'animated bounceIn' }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes fadeOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+@endsection

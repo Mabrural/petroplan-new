@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SpkController;
 use App\Http\Controllers\VesselController;
 use App\Http\Controllers\TerminController;
 use App\Http\Controllers\FuelController;
@@ -51,6 +52,8 @@ Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {
     Route::resource('vessels', VesselController::class);
 
     Route::resource('termins', TerminController::class);
+
+    Route::resource('spks', SpkController::class);
 
 
 
