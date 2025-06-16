@@ -15,9 +15,20 @@ class SpkController extends Controller
      */
     public function index()
     {
-        $spks = Spk::with(['period', 'creator'])->latest()->get();
+        $activePeriodId = session('active_period_id');
+
+        if (!$activePeriodId) {
+            return redirect()->route('set.period')->with('error', 'Please select a period first.');
+        }
+
+        $spks = Spk::with(['period', 'creator'])
+                    ->where('period_id', $activePeriodId)
+                    ->latest()
+                    ->get();
+
         return view('spks.index', compact('spks'));
     }
+
 
     public function create()
     {
