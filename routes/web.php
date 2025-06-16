@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DocumentTypeController;
 use App\Http\Controllers\ShipmentController;
 use App\Http\Controllers\SpkController;
 use App\Http\Controllers\VesselController;
@@ -58,6 +59,8 @@ Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {
 
     Route::resource('shipments', ShipmentController::class);
     Route::get('/get-termins/{periodId}', [ShipmentController::class, 'getTermins']);
+
+    Route::resource('document-types', DocumentTypeController::class);
 
 
 

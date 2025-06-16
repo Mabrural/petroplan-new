@@ -65,6 +65,13 @@
                     </a>
                 </li>
 
+                <li class="nav-item {{ request()->routeIs('document-types.*') ? 'active' : '' }}">
+                    <a href="{{ route('document-types.index') }}">
+                        <i class="fas fa-file-alt"></i>
+                        <p>Document Types</p>
+                    </a>
+                </li>
+
                 <li class="nav-item">
                     <a data-bs-toggle="collapse" href="#sidebarLayouts">
                         <i class="fas fa-upload"></i>
