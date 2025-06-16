@@ -38,7 +38,7 @@
                                 @forelse ($documents as $document)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $document->shipment->period->period_name ?? '-' }}</td>
+                                        <td>{{ $document->period->name ?? '-' }}</td>
                                         <td>{{ 'Shipment '.$document->shipment->shipment_number ?? '-' }}</td>
                                         <td>{{ $document->documentType->document_name ?? '-' }}</td>
                                         <td>

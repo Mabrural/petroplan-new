@@ -14,7 +14,7 @@ class UploadShipmentDocumentController extends Controller
 {
     public function index()
     {
-        $documents = UploadShipmentDocument::with(['shipment', 'documentType'])->latest()->get();
+        $documents = UploadShipmentDocument::with(['shipment', 'documentType', 'period'])->latest()->get();
         return view('upload-shipment-documents.index', compact('documents'));
     }
 
