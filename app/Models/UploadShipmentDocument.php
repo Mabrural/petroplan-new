@@ -10,6 +10,7 @@ class UploadShipmentDocument extends Model
     use HasFactory;
 
     protected $fillable = [
+        'period_id',
         'shipment_id',
         'document_type_id',
         'attachment',
@@ -29,5 +30,9 @@ class UploadShipmentDocument extends Model
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function period() {
+        return $this->belongsTo(Periode::class, 'period_id');
     }
 }

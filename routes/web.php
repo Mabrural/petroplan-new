@@ -64,6 +64,8 @@ Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {
     Route::resource('document-types', DocumentTypeController::class);
 
     Route::resource('upload-shipment-documents', UploadShipmentDocumentController::class);
+    Route::get('/get-shipments/{periodId}', [UploadShipmentDocumentController::class, 'getShipments']);
+
 
 
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UploadShipmentDocument;
+use App\Models\Termin;
 use App\Models\Shipment;
 use App\Models\DocumentType;
 use Illuminate\Http\Request;
@@ -11,9 +12,16 @@ use Illuminate\Support\Facades\Storage;
 
 class UploadShipmentDocumentController extends Controller
 {
+    public function index()
+    {
+        $documents = UploadShipmentDocument::with(['shipment', 'documentType'])->latest()->get();
+        return view('upload-shipment-documents.index', compact('documents'));
+    }
+
     public function create()
     {
         return view('upload-shipment-documents.create', [
+            'periodes' => \App\Models\Periode::all(),
             'shipments' => \App\Models\Shipment::all(),
             'documentTypes' => \App\Models\DocumentType::all(),
         ]);
@@ -22,6 +30,7 @@ class UploadShipmentDocumentController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'period_id' => 'required|exists:periodes,id',
             'shipment_id' => 'required|exists:shipments,id',
             'document_type_id' => 'required|exists:document_types,id',
             'attachments.*' => 'required|file|mimes:pdf,jpg,jpeg,png,heic|max:20480' // 20MB
@@ -32,6 +41,7 @@ class UploadShipmentDocumentController extends Controller
                 $filename = $file->store('shipment_documents', 'public');
 
                 UploadShipmentDocument::create([
+                    'period_id' => $validated['period_id'],
                     'shipment_id' => $validated['shipment_id'],
                     'document_type_id' => $validated['document_type_id'],
                     'attachment' => $filename,
@@ -44,11 +54,7 @@ class UploadShipmentDocumentController extends Controller
             ->with('success', count($request->file('attachments')).' documents uploaded successfully.');
     }
 
-    public function index()
-    {
-        $documents = UploadShipmentDocument::with(['shipment', 'documentType'])->latest()->get();
-        return view('upload-shipment-documents.index', compact('documents'));
-    }
+    
 
     public function destroy($id)
     {
@@ -63,4 +69,11 @@ class UploadShipmentDocumentController extends Controller
         
         return redirect()->back()->with('success', 'Document permanently deleted');
     }
+
+    public function getShipments($periodId)
+    {
+        $shipments = Shipment::where('period_id', $periodId)->get();
+        return response()->json($shipments);
+    }
+
 }
