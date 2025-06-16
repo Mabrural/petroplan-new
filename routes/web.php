@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UploadShipmentDocumentController;
 use App\Http\Controllers\DocumentTypeController;
 use App\Http\Controllers\ShipmentController;
 use App\Http\Controllers\SpkController;
@@ -61,6 +62,8 @@ Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {
     Route::get('/get-termins/{periodId}', [ShipmentController::class, 'getTermins']);
 
     Route::resource('document-types', DocumentTypeController::class);
+
+    Route::resource('upload-shipment-documents', UploadShipmentDocumentController::class);
 
 
 

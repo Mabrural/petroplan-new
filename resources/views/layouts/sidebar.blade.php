@@ -72,6 +72,13 @@
                     </a>
                 </li>
 
+                <li class="nav-item {{ request()->routeIs('upload-shipment-documents.*') ? 'active' : '' }}">
+                    <a href="{{ route('upload-shipment-documents.index') }}">
+                        <i class="fas fa-upload"></i>
+                        <p>Document Uploads</p>
+                    </a>
+                </li>
+
                 <li class="nav-item">
                     <a data-bs-toggle="collapse" href="#sidebarLayouts">
                         <i class="fas fa-upload"></i>
