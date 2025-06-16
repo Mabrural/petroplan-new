@@ -14,9 +14,20 @@ class TerminController extends Controller
      */
     public function index()
     {
-        $termins = Termin::with('period')->latest()->get();
+        $activePeriodId = session('active_period_id');
+
+        if (!$activePeriodId) {
+            return redirect()->route('set.period')->with('error', 'Please select a period first.');
+        }
+
+        $termins = Termin::with('period')
+                    ->where('period_id', $activePeriodId)
+                    ->latest()
+                    ->get();
+
         return view('termins.index', compact('termins'));
     }
+
 
     public function create()
     {

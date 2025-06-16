@@ -117,7 +117,7 @@ class PeriodeController extends Controller
 
         session(['active_period_id' => $request->period_id]);
 
-        return redirect()->intended('/dashboard');
+        return back()->with('success', 'Period changed successfully');
     }
 
 }
