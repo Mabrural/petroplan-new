@@ -31,31 +31,31 @@ class ShipmentController extends Controller
 
 
     public function create()
-{
-    $activePeriodId = session('active_period_id');
+    {
+        $activePeriodId = session('active_period_id');
 
-    if (!$activePeriodId) {
-        return redirect()->route('set.period')->with('error', 'Please select a period first.');
+        if (!$activePeriodId) {
+            return redirect()->route('set.period')->with('error', 'Please select a period first.');
+        }
+
+        // Ambil jumlah shipment pada periode aktif
+        $shipmentCount = Shipment::where('period_id', $activePeriodId)->count();
+        $nextShipmentNumber = $shipmentCount + 1;
+
+        $termins = Termin::where('period_id', $activePeriodId)->get();
+        $spks = Spk::where('period_id', $activePeriodId)->get();
+        $vessels = Vessel::all();
+        $fuels = Fuel::all();
+
+        return view('shipments.create', compact(
+            'termins',
+            'spks',
+            'vessels',
+            'fuels',
+            'activePeriodId',
+            'nextShipmentNumber'
+        ));
     }
-
-    // Ambil jumlah shipment pada periode aktif
-    $shipmentCount = Shipment::where('period_id', $activePeriodId)->count();
-    $nextShipmentNumber = $shipmentCount + 1;
-
-    $termins = Termin::where('period_id', $activePeriodId)->get();
-    $spks = Spk::where('period_id', $activePeriodId)->get();
-    $vessels = Vessel::all();
-    $fuels = Fuel::all();
-
-    return view('shipments.create', compact(
-        'termins',
-        'spks',
-        'vessels',
-        'fuels',
-        'activePeriodId',
-        'nextShipmentNumber'
-    ));
-}
 
 
 
@@ -105,22 +105,38 @@ class ShipmentController extends Controller
     }
 
 
-    public function edit(Shipment $shipment)
+    public function edit($id)
     {
+        $activePeriodId = session('active_period_id');
+
+        $shipment = Shipment::where('id', $id)
+            ->where('period_id', $activePeriodId)
+            ->firstOrFail();
+
+        // Format tanggal di controller menggunakan strtotime
+        $shipment->completion_date = date('Y-m-d', strtotime($shipment->completion_date));
+
+        $termins = Termin::where('period_id', $activePeriodId)->get();
+        $spks = Spk::where('period_id', $activePeriodId)->get();
+
         return view('shipments.edit', [
             'shipment' => $shipment,
-            'periodes' => Periode::all(),
-            'termins' => Termin::all(),
+            'termins' => $termins,
+            'spks' => $spks,
             'vessels' => Vessel::all(),
-            'spks' => Spk::all(),
             'fuels' => Fuel::all(),
         ]);
     }
 
-    public function update(Request $request, Shipment $shipment)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'period_id' => 'required|exists:periodes,id',
+        $activePeriodId = session('active_period_id');
+
+        $shipment = Shipment::where('id', $id)
+            ->where('period_id', $activePeriodId)
+            ->firstOrFail();
+
+        $validated = $request->validate([
             'termin_id' => 'required|exists:termins,id',
             'shipment_number' => 'required|string',
             'vessel_id' => 'required|exists:vessels,id',
@@ -136,16 +152,25 @@ class ShipmentController extends Controller
             'status_shipment' => 'required|in:in_progress,cancelled,completed,filling_completed',
         ]);
 
-        $shipment->update($request->all());
+        $shipment->update($validated);
 
         return redirect()->route('shipments.index')->with('success', 'Shipment updated successfully.');
     }
 
-    public function destroy(Shipment $shipment)
+
+    public function destroy($id)
     {
+        $activePeriodId = session('active_period_id');
+
+        $shipment = Shipment::where('id', $id)
+            ->where('period_id', $activePeriodId)
+            ->firstOrFail();
+
         $shipment->delete();
+
         return redirect()->route('shipments.index')->with('success', 'Shipment deleted successfully.');
     }
+
 
     public function getTermins($periodId)
     {
