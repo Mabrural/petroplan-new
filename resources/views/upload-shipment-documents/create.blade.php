@@ -37,31 +37,21 @@
                             @csrf
 
                             <div class="card-body">
+                                <input type="hidden" name="period_id" value="{{ $activePeriodId }}">
+
                                 <div class="form-group">
-                                    <label for="period_id">Select Period</label>
-                                    <select class="form-control @error('period_id') is-invalid @enderror" id="period_id"
-                                        name="period_id" required>
-                                        <option value="">-- Choose Period --</option>
-                                        @foreach ($periodes as $periode)
-                                            <option value="{{ $periode->id }}"
-                                                {{ old('period_id') == $periode->id ? 'selected' : '' }}>
-                                                {{ $periode->name }}
+                                    <label for="shipment_id">Shipment</label>
+                                    <select name="shipment_id" id="shipment_id"
+                                        class="form-control @error('shipment_id') is-invalid @enderror" required>
+                                        <option value="">-- Choose Shipment --</option>
+                                        @foreach ($shipments as $shipment)
+                                            <option value="{{ $shipment->id }}"
+                                                {{ old('shipment_id') == $shipment->id ? 'selected' : '' }}>
+                                                Shipment {{ $shipment->shipment_number }}
                                             </option>
                                         @endforeach
                                     </select>
-                                    @error('period_id')
-                                        <span class="invalid-feedback">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="shipment_id">Select Shipment</label>
-                                    <select class="form-control @error('shipment_id') is-invalid @enderror" id="shipment_id"
-                                        name="shipment_id" required>
-                                        <option value="">-- Choose Shipment --</option>
-                                        {{-- Akan diisi lewat JS --}}
-                                    </select>
-                                    @error('shipment_id')
+                                    @error('document_type_id')
                                         <span class="invalid-feedback">{{ $message }}</span>
                                     @enderror
                                 </div>

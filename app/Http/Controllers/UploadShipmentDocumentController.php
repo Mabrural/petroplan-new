@@ -31,20 +31,35 @@ class UploadShipmentDocumentController extends Controller
 
     public function create()
     {
+        $activePeriodId = session('active_period_id');
+
+        if (!$activePeriodId) {
+            return redirect()->route('set.period')->with('error', 'Please select a period first.');
+        }
+
+        // Hanya ambil shipment dalam periode aktif
+        $shipments = \App\Models\Shipment::where('period_id', $activePeriodId)->get();
+
         return view('upload-shipment-documents.create', [
-            'periodes' => \App\Models\Periode::all(),
-            'shipments' => \App\Models\Shipment::all(),
+            'activePeriodId' => $activePeriodId,
+            'shipments' => $shipments,
             'documentTypes' => \App\Models\DocumentType::all(),
         ]);
     }
 
-    public function store(Request $request)
+
+   public function store(Request $request)
     {
+        $activePeriodId = session('active_period_id');
+
+        if (!$activePeriodId) {
+            return redirect()->route('set.period')->with('error', 'Please select a period first.');
+        }
+
         $validated = $request->validate([
-            'period_id' => 'required|exists:periodes,id',
             'shipment_id' => 'required|exists:shipments,id',
             'document_type_id' => 'required|exists:document_types,id',
-            'attachments.*' => 'required|file|mimes:pdf,jpg,jpeg,png,heic|max:20480' // 20MB
+            'attachments.*' => 'required|file|mimes:pdf,jpg,jpeg,png,heic|max:20480', // 20MB
         ]);
 
         if ($request->hasFile('attachments')) {
@@ -52,7 +67,7 @@ class UploadShipmentDocumentController extends Controller
                 $filename = $file->store('shipment_documents', 'public');
 
                 UploadShipmentDocument::create([
-                    'period_id' => $validated['period_id'],
+                    'period_id' => $activePeriodId,
                     'shipment_id' => $validated['shipment_id'],
                     'document_type_id' => $validated['document_type_id'],
                     'attachment' => $filename,
@@ -62,10 +77,8 @@ class UploadShipmentDocumentController extends Controller
         }
 
         return redirect()->route('upload-shipment-documents.index')
-            ->with('success', count($request->file('attachments')).' documents uploaded successfully.');
+            ->with('success', count($request->file('attachments')) . ' documents uploaded successfully.');
     }
-
-    
 
     public function destroy($id)
     {
