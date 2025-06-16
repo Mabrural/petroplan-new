@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jun 16, 2025 at 03:06 AM
+-- Generation Time: Jun 16, 2025 at 03:45 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.3.6
 
@@ -43,6 +43,20 @@ CREATE TABLE `cache_locks` (
   `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `owner` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `expiration` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `document_types`
+--
+
+CREATE TABLE `document_types` (
+  `id` bigint UNSIGNED NOT NULL,
+  `document_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_by` bigint UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -149,7 +163,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (11, '2025_06_13_082027_create_vessels_table', 7),
 (12, '2025_06_13_084725_create_termins_table', 8),
 (13, '2025_06_13_091124_create_spks_table', 9),
-(14, '2025_06_16_022612_create_shipments_table', 10);
+(14, '2025_06_16_022612_create_shipments_table', 10),
+(15, '2025_06_16_032638_create_document_types_table', 11);
 
 -- --------------------------------------------------------
 
@@ -259,8 +274,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('1hoyW3JCA8AHWFzx7KiKGBNjXg9I6Z0tyyXmYzCn', 2, '192.168.1.2', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiQlVNV3lOcG1iYXFEeTU4MXZGdENFZFE4blRVU2VKR1VLSnkyMHVQTyI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjMzOiJodHRwOi8vMTkyLjE2OC4xLjY6ODAwMC9zaGlwbWVudHMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=', 1750043099),
-('49UbjJNh6edix2Hj2HTDaJEisiynAwWNppsubRaj', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoibEhsbEpGMENoU3BvMVM2bWllR1YzV0d1clpNMjdIdjZRSmYxQU44TyI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjMxOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvc2hpcG1lbnRzIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Mjt9', 1750043136);
+('1hoyW3JCA8AHWFzx7KiKGBNjXg9I6Z0tyyXmYzCn', 2, '192.168.1.2', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiQlVNV3lOcG1iYXFEeTU4MXZGdENFZFE4blRVU2VKR1VLSnkyMHVQTyI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQ1OiJodHRwOi8vMTkyLjE2OC4xLjY6ODAwMC9kb2N1bWVudC10eXBlcy9jcmVhdGUiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=', 1750045115),
+('49UbjJNh6edix2Hj2HTDaJEisiynAwWNppsubRaj', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoibEhsbEpGMENoU3BvMVM2bWllR1YzV0d1clpNMjdIdjZRSmYxQU44TyI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjM2OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvZG9jdW1lbnQtdHlwZXMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=', 1750045493);
 
 -- --------------------------------------------------------
 
@@ -414,6 +429,13 @@ ALTER TABLE `cache_locks`
   ADD PRIMARY KEY (`key`);
 
 --
+-- Indexes for table `document_types`
+--
+ALTER TABLE `document_types`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `document_types_created_by_foreign` (`created_by`);
+
+--
 -- Indexes for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
@@ -531,6 +553,12 @@ ALTER TABLE `vessels`
 --
 
 --
+-- AUTO_INCREMENT for table `document_types`
+--
+ALTER TABLE `document_types`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
@@ -552,7 +580,7 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `periodes`
@@ -605,6 +633,12 @@ ALTER TABLE `vessels`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `document_types`
+--
+ALTER TABLE `document_types`
+  ADD CONSTRAINT `document_types_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `fuels`
