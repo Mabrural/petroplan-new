@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jun 16, 2025 at 03:45 AM
+-- Generation Time: Jun 16, 2025 at 06:03 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.3.6
 
@@ -58,6 +58,13 @@ CREATE TABLE `document_types` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `document_types`
+--
+
+INSERT INTO `document_types` (`id`, `document_name`, `created_by`, `created_at`, `updated_at`) VALUES
+(3, 'Foto Kapal / Nama Kapal', 2, '2025-06-15 21:14:10', '2025-06-15 21:14:10');
 
 -- --------------------------------------------------------
 
@@ -164,7 +171,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (12, '2025_06_13_084725_create_termins_table', 8),
 (13, '2025_06_13_091124_create_spks_table', 9),
 (14, '2025_06_16_022612_create_shipments_table', 10),
-(15, '2025_06_16_032638_create_document_types_table', 11);
+(15, '2025_06_16_032638_create_document_types_table', 11),
+(16, '2025_06_16_040504_create_upload_shipment_documents_table', 12),
+(17, '2025_06_16_044124_add_period_id_to_upload_shipment_documents_table', 13);
 
 -- --------------------------------------------------------
 
@@ -274,8 +283,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('1hoyW3JCA8AHWFzx7KiKGBNjXg9I6Z0tyyXmYzCn', 2, '192.168.1.2', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiQlVNV3lOcG1iYXFEeTU4MXZGdENFZFE4blRVU2VKR1VLSnkyMHVQTyI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQ1OiJodHRwOi8vMTkyLjE2OC4xLjY6ODAwMC9kb2N1bWVudC10eXBlcy9jcmVhdGUiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=', 1750045115),
-('49UbjJNh6edix2Hj2HTDaJEisiynAwWNppsubRaj', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoibEhsbEpGMENoU3BvMVM2bWllR1YzV0d1clpNMjdIdjZRSmYxQU44TyI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjM2OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvZG9jdW1lbnQtdHlwZXMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=', 1750045493);
+('1hoyW3JCA8AHWFzx7KiKGBNjXg9I6Z0tyyXmYzCn', 2, '192.168.1.2', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiQlVNV3lOcG1iYXFEeTU4MXZGdENFZFE4blRVU2VKR1VLSnkyMHVQTyI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQ5OiJodHRwOi8vMTkyLjE2OC4xLjY6ODAwMC91cGxvYWQtc2hpcG1lbnQtZG9jdW1lbnRzIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Mjt9', 1750053641),
+('49UbjJNh6edix2Hj2HTDaJEisiynAwWNppsubRaj', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoibEhsbEpGMENoU3BvMVM2bWllR1YzV0d1clpNMjdIdjZRSmYxQU44TyI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQ3OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvdXBsb2FkLXNoaXBtZW50LWRvY3VtZW50cyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==', 1750053649);
 
 -- --------------------------------------------------------
 
@@ -360,6 +369,23 @@ INSERT INTO `termins` (`id`, `period_id`, `termin_number`, `created_by`, `create
 (6, 6, 2, 2, '2025-06-15 19:48:12', '2025-06-15 19:48:12'),
 (7, 6, 3, 2, '2025-06-15 19:48:19', '2025-06-15 19:48:19'),
 (8, 7, 1, 2, '2025-06-15 19:48:25', '2025-06-15 19:48:25');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `upload_shipment_documents`
+--
+
+CREATE TABLE `upload_shipment_documents` (
+  `id` bigint UNSIGNED NOT NULL,
+  `period_id` bigint UNSIGNED NOT NULL,
+  `shipment_id` bigint UNSIGNED NOT NULL,
+  `document_type_id` bigint UNSIGNED NOT NULL,
+  `attachment` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_by` bigint UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -534,6 +560,16 @@ ALTER TABLE `termins`
   ADD KEY `termins_created_by_foreign` (`created_by`);
 
 --
+-- Indexes for table `upload_shipment_documents`
+--
+ALTER TABLE `upload_shipment_documents`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `upload_shipment_documents_shipment_id_foreign` (`shipment_id`),
+  ADD KEY `upload_shipment_documents_document_type_id_foreign` (`document_type_id`),
+  ADD KEY `upload_shipment_documents_created_by_foreign` (`created_by`),
+  ADD KEY `upload_shipment_documents_period_id_foreign` (`period_id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -556,7 +592,7 @@ ALTER TABLE `vessels`
 -- AUTO_INCREMENT for table `document_types`
 --
 ALTER TABLE `document_types`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -580,7 +616,7 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `periodes`
@@ -617,6 +653,12 @@ ALTER TABLE `spks`
 --
 ALTER TABLE `termins`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `upload_shipment_documents`
+--
+ALTER TABLE `upload_shipment_documents`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -682,6 +724,15 @@ ALTER TABLE `spks`
 ALTER TABLE `termins`
   ADD CONSTRAINT `termins_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `termins_period_id_foreign` FOREIGN KEY (`period_id`) REFERENCES `periodes` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `upload_shipment_documents`
+--
+ALTER TABLE `upload_shipment_documents`
+  ADD CONSTRAINT `upload_shipment_documents_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `upload_shipment_documents_document_type_id_foreign` FOREIGN KEY (`document_type_id`) REFERENCES `document_types` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `upload_shipment_documents_period_id_foreign` FOREIGN KEY (`period_id`) REFERENCES `periodes` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `upload_shipment_documents_shipment_id_foreign` FOREIGN KEY (`shipment_id`) REFERENCES `shipments` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `vessels`
