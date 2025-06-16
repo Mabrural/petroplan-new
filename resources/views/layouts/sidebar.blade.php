@@ -66,20 +66,6 @@
                 </li>
 
                 <li class="nav-item">
-                    <a data-bs-toggle="collapse" href="#maps">
-                        <i class="fas fa-boxes"></i>
-                        <p>Shipment Management</p>
-                        <span class="caret"></span>
-                    </a>
-                    <div class="collapse" id="maps">
-                        <ul class="nav nav-collapse">
-                            <li><a href="{{ url('/shipment-list') }}"><span class="sub-item">Shipment List</span></a></li>
-                            <li><a href="{{ url('/shipment-list/create') }}"><span class="sub-item">Create Shipment</span></a></li>
-                        </ul>
-                    </div>
-                </li>
-
-                <li class="nav-item">
                     <a data-bs-toggle="collapse" href="#sidebarLayouts">
                         <i class="fas fa-upload"></i>
                         <p>Document Uploads</p>
