@@ -97,7 +97,7 @@ class PeriodeController extends Controller
         $periode->is_active = true;
         $periode->save();
 
-        return redirect()->back()->with('success', 'Periode ' . $periode->name . ' has been activated.');
+        return redirect()->back()->with('success', $periode->name . ' has been activated.');
     }
 
     public function deactivate($id)
@@ -106,6 +106,6 @@ class PeriodeController extends Controller
         $periode->is_active = false;
         $periode->save();
 
-        return redirect()->back()->with('success', 'Periode ' . $periode->name . ' has been deactivated.');
+        return redirect()->back()->with('success', $periode->name . ' has been deactivated.');
     }
 }
