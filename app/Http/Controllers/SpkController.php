@@ -70,14 +70,27 @@ class SpkController extends Controller
     }
 
 
-    public function edit(Spk $spk)
+    public function edit($id)
     {
-        $periodes = Periode::all();
-        return view('spks.edit', compact('spk', 'periodes'));
+        $activePeriodId = session('active_period_id');
+
+        // Cari SPK hanya dalam periode aktif
+        $spk = Spk::where('id', $id)
+            ->where('period_id', $activePeriodId)
+            ->firstOrFail();
+
+        return view('spks.edit', compact('spk', 'activePeriodId'));
     }
 
-    public function update(Request $request, Spk $spk)
+    public function update(Request $request, $id)
     {
+        $activePeriodId = session('active_period_id');
+
+        // Pastikan SPK yang diupdate berada dalam periode aktif
+        $spk = Spk::where('id', $id)
+            ->where('period_id', $activePeriodId)
+            ->firstOrFail();
+
         $request->validate([
             'period_id' => 'required|exists:periodes,id',
             'spk_number' => 'required|string',
@@ -99,8 +112,14 @@ class SpkController extends Controller
         return redirect()->route('spks.index')->with('success', 'SPK updated successfully.');
     }
 
-    public function destroy(Spk $spk)
+    public function destroy($id)
     {
+        $activePeriodId = session('active_period_id');
+
+        $spk = Spk::where('id', $id)
+            ->where('period_id', $activePeriodId)
+            ->firstOrFail();
+
         if ($spk->spk_file) {
             Storage::disk('public')->delete($spk->spk_file);
         }
