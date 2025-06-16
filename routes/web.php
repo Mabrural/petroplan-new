@@ -30,28 +30,12 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {
-    // Resource route
-    Route::resource('user-management', UserController::class)
-        ->parameters(['user-management' => 'user:slug']);
-
-    // Custom actions
-    Route::post('/user-management/{user:slug}/grant-admin', [UserController::class, 'grantAdmin'])
-        ->name('user-management.grant-admin');
     
-    Route::post('/user-management/{user:slug}/revoke-admin', [UserController::class, 'revokeAdmin'])
-        ->name('user-management.revoke-admin');
-
-    Route::post('/user-management/{user:slug}/activate', [UserController::class, 'activate'])
-        ->name('user-management.activate');
-
-    Route::post('/user-management/{user:slug}/deactivate', [UserController::class, 'deactivate'])
-        ->name('user-management.deactivate');
 
     Route::resource('period-list', PeriodeController::class);
     Route::post('/period/{id}/activate', [PeriodeController::class, 'activate'])->name('period-list.activate');
     Route::post('/period/{id}/deactivate', [PeriodeController::class, 'deactivate'])->name('period-list.deactivate');
 
-    Route::resource('fuels', FuelController::class);
 
     Route::resource('vessels', VesselController::class);
 
@@ -62,13 +46,9 @@ Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {
     Route::resource('shipments', ShipmentController::class);
     Route::get('/get-termins/{periodId}', [ShipmentController::class, 'getTermins']);
 
-    Route::resource('document-types', DocumentTypeController::class);
 
     Route::resource('upload-shipment-documents', UploadShipmentDocumentController::class);
     Route::get('/get-shipments/{periodId}', [UploadShipmentDocumentController::class, 'getShipments']);
-
-
-
 
 });
 
@@ -86,6 +66,42 @@ Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {
 
     Route::resource('role-permissions', RolePermissionController::class)->except(['store'])
     ->parameters(['role-permissions' => 'role_permission:slug']);
+});
+
+// administrator / IT
+Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {
+
+    // Resource route
+    Route::resource('user-management', UserController::class)
+        ->parameters(['user-management' => 'user:slug']);
+
+    // Custom actions
+    Route::post('/user-management/{user:slug}/grant-admin', [UserController::class, 'grantAdmin'])
+        ->name('user-management.grant-admin');
+    
+    Route::post('/user-management/{user:slug}/revoke-admin', [UserController::class, 'revokeAdmin'])
+        ->name('user-management.revoke-admin');
+
+    Route::post('/user-management/{user:slug}/activate', [UserController::class, 'activate'])
+        ->name('user-management.activate');
+
+    Route::post('/user-management/{user:slug}/deactivate', [UserController::class, 'deactivate'])
+        ->name('user-management.deactivate');
+
+    Route::resource('fuels', FuelController::class);
+
+    Route::resource('document-types', DocumentTypeController::class);
+
+});
+
+// admin officer
+Route::middleware(['auth', 'verified', 'active', 'admin_officer'])->group(function () {
+
+});
+
+// operasion
+Route::middleware(['auth', 'verified', 'active', 'operasion'])->group(function () {
+
 });
 
 require __DIR__.'/auth.php';

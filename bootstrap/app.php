@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\OperasionMiddleware;
+use App\Http\Middleware\AdminOfficerMiddleware;
 use App\Http\Middleware\SetActivePeriod;
 use App\Http\Middleware\CheckIfUserIsActive;
 use App\Http\Middleware\CheckIfUserIsAdmin;
@@ -19,6 +21,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'active' => CheckIfUserIsActive::class,
             'admin' => CheckIfUserIsAdmin::class,
             'period' => SetActivePeriod::class,
+            'admin_officer' => AdminOfficerMiddleware::class,
+            'operasion' => OperasionMiddleware::class,
         ]);
 
         $middleware->group('web', [
