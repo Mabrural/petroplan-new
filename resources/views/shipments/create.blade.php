@@ -56,9 +56,11 @@
 
                             <div class="form-group col-md-6">
                                 <label for="shipment_number">Shipment Number</label>
-                                <input type="text" class="form-control @error('shipment_number') is-invalid @enderror"
-                                       id="shipment_number" name="shipment_number" value="{{ old('shipment_number') }}"
-                                       placeholder="Enter shipment number" required>
+                                <input type="number" class="form-control @error('shipment_number') is-invalid @enderror"
+                                    id="shipment_number" name="shipment_number"
+                                    value="{{ old('shipment_number', $nextShipmentNumber) }}"
+                                    placeholder="Enter shipment number" required>
+
                                 @error('shipment_number')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
@@ -158,7 +160,7 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
                                 <label for="completion_date">Completion Date</label>
                                 <input type="date" class="form-control @error('completion_date') is-invalid @enderror"
                                        id="completion_date" name="completion_date" value="{{ old('completion_date') }}" required>
@@ -167,7 +169,7 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
                                 <label for="lo">LO</label>
                                 <input type="text" class="form-control @error('lo') is-invalid @enderror"
                                        id="lo" name="lo" value="{{ old('lo') }}">
@@ -176,7 +178,7 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
                                 <label for="status_shipment">Status Shipment</label>
                                 <select class="form-control @error('status_shipment') is-invalid @enderror"
                                         id="status_shipment" name="status_shipment" required>

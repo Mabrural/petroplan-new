@@ -31,21 +31,32 @@ class ShipmentController extends Controller
 
 
     public function create()
-    {
-        $activePeriodId = session('active_period_id');
+{
+    $activePeriodId = session('active_period_id');
 
-        if (!$activePeriodId) {
-            return redirect()->route('set.period')->with('error', 'Please select a period first.');
-        }
-
-        return view('shipments.create', [
-            'activePeriodId' => $activePeriodId,
-            'termins' => Termin::where('period_id', $activePeriodId)->get(),
-            'vessels' => Vessel::all(),
-            'spks' => Spk::where('period_id', $activePeriodId)->get(),
-            'fuels' => Fuel::all(),
-        ]);
+    if (!$activePeriodId) {
+        return redirect()->route('set.period')->with('error', 'Please select a period first.');
     }
+
+    // Ambil jumlah shipment pada periode aktif
+    $shipmentCount = Shipment::where('period_id', $activePeriodId)->count();
+    $nextShipmentNumber = $shipmentCount + 1;
+
+    $termins = Termin::where('period_id', $activePeriodId)->get();
+    $spks = Spk::where('period_id', $activePeriodId)->get();
+    $vessels = Vessel::all();
+    $fuels = Fuel::all();
+
+    return view('shipments.create', compact(
+        'termins',
+        'spks',
+        'vessels',
+        'fuels',
+        'activePeriodId',
+        'nextShipmentNumber'
+    ));
+}
+
 
 
     public function store(Request $request)
