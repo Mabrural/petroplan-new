@@ -57,30 +57,52 @@ class TerminController extends Controller
         return redirect()->route('termins.index')->with('success', 'Termin created successfully.');
     }
 
-    public function edit(Termin $termin)
+    public function edit($id)
     {
-        $periodes = Periode::all();
-        return view('termins.edit', compact('termin', 'periodes'));
+        $activePeriodId = session('active_period_id');
+
+        // Cari termin hanya dalam periode aktif
+        $termin = Termin::where('id', $id)
+            ->where('period_id', $activePeriodId)
+            ->firstOrFail();
+
+        $allPeriods = Periode::all();
+
+        return view('termins.edit', compact('termin', 'allPeriods'));
     }
 
-    public function update(Request $request, Termin $termin)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'period_id' => 'required|exists:periodes,id',
+        $activePeriodId = session('active_period_id');
+
+        $termin = Termin::where('id', $id)
+            ->where('period_id', $activePeriodId)
+            ->firstOrFail();
+
+        $validated = $request->validate([
             'termin_number' => 'required|integer|min:1',
+            // validasi lainnya jika perlu
         ]);
 
-        $termin->update([
-            'period_id' => $request->period_id,
-            'termin_number' => $request->termin_number,
-        ]);
+        $termin->update($validated);
 
         return redirect()->route('termins.index')->with('success', 'Termin updated successfully.');
     }
 
-    public function destroy(Termin $termin)
+
+
+    public function destroy($id)
     {
+        $activePeriodId = session('active_period_id');
+
+        // Hanya hapus termin yang sesuai dengan periode aktif
+        $termin = Termin::where('id', $id)
+            ->where('period_id', $activePeriodId)
+            ->firstOrFail();
+
         $termin->delete();
+
         return redirect()->route('termins.index')->with('success', 'Termin deleted successfully.');
     }
+
 }
