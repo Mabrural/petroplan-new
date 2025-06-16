@@ -79,20 +79,6 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a data-bs-toggle="collapse" href="#sidebarLayouts">
-                        <i class="fas fa-upload"></i>
-                        <p>Document Uploads</p>
-                        <span class="caret"></span>
-                    </a>
-                    <div class="collapse" id="sidebarLayouts">
-                        <ul class="nav nav-collapse">
-                            <li><a href="{{ url('/upload-shipment-document') }}"><span class="sub-item">Upload Shipment Documents</span></a></li>
-                            <li><a href="{{ url('/document-type') }}"><span class="sub-item">Document Types</span></a></li>
-                        </ul>
-                    </div>
-                </li>
-
                 <li class="nav-item {{ request()->routeIs('fuels.*') ? 'active' : '' }}">
                     <a href="{{ route('fuels.index') }}">
                         <i class="fas fa-gas-pump"></i>
