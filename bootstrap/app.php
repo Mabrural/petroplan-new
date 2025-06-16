@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\SetActivePeriod;
 use App\Http\Middleware\CheckIfUserIsActive;
 use App\Http\Middleware\CheckIfUserIsAdmin;
 use Illuminate\Foundation\Application;
@@ -17,6 +18,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'active' => CheckIfUserIsActive::class,
             'admin' => CheckIfUserIsAdmin::class,
+            'period' => SetActivePeriod::class,
+        ]);
+
+        $middleware->group('web', [
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            SetActivePeriod::class, // Tambahkan ini agar aktif di semua route web
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

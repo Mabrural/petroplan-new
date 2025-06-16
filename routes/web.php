@@ -1,5 +1,6 @@
 <?php
 
+
 use App\Http\Controllers\UploadShipmentDocumentController;
 use App\Http\Controllers\DocumentTypeController;
 use App\Http\Controllers\ShipmentController;
@@ -70,6 +71,8 @@ Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {
 
 
 });
+
+Route::post('/set-period', [PeriodeController::class, 'setActivePeriod'])->name('set.period')->middleware(['auth', 'verified', 'active', 'period']);
 
 
 Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {
