@@ -36,21 +36,8 @@
                         @csrf
                         <div class="card-body">
 
-                            <div class="form-group">
-                                <label for="period_id">Select Period</label>
-                                <select class="form-control @error('period_id') is-invalid @enderror"
-                                        id="period_id" name="period_id" required>
-                                    <option value="">-- Choose Period --</option>
-                                    @foreach ($periodes as $periode)
-                                        <option value="{{ $periode->id }}" {{ old('period_id') == $periode->id ? 'selected' : '' }}>
-                                            {{ $periode->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('period_id')
-                                    <span class="invalid-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
+                            {{-- Hidden input untuk period_id dari session --}}
+                            <input type="hidden" name="period_id" value="{{ $activePeriodId }}">
 
                             <div class="form-group">
                                 <label for="spk_number">SPK Number</label>

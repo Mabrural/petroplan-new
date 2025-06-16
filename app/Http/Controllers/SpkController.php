@@ -32,14 +32,25 @@ class SpkController extends Controller
 
     public function create()
     {
-        $periodes = Periode::all();
-        return view('spks.create', compact('periodes'));
+        $activePeriodId = session('active_period_id');
+
+        if (!$activePeriodId) {
+            return redirect()->route('set.period')->with('error', 'Please select a period first.');
+        }
+
+        return view('spks.create', compact('activePeriodId'));
     }
 
-    public function store(Request $request)
+
+        public function store(Request $request)
     {
+        $activePeriodId = session('active_period_id');
+
+        if (!$activePeriodId) {
+            return redirect()->route('set.period')->with('error', 'Please select a period first.');
+        }
+
         $request->validate([
-            'period_id' => 'required|exists:periodes,id',
             'spk_number' => 'required|string',
             'spk_date' => 'required|date',
             'spk_file' => 'required|mimes:pdf|max:2048',
@@ -48,7 +59,7 @@ class SpkController extends Controller
         $filePath = $request->file('spk_file')->store('spk_files', 'public');
 
         Spk::create([
-            'period_id' => $request->period_id,
+            'period_id' => $activePeriodId,
             'spk_number' => $request->spk_number,
             'spk_date' => $request->spk_date,
             'spk_file' => $filePath,
@@ -57,6 +68,7 @@ class SpkController extends Controller
 
         return redirect()->route('spks.index')->with('success', 'SPK created successfully.');
     }
+
 
     public function edit(Spk $spk)
     {
