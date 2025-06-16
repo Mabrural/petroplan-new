@@ -31,9 +31,15 @@ class TerminController extends Controller
 
     public function create()
     {
-        $periodes = Periode::all();
-        return view('termins.create', compact('periodes'));
+        $activePeriodId = session('active_period_id');
+
+        if (!$activePeriodId) {
+            return redirect()->route('set.period')->with('error', 'Please select a period first.');
+        }
+
+        return view('termins.create', compact('activePeriodId'));
     }
+
 
     public function store(Request $request)
     {
