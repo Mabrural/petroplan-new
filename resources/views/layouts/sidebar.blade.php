@@ -58,6 +58,13 @@
                     </a>
                 </li>
 
+                <li class="nav-item {{ request()->routeIs('shipments.*') ? 'active' : '' }}">
+                    <a href="{{ route('shipments.index') }}">
+                        <i class="fas fa-boxes"></i>
+                        <p>Shipment Management</p>
+                    </a>
+                </li>
+
                 <li class="nav-item">
                     <a data-bs-toggle="collapse" href="#maps">
                         <i class="fas fa-boxes"></i>

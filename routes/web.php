@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ShipmentController;
 use App\Http\Controllers\SpkController;
 use App\Http\Controllers\VesselController;
 use App\Http\Controllers\TerminController;
@@ -54,6 +55,9 @@ Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {
     Route::resource('termins', TerminController::class);
 
     Route::resource('spks', SpkController::class);
+
+    Route::resource('shipments', ShipmentController::class);
+    Route::get('/get-termins/{periodId}', [ShipmentController::class, 'getTermins']);
 
 
 
