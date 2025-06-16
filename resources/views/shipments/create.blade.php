@@ -36,34 +36,23 @@
                         @csrf
                         <div class="card-body row">
 
-                            <div class="form-group col-md-6">
-                                <label for="period_id">Select Period</label>
-                                <select class="form-control @error('period_id') is-invalid @enderror"
-                                        id="period_id" name="period_id" required>
-                                    <option value="">-- Choose Period --</option>
-                                    @foreach ($periodes as $periode)
-                                        <option value="{{ $periode->id }}" {{ old('period_id') == $periode->id ? 'selected' : '' }}>
-                                            {{ $periode->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('period_id')
-                                    <span class="invalid-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
+                            <input type="hidden" name="period_id" value="{{ $activePeriodId }}">
 
                             <div class="form-group col-md-6">
                                 <label for="termin_id">Select Termin</label>
                                 <select class="form-control @error('termin_id') is-invalid @enderror"
                                         id="termin_id" name="termin_id" required>
                                     <option value="">-- Choose Termin --</option>
-                                    {{-- Akan diisi lewat JS --}}
+                                    @foreach ($termins as $termin)
+                                        <option value="{{ $termin->id }}" {{ old('termin_id') == $termin->id ? 'selected' : '' }}>
+                                            Termin {{ $termin->termin_number }}
+                                        </option>
+                                    @endforeach
                                 </select>
                                 @error('termin_id')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
-
 
                             <div class="form-group col-md-6">
                                 <label for="shipment_number">Shipment Number</label>
@@ -133,7 +122,7 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-12">
                                 <label for="volume">Volume (Liter)</label>
                                 <input type="number" class="form-control @error('volume') is-invalid @enderror"
                                        id="volume" name="volume" value="{{ old('volume') }}" required>
@@ -214,34 +203,3 @@
     </div>
 </div>
 @endsection
-
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const periodSelect = document.getElementById('period_id');
-    const terminSelect = document.getElementById('termin_id');
-
-    periodSelect.addEventListener('change', function () {
-        const periodId = this.value;
-
-        // Kosongkan dropdown termin
-        terminSelect.innerHTML = '<option value="">-- Choose Termin --</option>';
-
-        if (periodId) {
-            fetch(`/get-termins/${periodId}`)
-                .then(response => response.json())
-                .then(data => {
-                    data.forEach(termin => {
-                        const option = document.createElement('option');
-                        option.value = termin.id;
-                        option.textContent = `Termin ${termin.termin_number}`;
-                        terminSelect.appendChild(option);
-                    });
-                })
-                .catch(error => console.error('Error:', error));
-        }
-    });
-});
-</script>
-@endpush
-

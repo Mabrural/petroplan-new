@@ -15,25 +15,48 @@ class ShipmentController extends Controller
 {
     public function index()
     {
-        $shipments = Shipment::with(['period', 'termin', 'vessel', 'spk', 'fuel', 'creator'])->latest()->get();
+        $activePeriodId = session('active_period_id');
+
+        if (!$activePeriodId) {
+            return redirect()->route('set.period')->with('error', 'Please select a period first.');
+        }
+
+        $shipments = Shipment::with(['period', 'termin', 'vessel', 'spk', 'fuel', 'creator'])
+            ->where('period_id', $activePeriodId)
+            ->latest()
+            ->get();
+
         return view('shipments.index', compact('shipments'));
     }
 
+
     public function create()
     {
+        $activePeriodId = session('active_period_id');
+
+        if (!$activePeriodId) {
+            return redirect()->route('set.period')->with('error', 'Please select a period first.');
+        }
+
         return view('shipments.create', [
-            'periodes' => Periode::all(),
-            'termins' => Termin::all(),
+            'activePeriodId' => $activePeriodId,
+            'termins' => Termin::where('period_id', $activePeriodId)->get(),
             'vessels' => Vessel::all(),
-            'spks' => Spk::all(),
+            'spks' => Spk::where('period_id', $activePeriodId)->get(),
             'fuels' => Fuel::all(),
         ]);
     }
 
+
     public function store(Request $request)
     {
+        $activePeriodId = session('active_period_id');
+
+        if (!$activePeriodId) {
+            return redirect()->route('set.period')->with('error', 'Please select a period first.');
+        }
+
         $request->validate([
-            'period_id' => 'required|exists:periodes,id',
             'termin_id' => 'required|exists:termins,id',
             'shipment_number' => 'required|string',
             'vessel_id' => 'required|exists:vessels,id',
@@ -49,12 +72,27 @@ class ShipmentController extends Controller
             'status_shipment' => 'required|in:in_progress,cancelled,completed,filling_completed',
         ]);
 
-        Shipment::create($request->all() + [
-            'created_by' => Auth::id()
+        Shipment::create([
+            'period_id' => $activePeriodId,
+            'termin_id' => $request->termin_id,
+            'shipment_number' => $request->shipment_number,
+            'vessel_id' => $request->vessel_id,
+            'spk_id' => $request->spk_id,
+            'location' => $request->location,
+            'fuel_id' => $request->fuel_id,
+            'volume' => $request->volume,
+            'p' => $request->p,
+            'a' => $request->a,
+            'b' => $request->b,
+            'completion_date' => $request->completion_date,
+            'lo' => $request->lo,
+            'status_shipment' => $request->status_shipment,
+            'created_by' => Auth::id(),
         ]);
 
         return redirect()->route('shipments.index')->with('success', 'Shipment created successfully.');
     }
+
 
     public function edit(Shipment $shipment)
     {
