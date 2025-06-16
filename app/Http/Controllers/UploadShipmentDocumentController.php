@@ -14,9 +14,20 @@ class UploadShipmentDocumentController extends Controller
 {
     public function index()
     {
-        $documents = UploadShipmentDocument::with(['shipment', 'documentType', 'period'])->latest()->get();
+        $activePeriodId = session('active_period_id');
+
+        if (!$activePeriodId) {
+            return redirect()->route('set.period')->with('error', 'Please select a period first.');
+        }
+
+        $documents = UploadShipmentDocument::with(['shipment', 'documentType', 'period'])
+                        ->where('period_id', $activePeriodId)
+                        ->latest()
+                        ->get();
+
         return view('upload-shipment-documents.index', compact('documents'));
     }
+
 
     public function create()
     {
