@@ -11,11 +11,28 @@ class FuelController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    // public function index()
+    // {
+    //     $fuels = Fuel::with('creator')->latest()->get();
+    //     return view('fuel.index', compact('fuels'));
+    // }
+    public function index(Request $request)
     {
-        $fuels = Fuel::with('creator')->latest()->get();
-        return view('fuel.index', compact('fuels'));
+        $perPage = $request->input('per_page', 10);
+        $search = $request->input('search');
+
+        $fuelsQuery = Fuel::with('creator')->orderBy('id', 'asc');
+
+        if ($search) {
+            $fuelsQuery->where('fuel_type', 'like', '%' . $search . '%');
+        }
+
+        $fuels = $fuelsQuery->paginate($perPage)->withQueryString();
+        $totalFuels = $fuels->total();
+
+        return view('fuel.index', compact('fuels', 'search', 'perPage', 'totalFuels'));
     }
+
 
     /**
      * Show the form for creating a new resource.
