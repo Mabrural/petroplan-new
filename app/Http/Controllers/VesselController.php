@@ -41,21 +41,34 @@ class VesselController extends Controller
         return redirect()->route('vessels.index')->with('success', 'Vessel successfully created.');
     }
 
-    public function edit(Vessel $vessel)
+    public function edit($id)
     {
+        $vessel = Vessel::find($id);
+
+        if (!$vessel) {
+            return redirect()->route('vessels.index')->with('error', 'Vessel not found.');
+        }
+
         return view('vessels.edit', compact('vessel'));
     }
 
-    public function update(Request $request, Vessel $vessel)
+
+    public function update(Request $request, $id)
     {
+        $vessel = Vessel::find($id);
+
+        if (!$vessel) {
+            return redirect()->route('vessels.index')->with('error', 'Vessel not found.');
+        }
+
         $validated = $request->validate([
             'vessel_name' => 'required|string|max:255',
             'image'       => 'nullable|image|max:2048',
         ]);
 
         if ($request->hasFile('image')) {
-            // Delete old image
-            if ($vessel->image) {
+            // Delete old image if exists
+            if ($vessel->image && Storage::disk('public')->exists($vessel->image)) {
                 Storage::disk('public')->delete($vessel->image);
             }
             $validated['image'] = $request->file('image')->store('vessels', 'public');
@@ -66,14 +79,27 @@ class VesselController extends Controller
         return redirect()->route('vessels.index')->with('success', 'Vessel updated successfully.');
     }
 
-    public function destroy(Vessel $vessel)
+
+    public function destroy($id)
     {
-        if ($vessel->image) {
-            Storage::disk('public')->delete($vessel->image);
+        $vessel = Vessel::find($id);
+
+        if (!$vessel) {
+            return redirect()->route('vessels.index')->with('error', 'Vessel not found.');
         }
 
-        $vessel->delete();
+        try {
+            // Hapus file image jika ada
+            if ($vessel->image && Storage::disk('public')->exists($vessel->image)) {
+                Storage::disk('public')->delete($vessel->image);
+            }
 
-        return redirect()->route('vessels.index')->with('success', 'Vessel deleted successfully.');
+            $vessel->delete();
+
+            return redirect()->route('vessels.index')->with('success', 'Vessel deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('vessels.index')->with('error', 'Failed to delete vessel: ' . $e->getMessage());
+        }
     }
+
 }
