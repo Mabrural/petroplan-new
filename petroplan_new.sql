@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jun 16, 2025 at 06:03 AM
+-- Generation Time: Jun 17, 2025 at 05:22 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.3.6
 
@@ -64,7 +64,14 @@ CREATE TABLE `document_types` (
 --
 
 INSERT INTO `document_types` (`id`, `document_name`, `created_by`, `created_at`, `updated_at`) VALUES
-(3, 'Foto Kapal / Nama Kapal', 2, '2025-06-15 21:14:10', '2025-06-15 21:14:10');
+(6, 'Foto Kapal / Nama Kapal', 2, '2025-06-16 21:25:10', '2025-06-16 21:25:10'),
+(7, 'Foto Mobil / Plat Nomor', 2, '2025-06-16 21:25:21', '2025-06-16 21:25:21'),
+(8, 'Foto Sample BBM', 2, '2025-06-16 21:25:27', '2025-06-16 21:25:27'),
+(9, 'Foto Selang Hose Connect', 2, '2025-06-16 21:25:34', '2025-06-16 21:25:34'),
+(10, 'Foto Segel Sebelum Bongkar', 2, '2025-06-16 21:25:42', '2025-06-16 21:25:42'),
+(11, 'Foto Orang Serah Terima DoC', 2, '2025-06-16 21:25:48', '2025-06-16 21:25:48'),
+(12, 'Foto Flow Meter Awal dan Akhir', 2, '2025-06-16 21:25:53', '2025-06-16 21:25:53'),
+(13, 'DoC Sudah Ditandatangani', 2, '2025-06-16 21:25:58', '2025-06-16 21:25:58');
 
 -- --------------------------------------------------------
 
@@ -217,8 +224,8 @@ CREATE TABLE `periodes` (
 --
 
 INSERT INTO `periodes` (`id`, `name`, `year`, `start_date`, `end_date`, `is_active`, `created_by`, `created_at`, `updated_at`) VALUES
-(6, 'Periode 2025', '2025', '2025-01-01', '2025-12-31', 0, 2, '2025-06-12 20:30:42', '2025-06-15 18:49:06'),
-(7, 'Periode 2026', '2026', '2026-01-01', '2026-12-31', 1, 2, '2025-06-15 19:47:46', '2025-06-15 19:47:46');
+(6, 'Periode 2025', '2025', '2025-01-01', '2025-12-31', 1, 2, '2025-06-12 20:30:42', '2025-06-16 01:16:06'),
+(8, 'Periode 2026', '2026', '2026-01-01', '2026-12-16', 1, 2, '2025-06-16 01:16:46', '2025-06-16 02:57:55');
 
 -- --------------------------------------------------------
 
@@ -260,8 +267,8 @@ CREATE TABLE `role_permissions` (
 
 INSERT INTO `role_permissions` (`id`, `slug`, `user_id`, `permission`, `created_at`, `updated_at`) VALUES
 (16, '02420958-f071-4e28-8472-9b05a19d1161', 19, 'operasion', '2025-06-12 19:22:12', '2025-06-12 19:22:12'),
-(20, '83244e3c-994d-4ea3-bc0e-b093b6d6b286', 2, 'admin_officer', '2025-06-12 19:30:38', '2025-06-12 19:30:38'),
-(22, '45f4632d-4394-4c1b-9970-9f6a3d0781b7', 21, 'operasion', '2025-06-13 00:05:11', '2025-06-13 00:05:11');
+(22, '45f4632d-4394-4c1b-9970-9f6a3d0781b7', 21, 'operasion', '2025-06-13 00:05:11', '2025-06-13 00:05:11'),
+(23, '5526d391-49e6-4b9f-942c-8a3a2a3921e3', 2, 'admin_officer', '2025-06-16 03:47:34', '2025-06-16 03:47:34');
 
 -- --------------------------------------------------------
 
@@ -283,8 +290,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('1hoyW3JCA8AHWFzx7KiKGBNjXg9I6Z0tyyXmYzCn', 2, '192.168.1.2', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiQlVNV3lOcG1iYXFEeTU4MXZGdENFZFE4blRVU2VKR1VLSnkyMHVQTyI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQ5OiJodHRwOi8vMTkyLjE2OC4xLjY6ODAwMC91cGxvYWQtc2hpcG1lbnQtZG9jdW1lbnRzIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Mjt9', 1750053641),
-('49UbjJNh6edix2Hj2HTDaJEisiynAwWNppsubRaj', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoibEhsbEpGMENoU3BvMVM2bWllR1YzV0d1clpNMjdIdjZRSmYxQU44TyI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQ3OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvdXBsb2FkLXNoaXBtZW50LWRvY3VtZW50cyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==', 1750053649);
+('sCI4j4jhmgm7PtnooGxxdkY7q5rjf6Zf56Jnq6T8', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiYldnemFhMzdRS0xjWVVGZlpUSHAzR0VQUnZTOGZDeVlkZWxWZ3NwbiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9mdWVscyI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoxNjoiYWN0aXZlX3BlcmlvZF9pZCI7czoxOiI2Ijt9', 1750136954),
+('uqAYQ0ObgY54gdHRrqVHq48NUudglj4LP9ECmBgU', 2, '192.168.1.2', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiUjM5dllyaThXdGtDMEJ3dXFJR2lUU1dlc05wMm5PTGVyTWYyVVgyQSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjk6Imh0dHA6Ly8xOTIuMTY4LjEuNjo4MDAwL2Z1ZWxzIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MjtzOjE2OiJhY3RpdmVfcGVyaW9kX2lkIjtzOjE6IjYiO30=', 1750136989);
 
 -- --------------------------------------------------------
 
@@ -313,14 +320,6 @@ CREATE TABLE `shipments` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `shipments`
---
-
-INSERT INTO `shipments` (`id`, `period_id`, `termin_id`, `shipment_number`, `vessel_id`, `spk_id`, `location`, `fuel_id`, `volume`, `p`, `a`, `b`, `completion_date`, `lo`, `status_shipment`, `created_by`, `created_at`, `updated_at`) VALUES
-(2, 6, 4, '1', 4, 2, 'Der. Batam', 2, 25000, NULL, NULL, NULL, '2025-06-15', '-', 'in_progress', 2, '2025-06-15 19:50:42', '2025-06-15 19:50:42'),
-(3, 7, 8, '2', 4, 2, 'Der. Batam', 2, 150000, NULL, NULL, NULL, '2025-06-16', '-', 'in_progress', 2, '2025-06-15 19:56:07', '2025-06-15 19:57:37');
-
 -- --------------------------------------------------------
 
 --
@@ -343,7 +342,17 @@ CREATE TABLE `spks` (
 --
 
 INSERT INTO `spks` (`id`, `period_id`, `spk_number`, `spk_date`, `spk_file`, `created_by`, `created_at`, `updated_at`) VALUES
-(2, 6, 'B-161/OP.03.04/VI/2025', '2025-06-13', 'spk_files/lFMdrlEihoUZnoTD0BEHr6qVdM9OMUgf2JCXvDlh.pdf', 2, '2025-06-13 02:31:23', '2025-06-13 02:33:09');
+(6, 6, 'B-161/OP.03.04/VI/2025', '2025-06-17', 'spk_files/NH6hUbrJyYX5ipW5Jbr3J3QuzexEiSJXSZUfNtn3.pdf', 2, '2025-06-16 21:19:23', '2025-06-16 21:19:23'),
+(7, 6, 'B-170/OP.03.04/VI/2025', '2025-06-17', 'spk_files/pgYq2bJB0N5gHYw0EpMHQCqZNLZLxNLqYscYP4rj.pdf', 2, '2025-06-16 21:20:13', '2025-06-16 21:20:13'),
+(8, 6, 'B-169/OP.03.04/VI/2025', '2025-06-27', 'spk_files/C29oXDDwTISQ6aP14gQY9D2hOAq2TDpNlAbxcN75.pdf', 2, '2025-06-16 21:20:23', '2025-06-16 21:20:23'),
+(9, 6, 'B-170/OP.03.04/VI/2025', '2025-06-18', 'spk_files/bNMiSs00sMn3YVvdENWjJdhKEiUBjSiaJjI1reAh.pdf', 2, '2025-06-16 21:20:38', '2025-06-16 21:20:38'),
+(10, 6, 'B-170/OP.03.04/VI/2025', '2025-06-17', 'spk_files/ANGUVLqtNTDnOZKqqT738oJjQSfx6YAv16f0wLA4.pdf', 2, '2025-06-16 21:20:50', '2025-06-16 21:20:50'),
+(11, 6, 'B-169/OP.03.04/VI/2025', '2025-06-19', 'spk_files/yKA8l8dELhkhbk97pCyPNwSF5M6LCxqwZ7aJeWra.pdf', 2, '2025-06-16 21:20:59', '2025-06-16 21:20:59'),
+(12, 6, 'B-161/OP.03.04/VI/2025', '2025-06-18', 'spk_files/BsTfH6ukor8mmsYwTmN8nsuAS6aoUZTwjSzRPC5O.pdf', 2, '2025-06-16 21:21:09', '2025-06-16 21:21:09'),
+(13, 6, 'B-170/OP.03.04/VI/2025', '2025-06-19', 'spk_files/KunfhMvLhCIbkvdzLtfaZqgWb2jaTs0AospH3n58.pdf', 2, '2025-06-16 21:21:17', '2025-06-16 21:21:17'),
+(14, 6, 'B-161/OP.03.04/VI/2025', '2025-06-18', 'spk_files/Qwo50oUcdCLi2RIO0gYBsLSiRxGok17TX4REI3gj.pdf', 2, '2025-06-16 21:21:28', '2025-06-16 21:21:28'),
+(15, 6, 'B-169/OP.03.04/VI/2025', '2025-06-18', 'spk_files/LWhT1mw2lDJTMgGZvR8pUGAjrt2nOXUS8Rjy0k6N.pdf', 2, '2025-06-16 21:21:39', '2025-06-16 21:21:39'),
+(16, 6, 'B-161/OP.03.04/VI/2025', '2025-06-18', 'spk_files/AmU9jxRYFYFu4TPX7uZ8cZxG9vNfvXcTtzHiYQdg.pdf', 2, '2025-06-16 21:21:50', '2025-06-16 21:21:50');
 
 -- --------------------------------------------------------
 
@@ -367,8 +376,15 @@ CREATE TABLE `termins` (
 INSERT INTO `termins` (`id`, `period_id`, `termin_number`, `created_by`, `created_at`, `updated_at`) VALUES
 (4, 6, 1, 2, '2025-06-13 02:00:52', '2025-06-13 02:01:30'),
 (6, 6, 2, 2, '2025-06-15 19:48:12', '2025-06-15 19:48:12'),
-(7, 6, 3, 2, '2025-06-15 19:48:19', '2025-06-15 19:48:19'),
-(8, 7, 1, 2, '2025-06-15 19:48:25', '2025-06-15 19:48:25');
+(11, 6, 3, 2, '2025-06-16 21:00:34', '2025-06-16 21:00:34'),
+(12, 6, 4, 2, '2025-06-16 21:00:37', '2025-06-16 21:00:37'),
+(13, 6, 5, 2, '2025-06-16 21:00:42', '2025-06-16 21:00:42'),
+(14, 6, 6, 2, '2025-06-16 21:00:51', '2025-06-16 21:00:51'),
+(15, 6, 7, 2, '2025-06-16 21:00:54', '2025-06-16 21:00:54'),
+(16, 6, 8, 2, '2025-06-16 21:00:58', '2025-06-16 21:00:58'),
+(17, 6, 9, 2, '2025-06-16 21:01:01', '2025-06-16 21:01:01'),
+(18, 6, 10, 2, '2025-06-16 21:01:05', '2025-06-16 21:01:05'),
+(19, 6, 11, 2, '2025-06-16 21:01:09', '2025-06-16 21:01:09');
 
 -- --------------------------------------------------------
 
@@ -412,7 +428,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `slug`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `is_admin`, `is_active`, `created_at`, `updated_at`) VALUES
-(2, 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d', 'Muhammad Mabrur Al Mutaqi', 'mabruralmutaqi@gmail.com', NULL, '$2y$12$gxXV6B8BYf3M1rT5K4RgAO38S2o01EmcQcATxO9u0eTn6cIa5Dp2S', NULL, 1, 1, '2025-06-04 03:15:46', '2025-06-05 03:01:14'),
+(2, 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d', 'Muhammad Mabrur Al Mutaqi', 'mabruralmutaqi@gmail.com', NULL, '$2y$12$gxXV6B8BYf3M1rT5K4RgAO38S2o01EmcQcATxO9u0eTn6cIa5Dp2S', NULL, 1, 1, '2025-06-04 03:15:46', '2025-06-16 19:58:39'),
 (19, 'dbc5d73c-4c06-4066-819a-8ff3b29957c4', 'Michael Kawilarang', 'michael@mitramaritim.com', NULL, '$2y$12$R2mwHYOiiNWMqQP6ZZdNq.nC07iYeSDKGyZcg0SC9WBv7RvjOY3TW', NULL, 0, 1, '2025-06-05 03:44:10', '2025-06-05 03:44:10'),
 (21, '26bd0553-12e8-4181-8198-8ccdc43b2cd9', 'Triyanto Bayu Widhiatmoko', 'bayu@petrolindo.com', NULL, '$2y$12$FApQQypS75wvtk5z9pCvTOvtWy/AyRcXO8SXkQsbH0sQXV7gLWNsq', NULL, 0, 1, '2025-06-12 19:15:24', '2025-06-12 20:35:09');
 
@@ -436,7 +452,26 @@ CREATE TABLE `vessels` (
 --
 
 INSERT INTO `vessels` (`id`, `vessel_name`, `image`, `created_by`, `created_at`, `updated_at`) VALUES
-(4, 'KN Ular Laut - 401', NULL, 2, '2025-06-13 02:53:14', '2025-06-13 02:53:14');
+(9, 'KN Kuda Laut - 403', NULL, 2, '2025-06-16 20:18:22', '2025-06-16 20:18:22'),
+(10, 'KN Ular Laut - 405', NULL, 2, '2025-06-16 20:18:28', '2025-06-16 20:18:28'),
+(11, 'KN Pulau Nipah - 321', NULL, 2, '2025-06-16 20:18:35', '2025-06-16 20:18:35'),
+(12, 'KN Singa Laut - 402', NULL, 2, '2025-06-16 20:18:41', '2025-06-16 20:18:41'),
+(13, 'KN Gajah Laut - 404', NULL, 2, '2025-06-16 20:18:47', '2025-06-16 20:18:47'),
+(14, 'KN Bintang Laut - 401', NULL, 2, '2025-06-16 20:18:52', '2025-06-16 20:18:52'),
+(15, 'KN Pulau Dana - 323', NULL, 2, '2025-06-16 20:18:57', '2025-06-16 20:18:57'),
+(16, 'KN Belut Laut - 406', NULL, 2, '2025-06-16 20:19:04', '2025-06-16 20:19:04'),
+(17, 'KN Tanjung Datu - 301', NULL, 2, '2025-06-16 20:19:12', '2025-06-16 20:19:12'),
+(18, 'KN Pulau Marore - 322', NULL, 2, '2025-06-16 20:19:17', '2025-06-16 20:19:17'),
+(19, 'KRI Tjiptadi-381', NULL, 2, '2025-06-16 20:19:23', '2025-06-16 20:19:23'),
+(20, 'KN Sarotama P.112', NULL, 2, '2025-06-16 20:19:30', '2025-06-16 20:19:30'),
+(21, 'KP Enggano 5015', NULL, 2, '2025-06-16 20:19:36', '2025-06-16 20:19:36'),
+(22, 'KP Orca 03', NULL, 2, '2025-06-16 20:19:42', '2025-06-16 20:19:42'),
+(23, 'BC 9004', NULL, 2, '2025-06-16 20:19:49', '2025-06-16 20:19:49'),
+(24, 'KRI Soputan-923', NULL, 2, '2025-06-16 20:19:55', '2025-06-16 20:19:55'),
+(25, 'KRI Orca 06', NULL, 2, '2025-06-16 20:20:00', '2025-06-16 20:20:00'),
+(26, 'BC 10002', NULL, 2, '2025-06-16 20:20:07', '2025-06-16 20:20:07'),
+(27, 'BC 6003', NULL, 2, '2025-06-16 20:20:15', '2025-06-16 20:20:15'),
+(28, 'KP Orca 06', NULL, 2, '2025-06-16 20:20:22', '2025-06-16 20:20:22');
 
 --
 -- Indexes for dumped tables
@@ -592,7 +627,7 @@ ALTER TABLE `vessels`
 -- AUTO_INCREMENT for table `document_types`
 --
 ALTER TABLE `document_types`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -604,7 +639,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `fuels`
 --
 ALTER TABLE `fuels`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `jobs`
@@ -622,7 +657,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `periodes`
 --
 ALTER TABLE `periodes`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -634,31 +669,31 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `role_permissions`
 --
 ALTER TABLE `role_permissions`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `shipments`
 --
 ALTER TABLE `shipments`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `spks`
 --
 ALTER TABLE `spks`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `termins`
 --
 ALTER TABLE `termins`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `upload_shipment_documents`
 --
 ALTER TABLE `upload_shipment_documents`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -670,7 +705,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `vessels`
 --
 ALTER TABLE `vessels`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- Constraints for dumped tables
