@@ -53,16 +53,29 @@ class FuelController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Fuel $fuel)
+    public function edit($id)
     {
+        $fuel = Fuel::find($id);
+
+        if (!$fuel) {
+            return redirect()->route('fuels.index')->with('error', 'Fuel not found.');
+        }
+
         return view('fuel.edit', compact('fuel'));
     }
+
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Fuel $fuel)
+    public function update(Request $request, $id)
     {
+        $fuel = Fuel::find($id);
+
+        if (!$fuel) {
+            return redirect()->route('fuels.index')->with('error', 'Fuel not found.');
+        }
+
         $request->validate([
             'fuel_type' => 'required|string|max:255',
         ]);
@@ -72,13 +85,21 @@ class FuelController extends Controller
         return redirect()->route('fuels.index')->with('success', 'Fuel updated successfully.');
     }
 
+
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Fuel $fuel)
+    public function destroy($id)
     {
+        $fuel = Fuel::find($id);
+
+        if (!$fuel) {
+            return redirect()->route('fuels.index')->with('error', 'Fuel not found.');
+        }
+
         $fuel->delete();
 
         return redirect()->route('fuels.index')->with('success', 'Fuel deleted successfully.');
     }
+
 }
