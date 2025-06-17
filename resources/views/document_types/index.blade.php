@@ -18,6 +18,41 @@
                 </div>
             </div>
 
+            <!-- Filter & Search -->
+            <form method="GET" action="{{ route('document-types.index') }}" class="row g-2 align-items-center mb-3">
+                <div class="col-md-4 col-sm-6">
+                    <input type="text" name="search" class="form-control" placeholder="Search Document Name..."
+                        value="{{ request('search') }}" autofocus>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <select name="per_page" class="form-select" onchange="this.form.submit()">
+                        @foreach ([10, 20, 30, 100, 1000] as $size)
+                            <option value="{{ $size }}" {{ $perPage == $size ? 'selected' : '' }}>
+                                Show {{ $size }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2 col-sm-2">
+                    <button type="submit" class="btn btn-secondary w-100">
+                        <i class="fas fa-search me-1"></i> Search
+                    </button>
+                </div>
+                @if (request('search') || request('per_page'))
+                    <div class="col-md-2">
+                        <a href="{{ route('document-types.index') }}" class="btn btn-outline-secondary w-100">Reset</a>
+                    </div>
+                @endif
+
+            </form>
+
+            <!-- Total Count -->
+            <div class="mb-2 text-muted small">
+                Showing {{ $documentTypes->firstItem() }}–{{ $documentTypes->lastItem() }} of {{ $totalDocs }} Document
+                Types
+            </div>
+
+
             <!-- Desktop Table -->
             <div class="card d-none d-lg-block mt-3">
                 <div class="card-body p-0">
@@ -34,22 +69,27 @@
                             <tbody>
                                 @forelse ($documentTypes as $doc)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $doc->document_name }}</td>
+                                        <td>{{ $documentTypes->firstItem() + $loop->index }}</td>
+                                        <td>{!! $search
+                                            ? str_ireplace($search, '<mark>' . e($search) . '</mark>', e($doc->document_name))
+                                            : e($doc->document_name) !!}</td>
                                         <td>{{ $doc->creator->name ?? '-' }}</td>
                                         <td>
                                             <div class="dropdown">
-                                                <button class="btn btn-link text-dark" type="button" data-bs-toggle="dropdown">
+                                                <button class="btn btn-link text-dark" type="button"
+                                                    data-bs-toggle="dropdown">
                                                     <i class="fas fa-ellipsis-v"></i>
                                                 </button>
                                                 <ul class="dropdown-menu">
                                                     <li>
-                                                        <a class="dropdown-item text-primary" href="{{ route('document-types.edit', $doc->id) }}">
+                                                        <a class="dropdown-item text-primary"
+                                                            href="{{ route('document-types.edit', $doc->id) }}">
                                                             <i class="fas fa-edit me-1"></i> Edit
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <form action="{{ route('document-types.destroy', $doc->id) }}" method="POST" onsubmit="return confirmDelete(event)">
+                                                        <form action="{{ route('document-types.destroy', $doc->id) }}"
+                                                            method="POST" onsubmit="return confirmDelete(event)">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="dropdown-item text-danger">
@@ -65,7 +105,8 @@
                                     <tr>
                                         <td colspan="4" class="text-center py-4">
                                             <div class="d-flex flex-column align-items-center">
-                                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state" style="height: 120px; opacity: 0.7;" class="mb-3">
+                                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state"
+                                                    style="height: 120px; opacity: 0.7;" class="mb-3">
                                                 <h5 class="text-muted">No Document Types Found</h5>
                                                 <p class="text-muted mb-3">You haven't added any document types yet</p>
                                             </div>
@@ -76,6 +117,10 @@
                         </table>
                     </div>
                 </div>
+                <div class="mt-3">
+                    {{ $documentTypes->links('pagination::bootstrap-5') }}
+                </div>
+
             </div>
 
             <!-- Mobile Card List -->
@@ -83,7 +128,9 @@
                 @forelse ($documentTypes as $doc)
                     <div class="card mb-2">
                         <div class="card-body">
-                            <h6 class="fw-bold mb-1">{{ $doc->document_name }}</h6>
+                            <h6 class="fw-bold mb-1">{!! $search
+                                ? str_ireplace($search, '<mark>' . e($search) . '</mark>', e($doc->document_name))
+                                : e($doc->document_name) !!}</h6>
                             <p class="text-muted mb-1">Created by: {{ $doc->creator->name ?? '-' }}</p>
                             <div class="dropdown float-end">
                                 <button class="btn btn-link text-dark" type="button" data-bs-toggle="dropdown">
@@ -91,12 +138,14 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a class="dropdown-item text-primary" href="{{ route('document-types.edit', $doc->id) }}">
+                                        <a class="dropdown-item text-primary"
+                                            href="{{ route('document-types.edit', $doc->id) }}">
                                             <i class="fas fa-edit me-1"></i> Edit
                                         </a>
                                     </li>
                                     <li>
-                                        <form action="{{ route('document-types.destroy', $doc->id) }}" method="POST" onsubmit="return confirmDelete(event)">
+                                        <form action="{{ route('document-types.destroy', $doc->id) }}" method="POST"
+                                            onsubmit="return confirmDelete(event)">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="dropdown-item text-danger">
@@ -112,13 +161,18 @@
                     <div class="card">
                         <div class="card-body text-center py-4">
                             <div class="d-flex flex-column align-items-center">
-                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state" style="height: 100px; opacity: 0.7;" class="mb-3">
+                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state"
+                                    style="height: 100px; opacity: 0.7;" class="mb-3">
                                 <h5 class="text-muted">No Document Types Available</h5>
                                 <p class="text-muted mb-3">Get started by adding a new document type</p>
                             </div>
                         </div>
                     </div>
                 @endforelse
+                <div class="mt-3">
+                    {{ $documentTypes->links('pagination::bootstrap-5') }}
+                </div>
+
             </div>
         </div>
     </div>
@@ -154,9 +208,9 @@
                 margin-bottom: 10px;
             `;
 
-            let icon = type === 'success'
-                ? '<i class="fas fa-check-circle me-2"></i>'
-                : '<i class="fas fa-exclamation-circle me-2"></i>';
+            let icon = type === 'success' ?
+                '<i class="fas fa-check-circle me-2"></i>' :
+                '<i class="fas fa-exclamation-circle me-2"></i>';
 
             alertEl.innerHTML = `
                 <div class="d-flex align-items-center">
@@ -191,7 +245,9 @@
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, delete it!',
-                customClass: { popup: 'animated bounceIn' }
+                customClass: {
+                    popup: 'animated bounceIn'
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     form.submit();

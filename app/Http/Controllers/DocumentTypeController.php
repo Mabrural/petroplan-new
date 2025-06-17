@@ -8,10 +8,25 @@ use Illuminate\Support\Facades\Auth;
 
 class DocumentTypeController extends Controller
 {
-    public function index()
+    // public function index()
+    // {
+    //     $documentTypes = DocumentType::with('creator')->latest()->get();
+    //     return view('document_types.index', compact('documentTypes'));
+    // }
+    public function index(Request $request)
     {
-        $documentTypes = DocumentType::with('creator')->latest()->get();
-        return view('document_types.index', compact('documentTypes'));
+        $search   = $request->input('search');
+        $perPage  = $request->input('per_page', 10); // default 10
+        $query    = DocumentType::with('creator')->orderBy('id', 'asc');
+
+        if ($search) {
+            $query->where('document_name', 'like', '%' . $search . '%');
+        }
+
+        $documentTypes = $query->paginate($perPage)->withQueryString(); // maintain search & per_page params
+        $totalDocs     = $query->count();
+
+        return view('document_types.index', compact('documentTypes', 'totalDocs', 'search', 'perPage'));
     }
 
     public function create()

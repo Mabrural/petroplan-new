@@ -37,6 +37,11 @@
                         <i class="fas fa-search me-1"></i> Search
                     </button>
                 </div>
+                @if (request('search') || request('per_page'))
+                    <div class="col-md-2">
+                        <a href="{{ route('spks.index') }}" class="btn btn-outline-secondary w-100">Reset</a>
+                    </div>
+                @endif
             </form>
 
             <!-- Total Count -->
