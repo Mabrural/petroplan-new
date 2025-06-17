@@ -17,6 +17,31 @@
                     </a>
                 </div>
             </div>
+            <!-- Filter and Tools -->
+            <form method="GET" action="{{ route('vessels.index') }}" class="row g-2 align-items-center mb-3">
+                <div class="col-md-4 col-sm-6">
+                    <input type="text" name="search" class="form-control" placeholder="Search vessel..."
+                        value="{{ request('search') }}" autofocus>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <select name="per_page" class="form-select" onchange="this.form.submit()">
+                        @foreach ([10, 20, 30, 100, 1000] as $size)
+                            <option value="{{ $size }}" {{ $perPage == $size ? 'selected' : '' }}>
+                                Show {{ $size }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2 col-sm-2">
+                    <button type="submit" class="btn btn-secondary w-100">
+                        <i class="fas fa-search me-1"></i> Search
+                    </button>
+                </div>
+            </form>
+
+            <div class="mb-2 text-muted small">
+                Showing {{ $vessels->firstItem() }}–{{ $vessels->lastItem() }} of {{ $totalVessels }} vessels
+            </div>
 
             <!-- Desktop Table -->
             <div class="card d-none d-lg-block mt-3">
@@ -35,11 +60,14 @@
                             <tbody>
                                 @forelse ($vessels as $vessel)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $vessel->vessel_name }}</td>
+                                        <td>{{ $vessels->firstItem() + $loop->index }}</td>
+                                        <td>{!! request('search')
+                                            ? str_ireplace(request('search'), '<mark>' . request('search') . '</mark>', e($vessel->vessel_name))
+                                            : e($vessel->vessel_name) !!}</td>
                                         <td>
                                             @if ($vessel->image)
-                                                <img src="{{ asset('storage/' . $vessel->image) }}" alt="Vessel Image" style="height: 40px;">
+                                                <img src="{{ asset('storage/' . $vessel->image) }}" alt="Vessel Image"
+                                                    style="height: 40px;">
                                             @else
                                                 <span class="text-muted">No image</span>
                                             @endif
@@ -47,17 +75,20 @@
                                         <td>{{ $vessel->creator->name ?? '-' }}</td>
                                         <td>
                                             <div class="dropdown">
-                                                <button class="btn btn-link text-dark" type="button" data-bs-toggle="dropdown">
+                                                <button class="btn btn-link text-dark" type="button"
+                                                    data-bs-toggle="dropdown">
                                                     <i class="fas fa-ellipsis-v"></i>
                                                 </button>
                                                 <ul class="dropdown-menu">
                                                     <li>
-                                                        <a class="dropdown-item text-primary" href="{{ route('vessels.edit', $vessel->id) }}">
+                                                        <a class="dropdown-item text-primary"
+                                                            href="{{ route('vessels.edit', $vessel->id) }}">
                                                             <i class="fas fa-edit me-1"></i> Edit
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <form action="{{ route('vessels.destroy', $vessel->id) }}" method="POST" onsubmit="return confirmDelete(event)">
+                                                        <form action="{{ route('vessels.destroy', $vessel->id) }}"
+                                                            method="POST" onsubmit="return confirmDelete(event)">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="dropdown-item text-danger">
@@ -73,7 +104,8 @@
                                     <tr>
                                         <td colspan="5" class="text-center py-4">
                                             <div class="d-flex flex-column align-items-center">
-                                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state" style="height: 120px; opacity: 0.7;" class="mb-3">
+                                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state"
+                                                    style="height: 120px; opacity: 0.7;" class="mb-3">
                                                 <h5 class="text-muted">No Vessels Found</h5>
                                                 <p class="text-muted mb-3">You haven't added any vessels yet</p>
                                             </div>
@@ -82,19 +114,26 @@
                                 @endforelse
                             </tbody>
                         </table>
+                        <div class="mt-3">
+                            {{ $vessels->links('pagination::bootstrap-5') }}
+                        </div>
                     </div>
                 </div>
             </div>
+
 
             <!-- Mobile Card List -->
             <div class="d-lg-none mt-3">
                 @forelse ($vessels as $vessel)
                     <div class="card mb-2">
                         <div class="card-body">
-                            <h6 class="fw-bold mb-1">{{ $vessel->vessel_name }}</h6>
+                            <h6 class="fw-bold mb-1">{!! request('search')
+                                ? str_ireplace(request('search'), '<mark>' . request('search') . '</mark>', e($vessel->vessel_name))
+                                : e($vessel->vessel_name) !!}</h6>
                             <p class="text-muted mb-1">Created by: {{ $vessel->creator->name ?? '-' }}</p>
                             @if ($vessel->image)
-                                <img src="{{ asset('storage/' . $vessel->image) }}" alt="Vessel Image" style="height: 100px;" class="my-2">
+                                <img src="{{ asset('storage/' . $vessel->image) }}" alt="Vessel Image"
+                                    style="height: 100px;" class="my-2">
                             @endif
                             <div class="dropdown float-end">
                                 <button class="btn btn-link text-dark" type="button" data-bs-toggle="dropdown">
@@ -102,12 +141,14 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a class="dropdown-item text-primary" href="{{ route('vessels.edit', $vessel->id) }}">
+                                        <a class="dropdown-item text-primary"
+                                            href="{{ route('vessels.edit', $vessel->id) }}">
                                             <i class="fas fa-edit me-1"></i> Edit
                                         </a>
                                     </li>
                                     <li>
-                                        <form action="{{ route('vessels.destroy', $vessel->id) }}" method="POST" onsubmit="return confirmDelete(event)">
+                                        <form action="{{ route('vessels.destroy', $vessel->id) }}" method="POST"
+                                            onsubmit="return confirmDelete(event)">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="dropdown-item text-danger">
@@ -123,13 +164,17 @@
                     <div class="card">
                         <div class="card-body text-center py-4">
                             <div class="d-flex flex-column align-items-center">
-                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state" style="height: 100px; opacity: 0.7;" class="mb-3">
+                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state"
+                                    style="height: 100px; opacity: 0.7;" class="mb-3">
                                 <h5 class="text-muted">No Vessels Available</h5>
                                 <p class="text-muted mb-3">Get started by adding a new vessel</p>
                             </div>
                         </div>
                     </div>
                 @endforelse
+                <div class="mt-3">
+                    {{ $vessels->links('pagination::bootstrap-5') }}
+                </div>
             </div>
         </div>
     </div>
@@ -165,9 +210,9 @@
                 margin-bottom: 10px;
             `;
 
-            let icon = type === 'success'
-                ? '<i class="fas fa-check-circle me-2"></i>'
-                : '<i class="fas fa-exclamation-circle me-2"></i>';
+            let icon = type === 'success' ?
+                '<i class="fas fa-check-circle me-2"></i>' :
+                '<i class="fas fa-exclamation-circle me-2"></i>';
 
             alertEl.innerHTML = `
                 <div class="d-flex align-items-center">
@@ -202,7 +247,9 @@
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, delete it!',
-                customClass: { popup: 'animated bounceIn' }
+                customClass: {
+                    popup: 'animated bounceIn'
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     form.submit();
