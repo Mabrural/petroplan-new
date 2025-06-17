@@ -29,28 +29,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {
-    
-
-    Route::resource('period-list', PeriodeController::class);
-    Route::post('/period/{id}/activate', [PeriodeController::class, 'activate'])->name('period-list.activate');
-    Route::post('/period/{id}/deactivate', [PeriodeController::class, 'deactivate'])->name('period-list.deactivate');
-
-
-    Route::resource('vessels', VesselController::class);
-
-    Route::resource('termins', TerminController::class);
-
-    Route::resource('spks', SpkController::class);
-
-    Route::resource('shipments', ShipmentController::class);
-    Route::get('/get-termins/{periodId}', [ShipmentController::class, 'getTermins']);
-
-
-    Route::resource('upload-shipment-documents', UploadShipmentDocumentController::class);
-    Route::get('/get-shipments/{periodId}', [UploadShipmentDocumentController::class, 'getShipments']);
-
-});
 
 Route::post('/set-period', [PeriodeController::class, 'setActivePeriod'])->name('set.period')->middleware(['auth', 'verified', 'active', 'period']);
 
@@ -92,6 +70,23 @@ Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {
 
     Route::resource('document-types', DocumentTypeController::class);
 
+    // sini
+    Route::resource('period-list', PeriodeController::class);
+    Route::post('/period/{id}/activate', [PeriodeController::class, 'activate'])->name('period-list.activate');
+    Route::post('/period/{id}/deactivate', [PeriodeController::class, 'deactivate'])->name('period-list.deactivate');
+
+
+    Route::resource('vessels', VesselController::class);
+
+    Route::resource('termins', TerminController::class);
+
+    Route::resource('spks', SpkController::class);
+
+    Route::resource('shipments', ShipmentController::class);
+    Route::get('/get-termins/{periodId}', [ShipmentController::class, 'getTermins']);
+
+    
+
 });
 
 // admin officer
@@ -100,8 +95,9 @@ Route::middleware(['auth', 'verified', 'active', 'admin_officer'])->group(functi
 });
 
 // operasion
-Route::middleware(['auth', 'verified', 'active', 'operasion'])->group(function () {
-
+Route::middleware(['auth', 'verified', 'active'])->group(function () {
+    Route::resource('upload-shipment-documents', UploadShipmentDocumentController::class);
+    Route::get('/get-shipments/{periodId}', [UploadShipmentDocumentController::class, 'getShipments']);
 });
 
 require __DIR__.'/auth.php';

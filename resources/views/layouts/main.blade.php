@@ -13,11 +13,8 @@
                     <!-- Logo Header -->
                     <div class="logo-header" data-background-color="dark">
                         <a href="index.html" class="logo">
-                            <img
-                                src="{{ asset('assets/img/kaiadmin/logo_light.svg') }}"
-                                alt="navbar brand"
-                                class="navbar-brand"
-                                height="20" />
+                            <img src="{{ asset('assets/img/kaiadmin/logo_light.svg') }}" alt="navbar brand"
+                                class="navbar-brand" height="20" />
                         </a>
                         <div class="nav-toggle">
                             <button class="btn btn-toggle toggle-sidebar">
@@ -47,38 +44,39 @@
     @stack('scripts')
 
     @if (!session('active_period_id'))
-<!-- Modal Pilih Periode -->
-<div class="modal fade" id="periodModal" tabindex="-1" aria-labelledby="periodModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog">
-        <form action="{{ route('set.period') }}" method="POST" class="modal-content">
-            @csrf
-            <div class="modal-header">
-                <h5 class="modal-title" id="periodModalLabel">Pilih Periode Aktif</h5>
+        <!-- Modal Pilih Periode -->
+        <div class="modal fade" id="periodModal" tabindex="-1" aria-labelledby="periodModalLabel" aria-hidden="true"
+            data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog">
+                <form action="{{ route('set.period') }}" method="POST" class="modal-content">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="periodModalLabel">Pilih Periode Aktif</h5>
+                    </div>
+                    <div class="modal-body">
+                        <select name="period_id" class="form-select" required>
+                            <option value="">-- Pilih Periode --</option>
+                            @foreach ($allPeriods as $periode)
+                                <option value="{{ $periode->id }}">{{ $periode->name }} ({{ $periode->year }})</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Set Periode</button>
+                    </div>
+                </form>
             </div>
-            <div class="modal-body">
-                <select name="period_id" class="form-select" required>
-                    <option value="">-- Pilih Periode --</option>
-                    @foreach ($allPeriods as $periode)
-                        <option value="{{ $periode->id }}">{{ $periode->name }} ({{ $periode->year }})</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Set Periode</button>
-            </div>
-        </form>
-    </div>
-</div>
-@endif
+        </div>
+    @endif
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        @if (!session('active_period_id'))
-            var periodModal = new bootstrap.Modal(document.getElementById('periodModal'));
-            periodModal.show();
-        @endif
-    });
-</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (!session('active_period_id'))
+                var periodModal = new bootstrap.Modal(document.getElementById('periodModal'));
+                periodModal.show();
+            @endif
+        });
+    </script>
 
 
 </body>
