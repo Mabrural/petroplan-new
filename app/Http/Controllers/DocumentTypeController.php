@@ -33,13 +33,26 @@ class DocumentTypeController extends Controller
         return redirect()->route('document-types.index')->with('success', 'Document type created successfully.');
     }
 
-    public function edit(DocumentType $documentType)
+    public function edit($id)
     {
+        $documentType = DocumentType::find($id);
+
+        if (!$documentType) {
+            return redirect()->route('document-types.index')->with('error', 'Document type not found.');
+        }
+
         return view('document_types.edit', compact('documentType'));
     }
 
-    public function update(Request $request, DocumentType $documentType)
+
+    public function update(Request $request, $id)
     {
+        $documentType = DocumentType::find($id);
+
+        if (!$documentType) {
+            return redirect()->route('document-types.index')->with('error', 'Document type not found.');
+        }
+
         $request->validate([
             'document_name' => 'required|string|max:255',
         ]);
@@ -51,10 +64,19 @@ class DocumentTypeController extends Controller
         return redirect()->route('document-types.index')->with('success', 'Document type updated successfully.');
     }
 
-    public function destroy(DocumentType $documentType)
+
+    public function destroy($id)
     {
+        $documentType = DocumentType::find($id);
+
+        if (!$documentType) {
+            return redirect()->route('document-types.index')->with('error', 'Document type not found.');
+        }
+
         $documentType->delete();
+
         return redirect()->route('document-types.index')->with('success', 'Document type deleted.');
     }
+
 }
 
