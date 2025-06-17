@@ -12,30 +12,26 @@ class VesselController extends Controller
     /**
      * Display a listing of the resource.
      */
-    // public function index()
-    // {
-    //     $vessels = Vessel::latest()->paginate(10);
-    //     return view('vessels.index', compact('vessels'));
-    // }
+
     public function index(Request $request)
-{
-    $query = Vessel::query();
+    {
+        $query = Vessel::query();
 
-    // Pencarian
-    if ($request->has('search')) {
-        $search = $request->search;
-        $query->where('vessel_name', 'like', '%' . $search . '%');
+        // Pencarian
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where('vessel_name', 'like', '%' . $search . '%');
+        }
+
+        // Default paginate: 10, opsi: 10, 20, 30, 100, 1000
+        $perPage = $request->input('per_page', 10);
+        $perPage = in_array($perPage, [10, 20, 30, 100, 1000]) ? $perPage : 10;
+
+        $vessels = $query->latest()->paginate($perPage)->appends($request->query());
+        $totalVessels = $query->count();
+
+        return view('vessels.index', compact('vessels', 'totalVessels', 'perPage'));
     }
-
-    // Default paginate: 10, opsi: 10, 20, 30, 100, 1000
-    $perPage = $request->input('per_page', 10);
-    $perPage = in_array($perPage, [10, 20, 30, 100, 1000]) ? $perPage : 10;
-
-    $vessels = $query->latest()->paginate($perPage)->appends($request->query());
-    $totalVessels = $query->count();
-
-    return view('vessels.index', compact('vessels', 'totalVessels', 'perPage'));
-}
 
 
     public function create()
