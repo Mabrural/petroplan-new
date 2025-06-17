@@ -12,21 +12,45 @@ class TerminController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    // public function index()
+    // {
+    //     $activePeriodId = session('active_period_id');
+
+    //     if (!$activePeriodId) {
+    //         return redirect()->route('set.period')->with('error', 'Please select a period first.');
+    //     }
+
+    //     $termins = Termin::with('period')
+    //                 ->where('period_id', $activePeriodId)
+    //                 ->latest()
+    //                 ->get();
+
+    //     return view('termins.index', compact('termins'));
+    // }
+    public function index(Request $request)
     {
         $activePeriodId = session('active_period_id');
-
         if (!$activePeriodId) {
             return redirect()->route('set.period')->with('error', 'Please select a period first.');
         }
 
-        $termins = Termin::with('period')
-                    ->where('period_id', $activePeriodId)
-                    ->latest()
-                    ->get();
+        $search = $request->input('search');
+        $perPage = $request->input('per_page', 10);
 
-        return view('termins.index', compact('termins'));
+        $terminsQuery = Termin::with(['period', 'creator'])
+            ->where('period_id', $activePeriodId)
+            ->orderBy('termin_number', 'asc');
+
+        if ($search) {
+            $terminsQuery->where('termin_number', 'like', '%' . $search . '%');
+        }
+
+        $termins = $terminsQuery->paginate($perPage)->appends($request->query());
+        $totalTermins = $termins->total();
+
+        return view('termins.index', compact('termins', 'totalTermins', 'perPage', 'search'));
     }
+
 
 
     public function create()
