@@ -13,7 +13,7 @@ class SpkController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $activePeriodId = session('active_period_id');
 
@@ -21,13 +21,25 @@ class SpkController extends Controller
             return redirect()->route('set.period')->with('error', 'Please select a period first.');
         }
 
+        $search = $request->input('search');
+        $perPage = $request->input('per_page', 10); // default 10
+
         $spks = Spk::with(['period', 'creator'])
                     ->where('period_id', $activePeriodId)
+                    ->when($search, function ($query, $search) {
+                        $query->where('spk_number', 'like', '%' . $search . '%');
+                    })
                     ->latest()
-                    ->get();
+                    ->paginate($perPage)
+                    ->withQueryString(); // penting agar search & per_page tidak hilang saat pagination
 
-        return view('spks.index', compact('spks'));
+        $totalSpks = Spk::where('period_id', $activePeriodId)
+                        ->when($search, fn($query) => $query->where('spk_number', 'like', "%$search%"))
+                        ->count();
+
+        return view('spks.index', compact('spks', 'totalSpks', 'search', 'perPage'));
     }
+
 
 
     public function create()

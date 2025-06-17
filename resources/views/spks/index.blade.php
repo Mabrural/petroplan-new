@@ -17,6 +17,33 @@
                     </a>
                 </div>
             </div>
+            <!-- Filter & Search -->
+            <form method="GET" action="{{ route('spks.index') }}" class="row g-2 align-items-center mb-3">
+                <div class="col-md-4 col-sm-6">
+                    <input type="text" name="search" class="form-control" placeholder="Search SPK Number..."
+                        value="{{ request('search') }}" autofocus>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <select name="per_page" class="form-select" onchange="this.form.submit()">
+                        @foreach ([10, 20, 30, 100, 1000] as $size)
+                            <option value="{{ $size }}" {{ $perPage == $size ? 'selected' : '' }}>
+                                Show {{ $size }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2 col-sm-2">
+                    <button type="submit" class="btn btn-secondary w-100">
+                        <i class="fas fa-search me-1"></i> Search
+                    </button>
+                </div>
+            </form>
+
+            <!-- Total Count -->
+            <div class="mb-2 text-muted small">
+                Showing {{ $spks->firstItem() }}–{{ $spks->lastItem() }} of {{ $totalSpks }} SPKs
+            </div>
+
 
             <!-- Desktop Table -->
             <div class="card d-none d-lg-block mt-3">
@@ -37,27 +64,34 @@
                             <tbody>
                                 @forelse ($spks as $spk)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $spk->spk_number }}</td>
+                                        <td>{{ $spks->firstItem() + $loop->index }}</td>
+                                        <td>{!! $search
+                                            ? str_ireplace($search, '<mark>' . e($search) . '</mark>', e($spk->spk_number))
+                                            : e($spk->spk_number) !!}
+                                        </td>
                                         <td>{{ $spk->spk_date }}</td>
                                         <td>{{ $spk->period->name ?? '-' }}</td>
                                         <td>{{ $spk->creator->name ?? '-' }}</td>
                                         <td>
-                                            <a href="{{ asset('storage/' . $spk->spk_file) }}" target="_blank" class="text-primary">View</a>
+                                            <a href="{{ asset('storage/' . $spk->spk_file) }}" target="_blank"
+                                                class="text-primary">View</a>
                                         </td>
                                         <td>
                                             <div class="dropdown">
-                                                <button class="btn btn-link text-dark" type="button" data-bs-toggle="dropdown">
+                                                <button class="btn btn-link text-dark" type="button"
+                                                    data-bs-toggle="dropdown">
                                                     <i class="fas fa-ellipsis-v"></i>
                                                 </button>
                                                 <ul class="dropdown-menu">
                                                     <li>
-                                                        <a class="dropdown-item text-primary" href="{{ route('spks.edit', $spk->id) }}">
+                                                        <a class="dropdown-item text-primary"
+                                                            href="{{ route('spks.edit', $spk->id) }}">
                                                             <i class="fas fa-edit me-1"></i> Edit
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <form action="{{ route('spks.destroy', $spk->id) }}" method="POST" onsubmit="return confirmDelete(event)">
+                                                        <form action="{{ route('spks.destroy', $spk->id) }}" method="POST"
+                                                            onsubmit="return confirmDelete(event)">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="dropdown-item text-danger">
@@ -73,7 +107,8 @@
                                     <tr>
                                         <td colspan="7" class="text-center py-4">
                                             <div class="d-flex flex-column align-items-center">
-                                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state" style="height: 120px; opacity: 0.7;" class="mb-3">
+                                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state"
+                                                    style="height: 120px; opacity: 0.7;" class="mb-3">
                                                 <h5 class="text-muted">No SPKs Found</h5>
                                                 <p class="text-muted mb-3">You haven't added any SPKs yet</p>
                                             </div>
@@ -84,6 +119,9 @@
                         </table>
                     </div>
                 </div>
+                <div class="mt-3">
+                    {{ $spks->links('pagination::bootstrap-5') }}
+                </div>
             </div>
 
             <!-- Mobile Card List -->
@@ -91,12 +129,15 @@
                 @forelse ($spks as $spk)
                     <div class="card mb-2">
                         <div class="card-body">
-                            <h6 class="fw-bold mb-1">{{ $spk->spk_number }}</h6>
+                            <h6 class="fw-bold mb-1">{!! $search
+                                ? str_ireplace($search, '<mark>' . e($search) . '</mark>', e($spk->spk_number))
+                                : e($spk->spk_number) !!}</h6>
                             <p class="text-muted mb-1">Date: {{ $spk->spk_date }}</p>
                             <p class="text-muted mb-1">Period: {{ $spk->period->name ?? '-' }}</p>
                             <p class="text-muted mb-1">Created by: {{ $spk->creator->name ?? '-' }}</p>
                             <p class="text-muted mb-2">
-                                <a href="{{ asset('storage/' . $spk->spk_file) }}" target="_blank" class="text-primary">View PDF</a>
+                                <a href="{{ asset('storage/' . $spk->spk_file) }}" target="_blank"
+                                    class="text-primary">View PDF</a>
                             </p>
                             <div class="dropdown float-end">
                                 <button class="btn btn-link text-dark" type="button" data-bs-toggle="dropdown">
@@ -109,7 +150,8 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <form action="{{ route('spks.destroy', $spk->id) }}" method="POST" onsubmit="return confirmDelete(event)">
+                                        <form action="{{ route('spks.destroy', $spk->id) }}" method="POST"
+                                            onsubmit="return confirmDelete(event)">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="dropdown-item text-danger">
@@ -125,13 +167,17 @@
                     <div class="card">
                         <div class="card-body text-center py-4">
                             <div class="d-flex flex-column align-items-center">
-                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state" style="height: 100px; opacity: 0.7;" class="mb-3">
+                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state"
+                                    style="height: 100px; opacity: 0.7;" class="mb-3">
                                 <h5 class="text-muted">No SPKs Available</h5>
                                 <p class="text-muted mb-3">Get started by adding a new SPK</p>
                             </div>
                         </div>
                     </div>
                 @endforelse
+                <div class="mt-3">
+                    {{ $spks->links('pagination::bootstrap-5') }}
+                </div>
             </div>
         </div>
     </div>
@@ -167,9 +213,9 @@
                 margin-bottom: 10px;
             `;
 
-            let icon = type === 'success'
-                ? '<i class="fas fa-check-circle me-2"></i>'
-                : '<i class="fas fa-exclamation-circle me-2"></i>';
+            let icon = type === 'success' ?
+                '<i class="fas fa-check-circle me-2"></i>' :
+                '<i class="fas fa-exclamation-circle me-2"></i>';
 
             alertEl.innerHTML = `
                 <div class="d-flex align-items-center">
@@ -204,7 +250,9 @@
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, delete it!',
-                customClass: { popup: 'animated bounceIn' }
+                customClass: {
+                    popup: 'animated bounceIn'
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     form.submit();
