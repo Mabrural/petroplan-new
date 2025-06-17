@@ -8,11 +8,6 @@ use Illuminate\Support\Facades\Auth;
 
 class DocumentTypeController extends Controller
 {
-    // public function index()
-    // {
-    //     $documentTypes = DocumentType::with('creator')->latest()->get();
-    //     return view('document_types.index', compact('documentTypes'));
-    // }
     public function index(Request $request)
     {
         $search   = $request->input('search');
