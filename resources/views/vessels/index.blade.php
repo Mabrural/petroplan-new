@@ -58,7 +58,7 @@
                                     <th width="5%">#</th>
                                     <th>Vessel Name</th>
                                     <th>Image</th>
-                                    <th>Created By</th>
+                                    <th>Created By/At</th>
                                     <th width="15%">Actions</th>
                                 </tr>
                             </thead>
@@ -77,7 +77,11 @@
                                                 <span class="text-muted">No image</span>
                                             @endif
                                         </td>
-                                        <td>{{ $vessel->creator->name ?? '-' }}</td>
+                                        <td>
+                                            <div class="fw-bold">{{ $vessel->creator->name ?? '-' }}</div>
+                                            <small
+                                                class="text-muted">{{ $vessel->created_at ? $vessel->created_at->format('d M Y H:i') : '-' }}</small>
+                                        </td>
                                         <td>
                                             <div class="dropdown">
                                                 <button class="btn btn-link text-dark" type="button"
@@ -135,7 +139,10 @@
                             <h6 class="fw-bold mb-1">{!! request('search')
                                 ? str_ireplace(request('search'), '<mark>' . request('search') . '</mark>', e($vessel->vessel_name))
                                 : e($vessel->vessel_name) !!}</h6>
-                            <p class="text-muted mb-1">Created by: {{ $vessel->creator->name ?? '-' }}</p>
+                            <p class="text-muted mb-0 mt-2">Created by: </p>
+                            <div class="fw-bold">{{ $vessel->creator->name ?? '-' }}</div>
+                                            <small
+                                                class="text-muted">{{ $vessel->created_at ? $vessel->created_at->format('d M Y H:i') : '-' }}</small>
                             @if ($vessel->image)
                                 <img src="{{ asset('storage/' . $vessel->image) }}" alt="Vessel Image"
                                     style="height: 100px;" class="my-2">
