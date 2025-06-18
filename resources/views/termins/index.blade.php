@@ -58,7 +58,7 @@
                                     <th width="5%">#</th>
                                     <th>Termin Number</th>
                                     <th>Period</th>
-                                    <th>Created By</th>
+                                    <th>Created By/At</th>
                                     <th width="15%">Actions</th>
                                 </tr>
                             </thead>
@@ -72,7 +72,11 @@
                                                 : 'Termin ' . e($termin->termin_number) !!}
                                         </td>
                                         <td>{{ $termin->period->name ?? '-' }}</td>
-                                        <td>{{ $termin->creator->name ?? '-' }}</td>
+                                        <td>
+                                            <div class="fw-bold">{{ $termin->creator->name ?? '-' }}</div>
+                                            <small
+                                                class="text-muted">{{ $termin->created_at ? $termin->created_at->format('d M Y H:i') : '-' }}</small>
+                                        </td>
                                         <td>
                                             <div class="dropdown">
                                                 <button class="btn btn-link text-dark" type="button"
@@ -130,7 +134,10 @@
                                                 ? str_ireplace($search, '<mark>' . $search . '</mark>', 'Termin ' . e($termin->termin_number))
                                                 : 'Termin ' . e($termin->termin_number) !!}</h6>
                             <p class="text-muted mb-1">Period: {{ $termin->period->name ?? '-' }}</p>
-                            <p class="text-muted mb-1">Created by: {{ $termin->creator->name ?? '-' }}</p>
+                            <p class="text-muted mb-0">Created by/at:</p>
+                            <div class="fw-bold">{{ $termin->creator->name ?? '-' }}</div>
+                                            <small
+                                                class="text-muted">{{ $termin->created_at ? $termin->created_at->format('d M Y H:i') : '-' }}</small>
                             <div class="dropdown float-end">
                                 <button class="btn btn-link text-dark" type="button" data-bs-toggle="dropdown">
                                     <i class="fas fa-ellipsis-v"></i>
