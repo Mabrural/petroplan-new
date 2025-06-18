@@ -57,7 +57,6 @@
                                 <tr>
                                     <th width="5%">#</th>
                                     <th>Termin Number</th>
-                                    <th>Period</th>
                                     <th>Created By/At</th>
                                     <th width="15%">Actions</th>
                                 </tr>
@@ -71,7 +70,6 @@
                                                 ? str_ireplace($search, '<mark>' . $search . '</mark>', 'Termin ' . e($termin->termin_number))
                                                 : 'Termin ' . e($termin->termin_number) !!}
                                         </td>
-                                        <td>{{ $termin->period->name ?? '-' }}</td>
                                         <td>
                                             <div class="fw-bold">{{ $termin->creator->name ?? '-' }}</div>
                                             <small
@@ -133,7 +131,6 @@
                             <h6 class="fw-bold mb-1">{!! $search
                                                 ? str_ireplace($search, '<mark>' . $search . '</mark>', 'Termin ' . e($termin->termin_number))
                                                 : 'Termin ' . e($termin->termin_number) !!}</h6>
-                            <p class="text-muted mb-1">Period: {{ $termin->period->name ?? '-' }}</p>
                             <p class="text-muted mb-0">Created by/at:</p>
                             <div class="fw-bold">{{ $termin->creator->name ?? '-' }}</div>
                                             <small

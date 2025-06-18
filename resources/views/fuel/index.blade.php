@@ -136,7 +136,7 @@
                                 @endif
                             </h6>
                             <p class="text-muted mb-0 mt-2">Created by/at: </p>
-                            <div class="fw-bold mt-0">{{ $fuel->creator->name ?? '-' }}</div>
+                            <div class="fw-bold">{{ $fuel->creator->name ?? '-' }}</div>
                             <small
                                 class="text-muted">{{ $fuel->created_at ? $fuel->created_at->format('d M Y H:i') : '-' }}</small>
                             <div class="dropdown float-end">

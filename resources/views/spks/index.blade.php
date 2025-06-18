@@ -60,8 +60,7 @@
                                     <th>#</th>
                                     <th>SPK Number</th>
                                     <th>SPK Date</th>
-                                    <th>Period</th>
-                                    <th>Created By</th>
+                                    <th>Created By/At</th>
                                     <th>File</th>
                                     <th>Actions</th>
                                 </tr>
@@ -74,9 +73,12 @@
                                             ? str_ireplace($search, '<mark>' . e($search) . '</mark>', e($spk->spk_number))
                                             : e($spk->spk_number) !!}
                                         </td>
-                                        <td>{{ $spk->spk_date }}</td>
-                                        <td>{{ $spk->period->name ?? '-' }}</td>
-                                        <td>{{ $spk->creator->name ?? '-' }}</td>
+                                        <td>{{ $spk->spk_date ? date('d M Y', strtotime($spk->spk_date)) : '-' }}</td>
+                                        <td>
+                                            <div class="fw-bold">{{ $spk->creator->name ?? '-' }}</div>
+                                            <small
+                                                class="text-muted">{{ $spk->created_at ? $spk->created_at->format('d M Y H:i') : '-' }}</small>
+                                        </td>
                                         <td>
                                             <a href="{{ asset('storage/' . $spk->spk_file) }}" target="_blank"
                                                 class="text-primary">View</a>
@@ -137,10 +139,12 @@
                             <h6 class="fw-bold mb-1">{!! $search
                                 ? str_ireplace($search, '<mark>' . e($search) . '</mark>', e($spk->spk_number))
                                 : e($spk->spk_number) !!}</h6>
-                            <p class="text-muted mb-1">Date: {{ $spk->spk_date }}</p>
-                            <p class="text-muted mb-1">Period: {{ $spk->period->name ?? '-' }}</p>
-                            <p class="text-muted mb-1">Created by: {{ $spk->creator->name ?? '-' }}</p>
-                            <p class="text-muted mb-2">
+                            <p class="text-muted mb-1">Date: {{ $spk->spk_date ? date('d M Y', strtotime($spk->spk_date)) : '-' }}</p>
+                            <p class="text-muted mb-0">Created by/at: </p>
+                            <div class="fw-bold">{{ $spk->creator->name ?? '-' }}</div>
+                                            <small
+                                                class="text-muted">{{ $spk->created_at ? $spk->created_at->format('d M Y H:i') : '-' }}</small>
+                            <p class="text-muted mt-2">
                                 <a href="{{ asset('storage/' . $spk->spk_file) }}" target="_blank"
                                     class="text-primary">View PDF</a>
                             </p>
