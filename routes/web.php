@@ -83,6 +83,7 @@ Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {
     Route::resource('spks', SpkController::class);
 
     Route::resource('shipments', ShipmentController::class);
+    Route::get('/shipments/{shipment}/details', [ShipmentController::class, 'showDetails'])->name('shipments.details');
     Route::get('/get-termins/{periodId}', [ShipmentController::class, 'getTermins']);
 
     

@@ -11,11 +11,7 @@ class FuelController extends Controller
     /**
      * Display a listing of the resource.
      */
-    // public function index()
-    // {
-    //     $fuels = Fuel::with('creator')->latest()->get();
-    //     return view('fuel.index', compact('fuels'));
-    // }
+
     public function index(Request $request)
     {
         $perPage = $request->input('per_page', 10);

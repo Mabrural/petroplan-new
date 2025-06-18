@@ -179,5 +179,17 @@ class ShipmentController extends Controller
         return response()->json($termins);
     }
 
+    public function showDetails($id)
+    {
+        $activePeriodId = session('active_period_id');
+        
+        $shipment = Shipment::with(['period', 'termin', 'vessel', 'spk', 'fuel', 'creator'])
+            ->where('id', $id)
+            ->where('period_id', $activePeriodId)
+            ->firstOrFail();
+
+        return view('shipments.details', compact('shipment'));
+    }
+
 }
 

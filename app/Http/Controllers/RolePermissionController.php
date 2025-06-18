@@ -31,21 +31,6 @@ class RolePermissionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    // public function store(Request $request, $slug)
-    // {
-    //     $request->validate([
-    //         'permission' => 'required|string|max:255',
-    //     ]);
-
-    //     $user = User::where('slug', $slug)->firstOrFail();
-
-    //     RolePermission::create([
-    //         'user_id' => $user->id,
-    //         'permission' => $request->permission,
-    //     ]);
-
-    //     return redirect()->route('role-permissions.index')->with('success', 'Role assigned successfully.');
-    // }
 
     public function store(Request $request, $slug)
     {
