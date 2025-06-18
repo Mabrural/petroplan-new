@@ -44,25 +44,25 @@
     @stack('scripts')
 
     @if (!session('active_period_id'))
-        <!-- Modal Pilih Periode -->
+        <!-- Active Period Selection Modal -->
         <div class="modal fade" id="periodModal" tabindex="-1" aria-labelledby="periodModalLabel" aria-hidden="true"
             data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog">
-                <form action="{{ route('set.period') }}" method="POST" class="modal-content">
+            <div class="modal-dialog modal-dialog-centered"> {{-- Center the modal vertically --}}
+                <form action="{{ route('set.period') }}" method="POST" class="modal-content shadow">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title" id="periodModalLabel">Pilih Periode Aktif</h5>
+                        <h5 class="modal-title" id="periodModalLabel">Select Active Period</h5>
                     </div>
                     <div class="modal-body">
                         <select name="period_id" class="form-select" required>
-                            <option value="">-- Pilih Periode --</option>
+                            <option value="">-- Choose Period --</option>
                             @foreach ($allPeriods as $periode)
                                 <option value="{{ $periode->id }}">{{ $periode->name }} ({{ $periode->year }})</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Set Periode</button>
+                        <button type="submit" class="btn btn-primary">Set Period</button>
                     </div>
                 </form>
             </div>

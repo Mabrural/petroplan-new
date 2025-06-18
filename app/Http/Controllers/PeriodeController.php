@@ -109,16 +109,6 @@ class PeriodeController extends Controller
         return redirect()->back()->with('success', $periode->name . ' has been deactivated.');
     }
 
-    // public function setActivePeriod(Request $request)
-    // {
-    //     $request->validate([
-    //         'period_id' => 'required|exists:periodes,id'
-    //     ]);
-
-    //     session(['active_period_id' => $request->period_id]);
-
-    //     return back()->with('success', 'Period changed successfully');
-    // }
     public function setActivePeriod(Request $request)
     {
         $request->validate([
@@ -127,8 +117,7 @@ class PeriodeController extends Controller
 
         session(['active_period_id' => $request->period_id]);
 
-        return redirect()->intended(route('dashboard'))->with('success', 'Period changed successfully');
+        return back()->with('success', 'Period changed successfully');
     }
-
 
 }
