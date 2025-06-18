@@ -26,11 +26,13 @@
                             <thead class="bg-light">
                                 <tr>
                                     <th>#</th>
+                                    <th>Termin Number</th>
                                     <th>Shipment Number</th>
                                     <th>Vessel</th>
+                                    <th>SPK</th>
                                     <th>Location</th>
                                     <th>Fuel</th>
-                                    <th>Volume</th>
+                                    <th>Volume (L)</th>
                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
@@ -39,18 +41,20 @@
                                 @forelse ($shipments as $shipment)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ 'Shipment '.$shipment->shipment_number }}</td>
+                                        <td>{{ 'Termin '.$shipment->termin->termin_number ?? '-' }}</td>
+                                        <td>{{ 'Shipment '.$shipment->shipment_number ?? '-' }}</td>
                                         <td>{{ $shipment->vessel->vessel_name ?? '-' }}</td>
+                                        <td>{{ $shipment->spk->spk_number ?? '-' }}</td>
                                         <td>{{ $shipment->location }}</td>
                                         <td>{{ $shipment->fuel->fuel_type ?? '-' }}</td>
-                                        <td>{{ $shipment->volume }}</td>
+                                        <td>{{ number_format($shipment->volume, 0, ',', '.') }}</td>
                                         <td><span class="badge bg-secondary">{{ ucfirst(str_replace('_', ' ', $shipment->status_shipment)) }}</span></td>
                                         <td>
                                             <div class="dropdown">
                                                 <button class="btn btn-link text-dark" type="button" data-bs-toggle="dropdown">
                                                     <i class="fas fa-ellipsis-v"></i>
                                                 </button>
-                                                <ul class="dropdown-menu">
+                                                <ul class="dropdown-menu"> 
                                                     <li>
                                                         <a class="dropdown-item text-primary" href="{{ route('shipments.edit', $shipment->id) }}">
                                                             <i class="fas fa-edit me-1"></i> Edit
