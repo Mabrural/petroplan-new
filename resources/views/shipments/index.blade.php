@@ -18,6 +18,81 @@
                 </div>
             </div>
 
+            <!-- Filter Section -->
+            <div class="card mt-3">
+                <div class="card-body">
+                    <form id="filterForm" method="GET" action="{{ route('shipments.index') }}">
+                        <div class="row g-3">
+                            <div class="col-md-2">
+                                <label for="termin_id" class="form-label">Termin</label>
+                                <select class="form-select" id="termin_id" name="termin_id">
+                                    <option value="">All Termin</option>
+                                    @foreach ($termins as $termin)
+                                        <option value="{{ $termin->id }}"
+                                            {{ request('termin_id') == $termin->id ? 'selected' : '' }}>
+                                            Termin {{ $termin->termin_number }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="spk_id" class="form-label">SPK</label>
+                                <select class="form-select" id="spk_id" name="spk_id">
+                                    <option value="">All SPK</option>
+                                    @foreach ($spks as $spk)
+                                        <option value="{{ $spk->id }}"
+                                            {{ request('spk_id') == $spk->id ? 'selected' : '' }}>
+                                            {{ $spk->spk_number }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="vessel_id" class="form-label">Vessel</label>
+                                <select class="form-select" id="vessel_id" name="vessel_id">
+                                    <option value="">All Vessel</option>
+                                    @foreach ($vessels as $vessel)
+                                        <option value="{{ $vessel->id }}"
+                                            {{ request('vessel_id') == $vessel->id ? 'selected' : '' }}>
+                                            {{ $vessel->vessel_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="fuel_id" class="form-label">Fuel</label>
+                                <select class="form-select" id="fuel_id" name="fuel_id">
+                                    <option value="">All Fuel</option>
+                                    @foreach ($fuels as $fuel)
+                                        <option value="{{ $fuel->id }}"
+                                            {{ request('fuel_id') == $fuel->id ? 'selected' : '' }}>
+                                            {{ $fuel->fuel_type }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="status_shipment" class="form-label">Status</label>
+                                <select class="form-select" id="status_shipment" name="status_shipment">
+                                    <option value="">All Status</option>
+                                    @foreach ($statuses as $status)
+                                        <option value="{{ $status }}"
+                                            {{ request('status_shipment') == $status ? 'selected' : '' }}>
+                                            {{ ucfirst(str_replace('_', ' ', $status)) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <a href="{{ route('shipments.index') }}" class="btn btn-secondary">
+                                    <i class="fas fa-sync-alt me-1"></i> Reset
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <!-- Desktop Table -->
             <div class="card d-none d-lg-block mt-3">
                 <div class="card-body p-0">
@@ -86,7 +161,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="text-center py-4">
+                                        <td colspan="10" class="text-center py-4">
                                             <div class="d-flex flex-column align-items-center">
                                                 <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state"
                                                     style="height: 120px; opacity: 0.7;" class="mb-3">
@@ -122,7 +197,8 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <button class="dropdown-item text-info view-details" data-id="{{ $shipment->id }}">
+                                        <button class="dropdown-item text-info view-details"
+                                            data-id="{{ $shipment->id }}">
                                             <i class="fas fa-eye me-1"></i> View Details
                                         </button>
                                     </li>
@@ -295,5 +371,23 @@
             }
         `;
         document.head.appendChild(style);
+
+        // Auto-submit form when any filter changes (optional)
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterForm = document.getElementById('filterForm');
+            const filterSelects = filterForm.querySelectorAll('select');
+
+            filterSelects.forEach(select => {
+                select.addEventListener('change', function() {
+                    filterForm.submit();
+                });
+            });
+        });
+
+        function removeFilter(filterName) {
+            const url = new URL(window.location.href);
+            url.searchParams.delete(filterName);
+            window.location.href = url.toString();
+        }
     </script>
 @endsection

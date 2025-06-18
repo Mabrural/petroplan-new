@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jun 17, 2025 at 05:22 AM
+-- Generation Time: Jun 18, 2025 at 10:37 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.3.6
 
@@ -110,7 +110,8 @@ CREATE TABLE `fuels` (
 INSERT INTO `fuels` (`id`, `fuel_type`, `created_by`, `created_at`, `updated_at`) VALUES
 (2, 'Biosolar', 2, '2025-06-13 01:12:48', '2025-06-13 01:12:48'),
 (3, 'Pertadex', 2, '2025-06-13 01:13:06', '2025-06-13 01:13:06'),
-(4, 'Dexlite', 2, '2025-06-13 01:15:01', '2025-06-13 01:15:01');
+(4, 'Dexlite', 2, '2025-06-13 01:15:01', '2025-06-13 01:15:01'),
+(7, 'Pertalite', 2, '2025-06-18 02:05:35', '2025-06-18 02:05:35');
 
 -- --------------------------------------------------------
 
@@ -224,8 +225,8 @@ CREATE TABLE `periodes` (
 --
 
 INSERT INTO `periodes` (`id`, `name`, `year`, `start_date`, `end_date`, `is_active`, `created_by`, `created_at`, `updated_at`) VALUES
-(6, 'Periode 2025', '2025', '2025-01-01', '2025-12-31', 1, 2, '2025-06-12 20:30:42', '2025-06-16 01:16:06'),
-(8, 'Periode 2026', '2026', '2026-01-01', '2026-12-16', 1, 2, '2025-06-16 01:16:46', '2025-06-16 02:57:55');
+(6, 'Periode 2025', '2025', '2025-01-01', '2025-12-31', 1, 2, '2025-06-12 20:30:42', '2025-06-18 02:27:24'),
+(8, 'Periode 2026', '2026', '2026-01-01', '2026-12-16', 1, 2, '2025-06-16 01:16:46', '2025-06-18 02:26:12');
 
 -- --------------------------------------------------------
 
@@ -290,8 +291,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('sCI4j4jhmgm7PtnooGxxdkY7q5rjf6Zf56Jnq6T8', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiYldnemFhMzdRS0xjWVVGZlpUSHAzR0VQUnZTOGZDeVlkZWxWZ3NwbiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9mdWVscyI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoxNjoiYWN0aXZlX3BlcmlvZF9pZCI7czoxOiI2Ijt9', 1750136954),
-('uqAYQ0ObgY54gdHRrqVHq48NUudglj4LP9ECmBgU', 2, '192.168.1.2', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiUjM5dllyaThXdGtDMEJ3dXFJR2lUU1dlc05wMm5PTGVyTWYyVVgyQSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjk6Imh0dHA6Ly8xOTIuMTY4LjEuNjo4MDAwL2Z1ZWxzIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MjtzOjE2OiJhY3RpdmVfcGVyaW9kX2lkIjtzOjE6IjYiO30=', 1750136989);
+('uSUhLfsGnDAABopos79d8SXqgcwa2TtXOTJN3jck', 2, '192.168.1.2', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiU2FRSnd6T3lZUk0xS294RFQ0aEpuaDRia2lBZ3FweVJydUdKQ2licCI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjkwOiJodHRwOi8vMTkyLjE2OC4xLjY6ODAwMC9zaGlwbWVudHM/ZnVlbF9pZD00JnNwa19pZD0mc3RhdHVzX3NoaXBtZW50PSZ0ZXJtaW5faWQ9JnZlc3NlbF9pZD0iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO3M6MTY6ImFjdGl2ZV9wZXJpb2RfaWQiO3M6MToiNiI7fQ==', 1750242599),
+('WN0qha4dwFb4k5vc6hLz2pLVDfC14P0BfRW378y9', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiQWJnc3Bkd2pkb0dMRzVFcjcwUjN3Q2I1NklTQUJoS3dORmJlRjh3eCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6ODk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9zaGlwbWVudHM/ZnVlbF9pZD0mc3BrX2lkPTE1JnN0YXR1c19zaGlwbWVudD0mdGVybWluX2lkPSZ2ZXNzZWxfaWQ9Ijt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MjtzOjE2OiJhY3RpdmVfcGVyaW9kX2lkIjtzOjE6IjYiO30=', 1750242656);
 
 -- --------------------------------------------------------
 
@@ -320,6 +321,23 @@ CREATE TABLE `shipments` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `shipments`
+--
+
+INSERT INTO `shipments` (`id`, `period_id`, `termin_id`, `shipment_number`, `vessel_id`, `spk_id`, `location`, `fuel_id`, `volume`, `p`, `a`, `b`, `completion_date`, `lo`, `status_shipment`, `created_by`, `created_at`, `updated_at`) VALUES
+(9, 6, 28, '1', 9, 15, 'Der. Batam', 2, 25000, NULL, NULL, NULL, '2025-06-18', NULL, 'in_progress', 2, '2025-06-18 08:52:20', '2025-06-18 08:53:15'),
+(10, 6, 28, '2', 10, 15, 'Der. Batam', 3, 150000, NULL, NULL, NULL, '2025-06-26', NULL, 'in_progress', 2, '2025-06-18 09:08:40', '2025-06-18 09:08:40'),
+(11, 6, 28, '3', 14, 17, 'Der. Batam', 4, 150000, NULL, NULL, NULL, '2025-06-18', NULL, 'in_progress', 2, '2025-06-18 10:18:29', '2025-06-18 10:18:29'),
+(12, 6, 29, '4', 17, 17, 'Der. Batam', 3, 15000, NULL, NULL, NULL, '2025-06-18', NULL, 'in_progress', 2, '2025-06-18 10:23:44', '2025-06-18 10:23:44'),
+(13, 6, 29, '5', 10, 17, 'Der. Batams', 3, 150000, NULL, NULL, NULL, '2025-06-19', NULL, 'in_progress', 2, '2025-06-18 10:24:09', '2025-06-18 10:24:09'),
+(14, 6, 29, '6', 19, 17, 'Der. Batam', 4, 25000, NULL, NULL, NULL, '2025-06-27', NULL, 'in_progress', 2, '2025-06-18 10:24:34', '2025-06-18 10:24:34'),
+(15, 6, 29, '7', 19, 17, 'Der. Batam', 2, 30000, NULL, NULL, NULL, '2025-06-22', NULL, 'in_progress', 2, '2025-06-18 10:26:49', '2025-06-18 10:26:49'),
+(16, 6, 29, '8', 22, 17, 'Der. Batam', 2, 30000, NULL, NULL, NULL, '2025-06-21', NULL, 'in_progress', 2, '2025-06-18 10:27:13', '2025-06-18 10:27:13'),
+(17, 6, 29, '9', 27, 17, 'Der. Batam', 3, 50000, NULL, NULL, NULL, '2025-06-23', NULL, 'in_progress', 2, '2025-06-18 10:27:38', '2025-06-18 10:27:38'),
+(18, 6, 29, '10', 23, 17, 'Der. Batam', 3, 4000, NULL, NULL, NULL, '2025-06-26', NULL, 'in_progress', 2, '2025-06-18 10:27:59', '2025-06-18 10:27:59'),
+(19, 6, 29, '11', 22, 17, 'Der. Batam', 4, 45000, NULL, NULL, NULL, '2025-06-18', NULL, 'in_progress', 2, '2025-06-18 10:28:19', '2025-06-18 10:28:19');
+
 -- --------------------------------------------------------
 
 --
@@ -342,17 +360,8 @@ CREATE TABLE `spks` (
 --
 
 INSERT INTO `spks` (`id`, `period_id`, `spk_number`, `spk_date`, `spk_file`, `created_by`, `created_at`, `updated_at`) VALUES
-(6, 6, 'B-161/OP.03.04/VI/2025', '2025-06-17', 'spk_files/NH6hUbrJyYX5ipW5Jbr3J3QuzexEiSJXSZUfNtn3.pdf', 2, '2025-06-16 21:19:23', '2025-06-16 21:19:23'),
-(7, 6, 'B-170/OP.03.04/VI/2025', '2025-06-17', 'spk_files/pgYq2bJB0N5gHYw0EpMHQCqZNLZLxNLqYscYP4rj.pdf', 2, '2025-06-16 21:20:13', '2025-06-16 21:20:13'),
-(8, 6, 'B-169/OP.03.04/VI/2025', '2025-06-27', 'spk_files/C29oXDDwTISQ6aP14gQY9D2hOAq2TDpNlAbxcN75.pdf', 2, '2025-06-16 21:20:23', '2025-06-16 21:20:23'),
-(9, 6, 'B-170/OP.03.04/VI/2025', '2025-06-18', 'spk_files/bNMiSs00sMn3YVvdENWjJdhKEiUBjSiaJjI1reAh.pdf', 2, '2025-06-16 21:20:38', '2025-06-16 21:20:38'),
-(10, 6, 'B-170/OP.03.04/VI/2025', '2025-06-17', 'spk_files/ANGUVLqtNTDnOZKqqT738oJjQSfx6YAv16f0wLA4.pdf', 2, '2025-06-16 21:20:50', '2025-06-16 21:20:50'),
-(11, 6, 'B-169/OP.03.04/VI/2025', '2025-06-19', 'spk_files/yKA8l8dELhkhbk97pCyPNwSF5M6LCxqwZ7aJeWra.pdf', 2, '2025-06-16 21:20:59', '2025-06-16 21:20:59'),
-(12, 6, 'B-161/OP.03.04/VI/2025', '2025-06-18', 'spk_files/BsTfH6ukor8mmsYwTmN8nsuAS6aoUZTwjSzRPC5O.pdf', 2, '2025-06-16 21:21:09', '2025-06-16 21:21:09'),
-(13, 6, 'B-170/OP.03.04/VI/2025', '2025-06-19', 'spk_files/KunfhMvLhCIbkvdzLtfaZqgWb2jaTs0AospH3n58.pdf', 2, '2025-06-16 21:21:17', '2025-06-16 21:21:17'),
-(14, 6, 'B-161/OP.03.04/VI/2025', '2025-06-18', 'spk_files/Qwo50oUcdCLi2RIO0gYBsLSiRxGok17TX4REI3gj.pdf', 2, '2025-06-16 21:21:28', '2025-06-16 21:21:28'),
 (15, 6, 'B-169/OP.03.04/VI/2025', '2025-06-18', 'spk_files/LWhT1mw2lDJTMgGZvR8pUGAjrt2nOXUS8Rjy0k6N.pdf', 2, '2025-06-16 21:21:39', '2025-06-16 21:21:39'),
-(16, 6, 'B-161/OP.03.04/VI/2025', '2025-06-18', 'spk_files/AmU9jxRYFYFu4TPX7uZ8cZxG9vNfvXcTtzHiYQdg.pdf', 2, '2025-06-16 21:21:50', '2025-06-16 21:21:50');
+(17, 6, 'B-170/OP.03.04/VI/2025', '2025-06-18', 'spk_files/rLn78et8aXjG8KRJXrZU18XETEBDIlz7Schs1DCc.pdf', 2, '2025-06-18 10:18:07', '2025-06-18 10:18:07');
 
 -- --------------------------------------------------------
 
@@ -374,17 +383,8 @@ CREATE TABLE `termins` (
 --
 
 INSERT INTO `termins` (`id`, `period_id`, `termin_number`, `created_by`, `created_at`, `updated_at`) VALUES
-(4, 6, 1, 2, '2025-06-13 02:00:52', '2025-06-13 02:01:30'),
-(6, 6, 2, 2, '2025-06-15 19:48:12', '2025-06-15 19:48:12'),
-(11, 6, 3, 2, '2025-06-16 21:00:34', '2025-06-16 21:00:34'),
-(12, 6, 4, 2, '2025-06-16 21:00:37', '2025-06-16 21:00:37'),
-(13, 6, 5, 2, '2025-06-16 21:00:42', '2025-06-16 21:00:42'),
-(14, 6, 6, 2, '2025-06-16 21:00:51', '2025-06-16 21:00:51'),
-(15, 6, 7, 2, '2025-06-16 21:00:54', '2025-06-16 21:00:54'),
-(16, 6, 8, 2, '2025-06-16 21:00:58', '2025-06-16 21:00:58'),
-(17, 6, 9, 2, '2025-06-16 21:01:01', '2025-06-16 21:01:01'),
-(18, 6, 10, 2, '2025-06-16 21:01:05', '2025-06-16 21:01:05'),
-(19, 6, 11, 2, '2025-06-16 21:01:09', '2025-06-16 21:01:09');
+(28, 6, 1, 2, '2025-06-18 08:36:23', '2025-06-18 08:36:23'),
+(29, 6, 2, 2, '2025-06-18 10:20:35', '2025-06-18 10:20:35');
 
 -- --------------------------------------------------------
 
@@ -639,7 +639,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `fuels`
 --
 ALTER TABLE `fuels`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `jobs`
@@ -657,7 +657,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `periodes`
 --
 ALTER TABLE `periodes`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -675,19 +675,19 @@ ALTER TABLE `role_permissions`
 -- AUTO_INCREMENT for table `shipments`
 --
 ALTER TABLE `shipments`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `spks`
 --
 ALTER TABLE `spks`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `termins`
 --
 ALTER TABLE `termins`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `upload_shipment_documents`

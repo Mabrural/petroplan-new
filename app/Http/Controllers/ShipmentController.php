@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ShipmentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $activePeriodId = session('active_period_id');
 
@@ -22,11 +22,39 @@ class ShipmentController extends Controller
         }
 
         $shipments = Shipment::with(['period', 'termin', 'vessel', 'spk', 'fuel', 'creator'])
-            ->where('period_id', $activePeriodId)
-            ->latest()
-            ->get();
+            ->where('period_id', $activePeriodId)->orderBy('id', 'asc');
 
-        return view('shipments.index', compact('shipments'));
+        // Apply filters if they exist
+        if ($request->has('termin_id') && $request->termin_id != '') {
+            $shipments->where('termin_id', $request->termin_id);
+        }
+
+        if ($request->has('spk_id') && $request->spk_id != '') {
+            $shipments->where('spk_id', $request->spk_id);
+        }
+
+        if ($request->has('vessel_id') && $request->vessel_id != '') {
+            $shipments->where('vessel_id', $request->vessel_id);
+        }
+
+        if ($request->has('fuel_id') && $request->fuel_id != '') {
+            $shipments->where('fuel_id', $request->fuel_id);
+        }
+
+        if ($request->has('status_shipment') && $request->status_shipment != '') {
+            $shipments->where('status_shipment', $request->status_shipment);
+        }
+
+        $shipments = $shipments->latest()->get();
+
+        // Get filter options
+        $termins = Termin::where('period_id', $activePeriodId)->get();
+        $spks = Spk::where('period_id', $activePeriodId)->get();
+        $vessels = Vessel::all();
+        $fuels = Fuel::all();
+        $statuses = ['in_progress', 'cancelled', 'completed', 'filling_completed'];
+
+        return view('shipments.index', compact('shipments', 'termins', 'spks', 'vessels', 'fuels', 'statuses'));
     }
 
 
