@@ -62,7 +62,7 @@
                                 <tr>
                                     <th width="5%">#</th>
                                     <th>Document Name</th>
-                                    <th>Created By</th>
+                                    <th>Created By/At</th>
                                     <th width="15%">Actions</th>
                                 </tr>
                             </thead>
@@ -73,7 +73,11 @@
                                         <td>{!! $search
                                             ? str_ireplace($search, '<mark>' . e($search) . '</mark>', e($doc->document_name))
                                             : e($doc->document_name) !!}</td>
-                                        <td>{{ $doc->creator->name ?? '-' }}</td>
+                                        <td>
+                                            <div class="fw-bold">{{ $doc->creator->name ?? '-' }}</div>
+                                            <small
+                                                class="text-muted">{{ $doc->created_at ? $doc->created_at->format('d M Y H:i') : '-' }}</small>
+                                        </td>
                                         <td>
                                             <div class="dropdown">
                                                 <button class="btn btn-link text-dark" type="button"
@@ -131,7 +135,10 @@
                             <h6 class="fw-bold mb-1">{!! $search
                                 ? str_ireplace($search, '<mark>' . e($search) . '</mark>', e($doc->document_name))
                                 : e($doc->document_name) !!}</h6>
-                            <p class="text-muted mb-1">Created by: {{ $doc->creator->name ?? '-' }}</p>
+                            <p class="text-muted mb-0 mt-2">Created by/at: </p>
+                            <div class="fw-bold">{{ $doc->creator->name ?? '-' }}</div>
+                                            <small
+                                                class="text-muted">{{ $doc->created_at ? $doc->created_at->format('d M Y H:i') : '-' }}</small>
                             <div class="dropdown float-end">
                                 <button class="btn btn-link text-dark" type="button" data-bs-toggle="dropdown">
                                     <i class="fas fa-ellipsis-v"></i>
