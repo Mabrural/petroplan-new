@@ -30,7 +30,7 @@
                                     <th>Period Name</th>
                                     <th>Year</th>
                                     <th>Status</th>
-                                    <th>Created By</th>
+                                    <th>Created By/At</th>
                                     <th width="15%">Actions</th>
                                 </tr>
                             </thead>
@@ -45,28 +45,38 @@
                                                 {{ $periode->is_active ? 'Active' : 'Inactive' }}
                                             </span>
                                         </td>
-                                        <td>{{ $periode->creator->name ?? '-' }}</td>
+                                        <td>
+                                            <div class="fw-bold">{{ $periode->creator->name ?? '-' }}</div>
+                                            <small
+                                                class="text-muted">{{ $periode->created_at ? $periode->created_at->format('d M Y H:i') : '-' }}</small>
+                                        </td>
                                         <td>
                                             <div class="dropdown">
-                                                <button class="btn btn-link text-dark" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <button class="btn btn-link text-dark" type="button"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
                                                     <i class="fas fa-ellipsis-v"></i>
                                                 </button>
                                                 <ul class="dropdown-menu">
                                                     <li>
-                                                        <a class="dropdown-item text-primary" href="{{ route('period-list.edit', $periode->id) }}">
+                                                        <a class="dropdown-item text-primary"
+                                                            href="{{ route('period-list.edit', $periode->id) }}">
                                                             <i class="fas fa-edit me-1"></i> Edit
                                                         </a>
                                                     </li>
                                                     <li>
                                                         @if ($periode->is_active)
-                                                            <form action="{{ route('period-list.deactivate', $periode->id) }}" method="POST" class="deactivate-form">
+                                                            <form
+                                                                action="{{ route('period-list.deactivate', $periode->id) }}"
+                                                                method="POST" class="deactivate-form">
                                                                 @csrf
                                                                 <button type="submit" class="dropdown-item text-warning">
                                                                     <i class="fas fa-ban me-1"></i> Deactivate
                                                                 </button>
                                                             </form>
                                                         @else
-                                                            <form action="{{ route('period-list.activate', $periode->id) }}" method="POST" class="activate-form">
+                                                            <form
+                                                                action="{{ route('period-list.activate', $periode->id) }}"
+                                                                method="POST" class="activate-form">
                                                                 @csrf
                                                                 <button type="submit" class="dropdown-item text-success">
                                                                     <i class="fas fa-check-circle me-1"></i> Activate
@@ -76,7 +86,8 @@
                                                     </li>
 
                                                     <li>
-                                                        <form action="{{ route('period-list.destroy', $periode->id) }}" method="POST" onsubmit="return confirmDelete(event)">
+                                                        <form action="{{ route('period-list.destroy', $periode->id) }}"
+                                                            method="POST" onsubmit="return confirmDelete(event)">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="dropdown-item text-danger">
@@ -92,7 +103,8 @@
                                     <tr>
                                         <td colspan="6" class="text-center py-4">
                                             <div class="d-flex flex-column align-items-center">
-                                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state" style="height: 120px; opacity: 0.7;" class="mb-3">
+                                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state"
+                                                    style="height: 120px; opacity: 0.7;" class="mb-3">
                                                 <h5 class="text-muted">No Periods Found</h5>
                                                 <p class="text-muted mb-3">You haven't created any periods yet</p>
                                             </div>
@@ -110,8 +122,11 @@
                 @forelse ($periodes as $periode)
                     <div class="card mb-2">
                         <div class="card-body">
-                            <h6 class="fw-bold mb-1">{{ $periode->name }} ({{ $periode->year }})</h6>
-                            <p class="text-muted mb-1">Created by: {{ $periode->creator->name ?? '-' }}</p>
+                            <h6 class="fw-bold mb-2">{{ $periode->name }} ({{ $periode->year }})</h6>
+                            <p class="text-muted mb-0">Created by/at: </p>
+                            <div class="fw-bold">{{ $periode->creator->name ?? '-' }}</div>
+                            <small
+                                class="text-muted">{{ $periode->created_at ? $periode->created_at->format('d M Y H:i') : '-' }}</small><br>
                             <span class="badge bg-{{ $periode->is_active ? 'success' : 'secondary' }}">
                                 {{ $periode->is_active ? 'Active' : 'Inactive' }}
                             </span>
@@ -121,12 +136,33 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a class="dropdown-item text-primary" href="{{ route('period-list.edit', $periode->id) }}">
+                                        <a class="dropdown-item text-primary"
+                                            href="{{ route('period-list.edit', $periode->id) }}">
                                             <i class="fas fa-edit me-1"></i> Edit
                                         </a>
                                     </li>
                                     <li>
-                                        <form action="{{ route('period-list.destroy', $periode->id) }}" method="POST" onsubmit="return confirmDelete(event)">
+                                        @if ($periode->is_active)
+                                            <form action="{{ route('period-list.deactivate', $periode->id) }}"
+                                                method="POST" class="deactivate-form">
+                                                @csrf
+                                                <button type="submit" class="dropdown-item text-warning">
+                                                    <i class="fas fa-ban me-1"></i> Deactivate
+                                                </button>
+                                            </form>
+                                        @else
+                                            <form action="{{ route('period-list.activate', $periode->id) }}" method="POST"
+                                                class="activate-form">
+                                                @csrf
+                                                <button type="submit" class="dropdown-item text-success">
+                                                    <i class="fas fa-check-circle me-1"></i> Activate
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </li>
+                                    <li>
+                                        <form action="{{ route('period-list.destroy', $periode->id) }}" method="POST"
+                                            onsubmit="return confirmDelete(event)">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="dropdown-item text-danger">
@@ -142,7 +178,8 @@
                     <div class="card">
                         <div class="card-body text-center py-4">
                             <div class="d-flex flex-column align-items-center">
-                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state" style="height: 100px; opacity: 0.7;" class="mb-3">
+                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state"
+                                    style="height: 100px; opacity: 0.7;" class="mb-3">
                                 <h5 class="text-muted">No Periods Available</h5>
                                 <p class="text-muted mb-3">Get started by creating a new period</p>
                             </div>
