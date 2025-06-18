@@ -58,7 +58,7 @@
                                 <tr>
                                     <th width="5%">#</th>
                                     <th>Fuel Type</th>
-                                    <th>Created By</th>
+                                    <th>Created By/At</th>
                                     <th width="15%">Actions</th>
                                 </tr>
                             </thead>
@@ -66,11 +66,16 @@
                                 @forelse ($fuels as $fuel)
                                     <tr>
                                         <td>{{ $fuels->firstItem() + $loop->index }}</td>
-                                        <td>{!! $search ? str_ireplace($search, '<mark>' . $search . '</mark>', e($fuel->fuel_type)) : e($fuel->fuel_type) !!} @if ($fuel->created_at->gt(now()->subDay()))
+                                        <td>{!! $search ? str_ireplace($search, '<mark>' . $search . '</mark>', e($fuel->fuel_type)) : e($fuel->fuel_type) !!}
+                                            @if ($fuel->created_at->gt(now()->subDay()))
                                                 <span class="badge bg-success">New</span>
                                             @endif
                                         </td>
-                                        <td>{{ $fuel->creator->name ?? '-' }}</td>
+                                        <td>
+                                            <div class="fw-bold">{{ $fuel->creator->name ?? '-' }}</div>
+                                            <small
+                                                class="text-muted">{{ $fuel->created_at ? $fuel->created_at->format('d M Y H:i') : '-' }}</small>
+                                        </td>
                                         <td>
                                             <div class="dropdown">
                                                 <button class="btn btn-link text-dark" type="button"
@@ -124,8 +129,16 @@
                 @forelse ($fuels as $fuel)
                     <div class="card mb-2">
                         <div class="card-body">
-                            <h6 class="fw-bold mb-1">{!! $search ? str_ireplace($search, '<mark>' . $search . '</mark>', e($fuel->fuel_type)) : e($fuel->fuel_type) !!}</h6>
-                            <p class="text-muted mb-1">Created by: {{ $fuel->creator->name ?? '-' }}</p>
+                            <h6 class="fw-bold mb-1">
+                                {!! $search ? str_ireplace($search, '<mark>' . $search . '</mark>', e($fuel->fuel_type)) : e($fuel->fuel_type) !!}
+                                @if ($fuel->created_at->gt(now()->subDay()))
+                                    <span class="badge bg-success">New</span>
+                                @endif
+                            </h6>
+                            <p class="text-muted mb-0 mt-2">Created by/at: </p>
+                            <div class="fw-bold mt-0">{{ $fuel->creator->name ?? '-' }}</div>
+                            <small
+                                class="text-muted">{{ $fuel->created_at ? $fuel->created_at->format('d M Y H:i') : '-' }}</small>
                             <div class="dropdown float-end">
                                 <button class="btn btn-link text-dark" type="button" data-bs-toggle="dropdown">
                                     <i class="fas fa-ellipsis-v"></i>
