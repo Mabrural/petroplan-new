@@ -19,6 +19,9 @@
                             <strong>Termin:</strong> {{ 'Termin ' . $shipment->termin->termin_number ?? '-' }}
                         </div>
                         <div class="col-md-6 mb-2">
+                            <strong>Shipment:</strong> {{ 'Shipment ' . $shipment->shipment_number ?? '-' }}
+                        </div>
+                        <div class="col-md-6 mb-2">
                             <strong>SPK:</strong> {{ $shipment->spk->spk_number ?? '-' }}
                         </div>
                         <div class="col-md-6 mb-2">
