@@ -140,9 +140,15 @@
                                     <tr>
                                         <td>{{ $shipments->firstItem() + $loop->index }}</td>
                                         <td>{{ 'Termin ' . $shipment->termin->termin_number ?? '-' }}</td>
-                                        <td>{{ 'Shipment ' . $shipment->shipment_number ?? '-' }}</td>
+                                        <td>
+                                            <button class="dropdown-item text-info view-details"
+                                                data-id="{{ $shipment->id }}">
+                                                {{ 'Shipment ' . $shipment->shipment_number ?? '-' }}
+                                            </button>
+                                        </td>
                                         <td>{{ $shipment->vessel->vessel_name ?? '-' }}</td>
-                                        <td>{{ $shipment->spk->spk_number ?? '-' }}</td>
+                                        <td><a href="{{ asset('storage/' . $shipment->spk->spk_file) }}"
+                                                target="_blank">{{ $shipment->spk->spk_number ?? '-' }}</a></td>
                                         <td>{{ $shipment->location }}</td>
                                         <td>{{ $shipment->fuel->fuel_type ?? '-' }}</td>
                                         <td>{{ number_format($shipment->volume, 0, ',', '.') }}</td>
@@ -211,7 +217,8 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <div>
-                                    <h6 class="fw-bold mb-1 text-primary">Shipment {{ $shipment->shipment_number }}</h6>
+                                    <h6 class="dropdown-item text-primary view-details"
+                                                data-id="{{ $shipment->id }}">Shipment {{ $shipment->shipment_number }}</h6>
                                     <span class="badge bg-secondary small">
                                         {{ ucfirst(str_replace('_', ' ', $shipment->status_shipment)) }}
                                     </span>
@@ -252,7 +259,9 @@
                                     {{ 'Termin ' . $shipment->termin->termin_number ?? '-' }}</li>
                                 <li class="mb-1"><strong>Vessel:</strong> {{ $shipment->vessel->vessel_name ?? '-' }}
                                 </li>
-                                <li class="mb-1"><strong>SPK:</strong> {{ $shipment->spk->spk_number ?? '-' }}</li>
+                                <li class="mb-1"><strong>SPK:</strong> <a
+                                        href="{{ asset('storage/' . $shipment->spk->spk_file) }}"
+                                        target="_blank">{{ $shipment->spk->spk_number ?? '-' }}</a></li>
                                 <li class="mb-1"><strong>Location:</strong> {{ $shipment->location }}</li>
                                 <li class="mb-1"><strong>Fuel:</strong> {{ $shipment->fuel->fuel_type ?? '-' }}</li>
                                 <li><strong>Volume:</strong> {{ number_format($shipment->volume, 0, ',', '.') }} Liter</li>
