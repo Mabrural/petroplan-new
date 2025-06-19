@@ -161,15 +161,16 @@
                             </ul>
                         </div>
                     </li>
-                @endif
 
-                <li class="nav-item">
-                    <a href="{{ url('/settings') }}">
-                        <i class="fas fa-cogs"></i>
-                        <p>Settings</p>
-                        {{-- <span class="badge badge-secondary">1</span> --}}
-                    </a>
-                </li>
+
+                    <li class="nav-item">
+                        <a href="#">
+                            <i class="fas fa-cogs"></i>
+                            <p class="d-inline">Settings</p>
+                            <span class="badge bg-secondary ms-2">Coming Soon</span>
+                        </a>
+                    </li>
+                @endif
 
             </ul>
         </div>
