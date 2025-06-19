@@ -259,7 +259,7 @@ class ShipmentController extends Controller
 
         $request->validate([
             'document_type_id' => 'required|exists:document_types,id',
-            'attachment.*' => 'required|file|max:5120',
+            'attachment.*' => 'required|file|max:5120|mimes:png,jpg,jpeg,pdf',
         ]);
 
         foreach ($request->file('attachment') as $file) {

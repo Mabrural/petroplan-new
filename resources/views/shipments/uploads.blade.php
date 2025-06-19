@@ -6,7 +6,7 @@
             <div id="alertContainer" style="position: fixed; top: 20px; right: 20px; z-index: 9999; width: 350px;"></div>
 
             <!-- Header -->
-            <div class="mb-4">
+            <div class="mb-4 mt-5">
                 <h4 class="fw-bold">Upload Documents for <span class="text-primary">Shipment
                         {{ $shipment->shipment_number }}</span></h4>
                 <p class="text-muted">Ensure you upload all required documents correctly.</p>
@@ -128,7 +128,7 @@
                                     @csrf
                                     <input type="hidden" name="document_type_id" value="{{ $docType->id }}">
                                     <div class="input-group input-group-sm">
-                                        <input type="file" name="attachment[]" multiple class="form-control" required>
+                                        <input type="file" name="attachment[]" multiple class="form-control" accept=".png, .jpg, .jpeg, .pdf" required>
                                         <button type="submit" class="btn btn-primary">
                                             <i class="fas fa-upload me-1"></i> Upload
                                         </button>
