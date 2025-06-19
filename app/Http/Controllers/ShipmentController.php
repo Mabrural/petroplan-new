@@ -226,16 +226,33 @@ class ShipmentController extends Controller
 
     public function uploadDocuments($id)
     {
-        $shipment = Shipment::findOrFail($id);
+        $shipment = Shipment::with(['termin', 'vessel', 'spk', 'fuel'])->findOrFail($id);
+
+        $activePeriodId = session('active_period_id');
+        if (!$activePeriodId) {
+            return redirect()->route('set.period')->with('error', 'Please select a period first.');
+        }
+
+        // Hanya ambil documentTypes yang dibuat dalam periode ini (opsional, jika dibutuhkan filter)
         $documentTypes = DocumentType::all();
-        $uploadedDocuments = UploadShipmentDocument::where('shipment_id', $id)->pluck('attachment', 'document_type_id');
+
+        // Ambil dokumen yang sudah diupload dalam konteks shipment ini
+        $uploadedDocuments = UploadShipmentDocument::where('shipment_id', $id)
+            ->where('period_id', $activePeriodId)
+            ->pluck('attachment', 'document_type_id');
 
         return view('shipments.uploads', compact('shipment', 'documentTypes', 'uploadedDocuments'));
     }
 
+
     public function storeUploadedDocument(Request $request, $id)
     {
         $shipment = Shipment::findOrFail($id);
+        $activePeriodId = session('active_period_id');
+
+        if (!$activePeriodId) {
+            return redirect()->route('set.period')->with('error', 'Please select a period first.');
+        }
 
         $request->validate([
             'document_type_id' => 'required|exists:document_types,id',
@@ -246,11 +263,11 @@ class ShipmentController extends Controller
 
         UploadShipmentDocument::updateOrCreate(
             [
-                'shipment_id' => $id,
+                'shipment_id' => $shipment->id,
                 'document_type_id' => $request->document_type_id,
+                'period_id' => $activePeriodId,
             ],
             [
-                'period_id' => $shipment->period_id,
                 'attachment' => $path,
                 'created_by' => auth()->id(),
             ]
@@ -258,5 +275,6 @@ class ShipmentController extends Controller
 
         return back()->with('success', 'Document uploaded successfully.');
     }
+
 }
 
