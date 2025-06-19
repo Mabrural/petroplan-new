@@ -126,7 +126,7 @@
                         </table>
                     </div>
                 </div>
-                <div class="mt-3">
+                <div class="p-3">
                     {{ $spks->links('pagination::bootstrap-5') }}
                 </div>
             </div>

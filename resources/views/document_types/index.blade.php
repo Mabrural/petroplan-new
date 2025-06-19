@@ -121,7 +121,7 @@
                         </table>
                     </div>
                 </div>
-                <div class="mt-3">
+                <div class="p-3">
                     {{ $documentTypes->links('pagination::bootstrap-5') }}
                 </div>
 

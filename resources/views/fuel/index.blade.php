@@ -119,7 +119,7 @@
                         </table>
                     </div>
                 </div>
-                <div class="mt-3">
+                <div class="p-3">
                     {{ $fuels->links('pagination::bootstrap-5') }}
                 </div>
             </div>
