@@ -101,8 +101,12 @@
                                         <td>{{ 'Shipment ' . $document->shipment->shipment_number ?? '-' }}</td>
                                         <td>{{ $document->documentType->document_name ?? '-' }}</td>
                                         <td>
-                                            <a href="{{ asset('storage/' . $document->attachment) }}" target="_blank"
-                                                class="text-decoration-underline">View</a>
+                                            <button type="button" class="btn btn-sm btn-outline-primary preview-btn"
+                                                data-url="{{ asset('storage/' . $document->attachment) }}"
+                                                data-type="{{ pathinfo($document->attachment, PATHINFO_EXTENSION) }}">
+                                                <i class="fas fa-eye me-1"></i> View
+                                            </button>
+
                                         </td>
                                         <td>
                                             <div class="fw-bold">{{ $document->creator->name ?? '-' }}</div>
@@ -152,8 +156,11 @@
                             <div class="fw-bold">{{ $document->creator->name ?? '-' }}</div>
                             <small
                                 class="text-muted">{{ $document->created_at ? $document->created_at->format('d M Y H:i') : '-' }}</small><br>
-                            <a href="{{ asset('storage/' . $document->attachment) }}" target="_blank"
-                                class="btn btn-sm btn-outline-primary me-2">View</a>
+                            <button type="button" class="btn btn-sm btn-outline-primary preview-btn"
+                                data-url="{{ asset('storage/' . $document->attachment) }}"
+                                data-type="{{ pathinfo($document->attachment, PATHINFO_EXTENSION) }}">
+                                <i class="fas fa-eye me-1"></i> View
+                            </button>
                             <form action="{{ route('upload-shipment-documents.destroy', $document->id) }}" method="POST"
                                 class="d-inline" onsubmit="return confirmDelete(event)">
                                 @csrf
@@ -180,6 +187,26 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal for Document Preview -->
+    <div class="modal fade" id="documentPreviewModal" tabindex="-1" aria-labelledby="documentPreviewModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title" id="documentPreviewModalLabel">Document Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-0" style="background-color: #f9f9f9;">
+                    <div id="documentPreviewContainer"
+                        style="height: 80vh; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+                        <!-- Filled dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- SweetAlert & Alert Script -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -283,5 +310,33 @@
             }
         `;
         document.head.appendChild(style);
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const previewButtons = document.querySelectorAll('.preview-btn');
+            const previewModal = new bootstrap.Modal(document.getElementById('documentPreviewModal'));
+            const previewContainer = document.getElementById('documentPreviewContainer');
+
+            previewButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const url = button.getAttribute('data-url');
+                    const type = button.getAttribute('data-type').toLowerCase();
+
+                    let content = '';
+
+                    if (type === 'pdf') {
+                        content =
+                            `<embed src="${url}" type="application/pdf" style="width: 100%; height: 100%; object-fit: cover; border: none;" />`;
+                    } else {
+                        content = `<img src="${url}" alt="Preview Image" class="img-fluid rounded"
+                                style="max-height: 100%; max-width: 100%; object-fit: contain;" />`;
+                    }
+
+                    previewContainer.innerHTML = content;
+                    previewModal.show();
+                });
+            });
+        });
     </script>
 @endsection
