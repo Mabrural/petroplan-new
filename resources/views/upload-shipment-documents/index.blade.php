@@ -114,14 +114,19 @@
                                                 class="text-muted">{{ $document->created_at ? $document->created_at->format('d M Y H:i') : '-' }}</small>
                                         </td>
                                         <td>
-                                            <form action="{{ route('upload-shipment-documents.destroy', $document->id) }}"
-                                                method="POST" onsubmit="return confirmDelete(event)">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger">
-                                                    <i class="fas fa-trash-alt me-1"></i> Delete
-                                                </button>
-                                            </form>
+                                            @if (Auth::user()->id == $document->created_by)
+                                                <form
+                                                    action="{{ route('upload-shipment-documents.destroy', $document->id) }}"
+                                                    method="POST" onsubmit="return confirmDelete(event)">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger">
+                                                        <i class="fas fa-trash-alt me-1"></i> Delete
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <span class="text-muted">Delete access denied.</span>
+                                            @endif
                                         </td>
                                     </tr>
                                 @empty
@@ -161,12 +166,14 @@
                                 data-type="{{ pathinfo($document->attachment, PATHINFO_EXTENSION) }}">
                                 <i class="fas fa-eye me-1"></i> View
                             </button>
+                            @if (Auth::user()->id == $document->created_by)
                             <form action="{{ route('upload-shipment-documents.destroy', $document->id) }}" method="POST"
                                 class="d-inline" onsubmit="return confirmDelete(event)">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
                             </form>
+                            @endif
                         </div>
                     </div>
                 @empty
