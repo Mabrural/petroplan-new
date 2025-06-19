@@ -92,17 +92,19 @@
         </div>
     </div>
 
-    <div class="d-flex justify-content-end mt-4">
-        <a href="{{ route('shipments.edit', $shipment->id) }}" class="btn btn-primary btn-sm me-2">
-            <i class="fas fa-edit me-1"></i> Edit
-        </a>
-        <form action="{{ route('shipments.destroy', $shipment->id) }}" method="POST"
-            onsubmit="return confirm('Are you sure you want to delete this shipment?');">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-danger btn-sm">
-                <i class="fas fa-trash-alt me-1"></i> Delete
-            </button>
-        </form>
-    </div>
+    @if (Auth::check() && Auth::user()->rolePermissions->contains('permission', 'admin_officer'))
+        <div class="d-flex justify-content-end mt-4">
+            <a href="{{ route('shipments.edit', $shipment->id) }}" class="btn btn-primary btn-sm me-2">
+                <i class="fas fa-edit me-1"></i> Edit
+            </a>
+            <form action="{{ route('shipments.destroy', $shipment->id) }}" method="POST"
+                onsubmit="return confirm('Are you sure you want to delete this shipment?');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger btn-sm">
+                    <i class="fas fa-trash-alt me-1"></i> Delete
+                </button>
+            </form>
+        </div>
+    @endif
 </div>

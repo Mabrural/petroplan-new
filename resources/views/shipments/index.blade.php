@@ -11,11 +11,13 @@
                     <h3 class="fw-bold mb-0">Shipment Management</h3>
                     <p class="text-muted mb-0">Manage available Shipments</p>
                 </div>
-                <div>
-                    <a href="{{ route('shipments.create') }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-plus me-1"></i>Add Shipment
-                    </a>
-                </div>
+                @if (Auth::check() && Auth::user()->rolePermissions->contains('permission', 'admin_officer'))
+                    <div>
+                        <a href="{{ route('shipments.create') }}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus me-1"></i>Add Shipment
+                        </a>
+                    </div>
+                @endif
             </div>
 
             <!-- Filter Section -->
@@ -168,22 +170,24 @@
                                                             <i class="fas fa-eye me-1"></i> View Details
                                                         </button>
                                                     </li>
-                                                    <li>
-                                                        <a class="dropdown-item text-primary"
-                                                            href="{{ route('shipments.edit', $shipment->id) }}">
-                                                            <i class="fas fa-edit me-1"></i> Edit
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <form action="{{ route('shipments.destroy', $shipment->id) }}"
-                                                            method="POST" onsubmit="return confirmDelete(event)">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="dropdown-item text-danger">
-                                                                <i class="fas fa-trash-alt me-1"></i> Delete
-                                                            </button>
-                                                        </form>
-                                                    </li>
+                                                    @if (Auth::check() && Auth::user()->rolePermissions->contains('permission', 'admin_officer'))
+                                                        <li>
+                                                            <a class="dropdown-item text-primary"
+                                                                href="{{ route('shipments.edit', $shipment->id) }}">
+                                                                <i class="fas fa-edit me-1"></i> Edit
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <form action="{{ route('shipments.destroy', $shipment->id) }}"
+                                                                method="POST" onsubmit="return confirmDelete(event)">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="dropdown-item text-danger">
+                                                                    <i class="fas fa-trash-alt me-1"></i> Delete
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                    @endif
                                                     <li>
                                                         <a class="dropdown-item text-warning"
                                                             href="{{ route('shipments.upload.documents', $shipment->id) }}">
@@ -241,22 +245,24 @@
                                                 <i class="fas fa-eye me-1"></i> View Details
                                             </button>
                                         </li>
-                                        <li>
-                                            <a class="dropdown-item text-primary"
-                                                href="{{ route('shipments.edit', $shipment->id) }}">
-                                                <i class="fas fa-edit me-1"></i> Edit
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <form action="{{ route('shipments.destroy', $shipment->id) }}" method="POST"
-                                                onsubmit="return confirmDelete(event)">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="dropdown-item text-danger">
-                                                    <i class="fas fa-trash-alt me-1"></i> Delete
-                                                </button>
-                                            </form>
-                                        </li>
+                                        @if (Auth::check() && Auth::user()->rolePermissions->contains('permission', 'admin_officer'))
+                                            <li>
+                                                <a class="dropdown-item text-primary"
+                                                    href="{{ route('shipments.edit', $shipment->id) }}">
+                                                    <i class="fas fa-edit me-1"></i> Edit
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <form action="{{ route('shipments.destroy', $shipment->id) }}"
+                                                    method="POST" onsubmit="return confirmDelete(event)">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="dropdown-item text-danger">
+                                                        <i class="fas fa-trash-alt me-1"></i> Delete
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        @endif
                                         <li>
                                             <a class="dropdown-item text-warning"
                                                 href="{{ route('shipments.upload.documents', $shipment->id) }}">

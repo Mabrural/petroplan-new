@@ -95,18 +95,20 @@
                                                             {{ basename($doc->attachment) }}
                                                         </span>
                                                     </div>
-                                                    <div>
-                                                        <form
-                                                            action="{{ route('shipments.upload.documents.destroy', [$shipment->id, $doc->id]) }}"
-                                                            method="POST" class="d-inline delete-form">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="button"
-                                                                class="btn btn-sm btn-outline-danger delete-btn">
-                                                                <i class="fas fa-trash-alt"></i>
-                                                            </button>
-                                                        </form>
-                                                    </div>
+                                                    @if ($shipment->status_shipment != 'filling_completed' && $shipment->status_shipment != 'cancelled')
+                                                        <div>
+                                                            <form
+                                                                action="{{ route('shipments.upload.documents.destroy', [$shipment->id, $doc->id]) }}"
+                                                                method="POST" class="d-inline delete-form">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="button"
+                                                                    class="btn btn-sm btn-outline-danger delete-btn">
+                                                                    <i class="fas fa-trash-alt"></i>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    @endif
                                                 </div>
                                                 <div
                                                     class="d-flex justify-content-between align-items-center small text-muted">
@@ -131,19 +133,22 @@
                                 <form action="{{ route('shipments.upload.documents.store', $shipment->id) }}"
                                     method="POST" enctype="multipart/form-data">
                                     @csrf
-                                    <input type="hidden" name="document_type_id" value="{{ $docType->id }}">
-                                    <p class="text-muted small mb-1">
-                                        Allowed file types: <strong>.png, .jpg, .jpeg, .pdf</strong><br>
-                                        Max file size: <strong>5MB per file</strong>
-                                    </p>
+                                    @if ($shipment->status_shipment != 'filling_completed' && $shipment->status_shipment != 'cancelled')
+                                        <input type="hidden" name="document_type_id" value="{{ $docType->id }}">
+                                        <p class="text-muted small mb-1">
+                                            Allowed file types: <strong>.png, .jpg, .jpeg, .pdf</strong><br>
+                                            Max file size: <strong>5MB per file</strong>
+                                        </p>
 
-                                    <div class="input-group input-group-sm">
-                                        <input type="file" name="attachment[]" multiple class="form-control"
-                                            accept=".png, .jpg, .jpeg, .pdf" required>
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fas fa-upload me-1"></i> Upload
-                                        </button>
-                                    </div>
+
+                                        <div class="input-group input-group-sm">
+                                            <input type="file" name="attachment[]" multiple class="form-control"
+                                                accept=".png, .jpg, .jpeg, .pdf" required>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-upload me-1"></i> Upload
+                                            </button>
+                                        </div>
+                                    @endif
                                 </form>
                             </div>
                         </div>
