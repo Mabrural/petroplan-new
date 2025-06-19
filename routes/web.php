@@ -20,10 +20,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard.index');
-// })->middleware(['auth', 'verified', 'active'])->name('dashboard');
-
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified', 'active'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -115,6 +111,11 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
 
     Route::delete('shipments/{id}/uploaded-documents/{documentId}', [ShipmentController::class, 'destroyUploadedDocument'])
     ->name('shipments.upload.documents.destroy');
+
+
+    //report
+    Route::get('/shipment-summary-report', [App\Http\Controllers\ShipmentSummaryController::class, 'index'])->name('shipment.summary');
+
 });
 
 require __DIR__.'/auth.php';

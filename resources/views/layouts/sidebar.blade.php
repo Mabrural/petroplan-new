@@ -95,27 +95,66 @@
                     </li>
                 @endif
 
-                <li class="nav-item">
-                    <a data-bs-toggle="collapse" href="#reportAnalitics">
+                <li
+                    class="nav-item 
+    {{ request()->is('shipment-summary-report') ||
+    request()->is('vessel-activity-chart') ||
+    request()->is('bbm-usage-analysis') ||
+    request()->is('export-data') ||
+    request()->is('print-report')
+        ? 'active'
+        : '' }}">
+                    <a data-bs-toggle="collapse" href="#reportAnalytics"
+                        class="{{ request()->is('shipment-summary-report') ||
+                        request()->is('vessel-activity-chart') ||
+                        request()->is('bbm-usage-analysis') ||
+                        request()->is('export-data') ||
+                        request()->is('print-report')
+                            ? ''
+                            : 'collapsed' }}">
                         <i class="fas fa-chart-bar"></i>
                         <p>Report & Analytics</p>
                         <span class="caret"></span>
                     </a>
-                    <div class="collapse" id="reportAnalitics">
+                    <div class="collapse 
+        {{ request()->is('shipment-summary-report') ||
+        request()->is('vessel-activity-chart') ||
+        request()->is('bbm-usage-analysis') ||
+        request()->is('export-data') ||
+        request()->is('print-report')
+            ? 'show'
+            : '' }}"
+                        id="reportAnalytics">
                         <ul class="nav nav-collapse">
-                            <li><a href="{{ url('/shipment-summary-report') }}"><span class="sub-item">Shipment Summary
-                                        Report</span></a></li>
-                            <li><a href="{{ url('/vessel-activity-chart') }}"><span class="sub-item">Vessel Activity
-                                        Chart</span></a></li>
-                            <li><a href="{{ url('/bbm-usage-analysis') }}"><span class="sub-item">BBM Usage
-                                        Analysis</span></a></li>
-                            <li><a href="{{ url('/export-data') }}"><span class="sub-item">Export Data
-                                        (Excel/CSV)</span></a></li>
-                            <li><a href="{{ url('/print-report') }}"><span class="sub-item">Print Reports
-                                        (PDF)</span></a></li>
+                            <li class="{{ request()->is('shipment-summary-report') ? 'active' : '' }}">
+                                <a href="{{ url('/shipment-summary-report') }}">
+                                    <span class="sub-item">Shipment Summary Report</span>
+                                </a>
+                            </li>
+                            <li class="{{ request()->is('vessel-activity-chart') ? 'active' : '' }}">
+                                <a href="{{ url('/vessel-activity-chart') }}">
+                                    <span class="sub-item">Vessel Activity Chart</span>
+                                </a>
+                            </li>
+                            <li class="{{ request()->is('bbm-usage-analysis') ? 'active' : '' }}">
+                                <a href="{{ url('/bbm-usage-analysis') }}">
+                                    <span class="sub-item">BBM Usage Analysis</span>
+                                </a>
+                            </li>
+                            <li class="{{ request()->is('export-data') ? 'active' : '' }}">
+                                <a href="{{ url('/export-data') }}">
+                                    <span class="sub-item">Export Data (Excel/CSV)</span>
+                                </a>
+                            </li>
+                            <li class="{{ request()->is('print-report') ? 'active' : '' }}">
+                                <a href="{{ url('/print-report') }}">
+                                    <span class="sub-item">Print Reports (PDF)</span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </li>
+
 
                 @if (Auth::user()->is_admin == true)
                     <li
