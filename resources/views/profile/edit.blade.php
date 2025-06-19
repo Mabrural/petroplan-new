@@ -100,10 +100,10 @@
                 </div>
 
                 <!-- Delete Account -->
-                <div class="card card-profile p-4 mb-4">
+                {{-- <div class="card card-profile p-4 mb-4">
                     <div class="section-title">Delete Account</div>
                     @include('profile.partials.delete-user-form')
-                </div>
+                </div> --}}
 
             </div>
         </div>
