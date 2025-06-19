@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\DocumentType;
 use App\Models\UploadShipmentDocument;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
 
 class ShipmentController extends Controller
 {
@@ -261,7 +263,14 @@ class ShipmentController extends Controller
         ]);
 
         foreach ($request->file('attachment') as $file) {
-            $path = $file->store('shipment_documents', 'public');
+            // Ambil nama asli dan beri timestamp agar unik
+            $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
+            $safeName = Str::slug($originalName); // Biar rapi dan aman
+            $filename = $safeName . '-' . now()->format('YmdHis') . '.' . $extension;
+
+            // Simpan file dengan nama yang sudah diformat
+            $path = $file->storeAs('shipment_documents', $filename, 'public');
 
             UploadShipmentDocument::create([
                 'shipment_id' => $shipment->id,
@@ -275,21 +284,22 @@ class ShipmentController extends Controller
         return back()->with('success', 'Documents uploaded successfully.');
     }
 
+
     public function destroyUploadedDocument($id, $documentId)
-{
-    $document = UploadShipmentDocument::where('shipment_id', $id)
-        ->where('id', $documentId)
-        ->firstOrFail();
+    {
+        $document = UploadShipmentDocument::where('shipment_id', $id)
+            ->where('id', $documentId)
+            ->firstOrFail();
 
-    // Hapus file dari storage
-    if ($document->attachment && Storage::disk('public')->exists($document->attachment)) {
-        Storage::disk('public')->delete($document->attachment);
+        // Hapus file dari storage
+        if ($document->attachment && Storage::disk('public')->exists($document->attachment)) {
+            Storage::disk('public')->delete($document->attachment);
+        }
+
+        $document->delete();
+
+        return back()->with('success', 'Document deleted successfully.');
     }
-
-    $document->delete();
-
-    return back()->with('success', 'Document deleted successfully.');
-}
 
 }
 

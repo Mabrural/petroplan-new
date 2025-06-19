@@ -257,6 +257,12 @@
                                                 </button>
                                             </form>
                                         </li>
+                                        <li>
+                                            <a class="dropdown-item text-warning"
+                                                href="{{ route('shipments.upload.documents', $shipment->id) }}">
+                                                <i class="fas fa-upload me-1"></i> Upload Document
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
