@@ -316,6 +316,29 @@
                     });
                 });
             });
+
+            // Smooth loading for file uploads
+            document.querySelectorAll('form[enctype="multipart/form-data"]').forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    const originalBtnText = submitBtn.innerHTML;
+
+                    // Show loading state
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = `
+                        <span class="upload-spinner" style="display: inline-block; animation: spin 1s linear infinite;">
+                            <i class="fas fa-circle-notch"></i>
+                        </span>
+                        Uploading...
+                    `;
+
+                    // After form submit, reset button after a short delay
+                    setTimeout(() => {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnText;
+                    }, 2000);
+                });
+            });
         });
 
         // Keyframe animations
@@ -328,6 +351,10 @@
             @keyframes fadeOut {
                 from { transform: translateX(0); opacity: 1; }
                 to { transform: translateX(100%); opacity: 0; }
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
             }
             .cursor-pointer { cursor: pointer; }
             .object-fit-cover { object-fit: cover; }
