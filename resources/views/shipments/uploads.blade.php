@@ -3,6 +3,8 @@
 @section('container')
     <div class="container mt-4">
         <div class="page-inner">
+            <div id="alertContainer" style="position: fixed; top: 20px; right: 20px; z-index: 9999; width: 350px;"></div>
+
             <!-- Header -->
             <div class="mb-4">
                 <h4 class="fw-bold">Upload Documents for <span class="text-primary">Shipment
@@ -44,11 +46,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Alerts -->
-            @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
 
             <!-- Document Upload Cards -->
             <!-- Document Upload Cards -->
@@ -168,5 +165,91 @@
                 });
             });
         });
+    </script>
+
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        @if (session('success'))
+            showAlert('success', '{{ session('success') }}');
+        @endif
+
+        @if (session('error'))
+            showAlert('error', '{{ session('error') }}');
+        @endif
+
+        @if ($errors->any())
+            showAlert('error', '{{ $errors->first() }}');
+        @endif
+
+        function showAlert(type, message) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertId = 'alert-' + Date.now();
+            const alertEl = document.createElement('div');
+
+            alertEl.id = alertId;
+            alertEl.className = `alert alert-${type} alert-dismissible fade show shadow-sm`;
+            alertEl.role = 'alert';
+            alertEl.style.cssText =
+                `position: relative; overflow: hidden; border: none; border-left: 4px solid ${type === 'success' ? '#28a745' : '#dc3545'}; animation: slideIn 0.3s ease-out forwards; margin-bottom: 10px;`;
+
+            let icon = type === 'success' ?
+                '<i class="fas fa-check-circle me-2"></i>' :
+                '<i class="fas fa-exclamation-circle me-2"></i>';
+
+            alertEl.innerHTML = `
+            <div class="d-flex align-items-center">
+                <div style="font-size: 1.5rem; color: ${type === 'success' ? '#28a745' : '#dc3545'};">${icon}</div>
+                <div><strong>${type.charAt(0).toUpperCase() + type.slice(1)}!</strong> ${message}</div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+
+            alertContainer.appendChild(alertEl);
+
+            setTimeout(() => {
+                const alert = document.getElementById(alertId);
+                if (alert) {
+                    alert.style.animation = 'fadeOut 0.3s ease-out forwards';
+                    setTimeout(() => alert.remove(), 300);
+                }
+            }, 5000);
+        }
+
+        // Tambahkan SweetAlert untuk konfirmasi hapus dokumen
+        document.querySelectorAll('form[action*="upload.documents.destroy"]').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Delete Document?',
+                    text: "This action cannot be undone!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, delete it!',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+
+        // Keyframe for slide in/out
+        const style = document.createElement('style');
+        style.innerHTML = `
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    `;
+        document.head.appendChild(style);
     </script>
 @endsection
