@@ -78,7 +78,7 @@
                                                         <div class="thumbnail-preview cursor-pointer"
                                                             style="width: 50px; height: 50px; overflow: hidden;"
                                                             data-bs-toggle="modal" data-bs-target="#documentModal"
-                                                            data-url="{{ asset('storage/' . $doc->attachment) }}"
+                                                            data-url="{{ url('storage/' . $doc->attachment) }}"
                                                             data-type="{{ pathinfo($doc->attachment, PATHINFO_EXTENSION) }}"
                                                             data-title="{{ basename($doc->attachment) }}">
                                                             @if (Str::endsWith($doc->attachment, ['.pdf']))
@@ -87,7 +87,7 @@
                                                                     <i class="fas fa-file-pdf fa-lg"></i>
                                                                 </div>
                                                             @else
-                                                                <img src="{{ asset('storage/' . $doc->attachment) }}"
+                                                                <img src="{{ url('storage/' . $doc->attachment) }}"
                                                                     class="img-fluid h-100 w-100 object-fit-cover">
                                                             @endif
                                                         </div>
