@@ -95,7 +95,7 @@
                                                             {{ basename($doc->attachment) }}
                                                         </span>
                                                     </div>
-                                                    @if ($shipment->status_shipment != 'filling_completed' && $shipment->status_shipment != 'cancelled')
+                                                    @if ($shipment->status_shipment != 'filling_completed' && $shipment->status_shipment != 'cancelled' && Auth::user()->id == $doc->created_by)
                                                         <div>
                                                             <form
                                                                 action="{{ route('shipments.upload.documents.destroy', [$shipment->id, $doc->id]) }}"
