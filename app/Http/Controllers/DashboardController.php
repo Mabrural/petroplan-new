@@ -7,6 +7,7 @@ use App\Models\Spk;
 use App\Models\Termin;
 use App\Models\Vessel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -35,4 +36,24 @@ class DashboardController extends Controller
             'onlineUsers'
         ));
     }
+
+    public function vesselActivityChart()
+{
+    $activePeriodId = session('active_period_id');
+
+    if (!$activePeriodId) {
+        return redirect()->route('set.period')->with('error', 'Please select a period first.');
+    }
+
+    $activityData = Shipment::select('vessel_id', DB::raw('COUNT(*) as shipment_count'))
+        ->where('period_id', $activePeriodId)
+        ->groupBy('vessel_id')
+        ->with('vessel')
+        ->get();
+
+    $labels = $activityData->pluck('vessel.vessel_name');
+    $counts = $activityData->pluck('shipment_count');
+
+    return view('reports.vessel-activity-chart', compact('labels', 'counts'));
+}
 }

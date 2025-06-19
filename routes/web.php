@@ -118,6 +118,10 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
     Route::get('/shipment-summary-report', [ShipmentSummaryController::class, 'index'])->name('shipment.summary');
     Route::get('/shipment-summary/export', [ShipmentSummaryController::class, 'exportShipmentSummary'])->name('shipment.summary.export');
 
+    // vessel activity chart
+    Route::get('/vessel-activity-chart', [DashboardController::class, 'vesselActivityChart'])->name('vessel.activity.chart');
+
+
 
 });
 
