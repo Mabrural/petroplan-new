@@ -56,16 +56,31 @@
                                 <h6 class="fw-bold mb-2">{{ $docType->document_name }}</h6>
 
                                 <div class="mb-2">
-                                    @if (isset($uploadedDocuments[$docType->id]))
-                                        <span class="badge bg-success mb-1">Uploaded</span><br>
-                                        <button type="button" class="btn btn-sm  px-0 text-primary view-doc-btn"
-                                            data-url="{{ asset('storage/' . $uploadedDocuments[$docType->id]) }}"
-                                            data-name="{{ $docType->document_name }}">
-                                            <i class="fas fa-eye me-1"></i> View Document
-                                        </button>
+                                    @php
+                                        $uploadedList = \App\Models\UploadShipmentDocument::where(
+                                            'shipment_id',
+                                            $shipment->id,
+                                        )
+                                            ->where('document_type_id', $docType->id)
+                                            ->where('period_id', session('active_period_id'))
+                                            ->get();
+                                    @endphp
+
+                                    @if ($uploadedList->isNotEmpty())
+                                        <span class="badge bg-success mb-1">Uploaded
+                                            ({{ $uploadedList->count() }})
+                                        </span><br>
+                                        @foreach ($uploadedList as $doc)
+                                            <button type="button" class="btn btn-sm px-0 text-primary view-doc-btn mb-1"
+                                                data-url="{{ asset('storage/' . $doc->attachment) }}"
+                                                data-name="{{ $docType->document_name }}">
+                                                <i class="fas fa-eye me-1"></i> View Document
+                                            </button><br>
+                                        @endforeach
                                     @else
                                         <span class="badge bg-warning text-dark">Not Uploaded</span>
                                     @endif
+
 
                                 </div>
 
@@ -74,8 +89,9 @@
                                     @csrf
                                     <input type="hidden" name="document_type_id" value="{{ $docType->id }}">
                                     <div class="input-group">
-                                        <input type="file" name="attachment" class="form-control form-control-sm"
-                                            required>
+                                        <input type="file" name="attachment[]" multiple
+                                            class="form-control form-control-sm" required>
+
                                         <button type="submit" class="btn btn-sm btn-primary">Upload</button>
                                     </div>
                                 </form>
@@ -100,10 +116,11 @@
             <h5 class="offcanvas-title" id="documentSliderLabel">Document Viewer</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body p-0" id="documentViewerBody" style="height: 100%; overflow: hidden;">
+        <div class="offcanvas-body p-0" id="documentViewerBody" style="height: 100dvh; overflow: hidden;">
             <iframe id="documentFrame" src="" width="100%" height="100%" frameborder="0"
                 style="border: none;"></iframe>
         </div>
+
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

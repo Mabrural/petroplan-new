@@ -256,25 +256,24 @@ class ShipmentController extends Controller
 
         $request->validate([
             'document_type_id' => 'required|exists:document_types,id',
-            'attachment' => 'required|file|max:5120',
+            'attachment.*' => 'required|file|max:5120',
         ]);
 
-        $path = $request->file('attachment')->store('shipment_documents', 'public');
+        foreach ($request->file('attachment') as $file) {
+            $path = $file->store('shipment_documents', 'public');
 
-        UploadShipmentDocument::updateOrCreate(
-            [
+            UploadShipmentDocument::create([
                 'shipment_id' => $shipment->id,
                 'document_type_id' => $request->document_type_id,
                 'period_id' => $activePeriodId,
-            ],
-            [
                 'attachment' => $path,
                 'created_by' => auth()->id(),
-            ]
-        );
+            ]);
+        }
 
-        return back()->with('success', 'Document uploaded successfully.');
+        return back()->with('success', 'Documents uploaded successfully.');
     }
+
 
 }
 
