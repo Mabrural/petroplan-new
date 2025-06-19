@@ -71,7 +71,7 @@
                                             : e($vessel->vessel_name) !!}</td>
                                         <td>
                                             @if ($vessel->image)
-                                                <img src="{{ asset('storage/' . $vessel->image) }}" alt="Vessel Image"
+                                                <img src="{{ url('storage/' . $vessel->image) }}" alt="Vessel Image"
                                                     style="height: 40px;">
                                             @else
                                                 <span class="text-muted">No image</span>
