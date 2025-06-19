@@ -66,7 +66,8 @@
 
                                 @if ($uploadedList->isNotEmpty())
                                     <div class="badge bg-success mb-2">
-                                        {{ $uploadedList->count() }} file{{ $uploadedList->count() > 1 ? 's' : '' }} uploaded
+                                        {{ $uploadedList->count() }} file{{ $uploadedList->count() > 1 ? 's' : '' }}
+                                        uploaded
                                     </div>
 
                                     <div class="uploaded-doc-list small mb-3" style="max-height: 150px; overflow-y: auto;">
@@ -74,14 +75,15 @@
                                             <div class="d-flex flex-column mb-2 p-2 bg-light rounded">
                                                 <div class="d-flex justify-content-between align-items-center mb-1">
                                                     <div class="d-flex align-items-center gap-2" style="width: 70%;">
-                                                        <div class="thumbnail-preview cursor-pointer" 
+                                                        <div class="thumbnail-preview cursor-pointer"
                                                             style="width: 50px; height: 50px; overflow: hidden;"
                                                             data-bs-toggle="modal" data-bs-target="#documentModal"
                                                             data-url="{{ asset('storage/' . $doc->attachment) }}"
                                                             data-type="{{ pathinfo($doc->attachment, PATHINFO_EXTENSION) }}"
                                                             data-title="{{ basename($doc->attachment) }}">
                                                             @if (Str::endsWith($doc->attachment, ['.pdf']))
-                                                                <div class="bg-danger text-white d-flex align-items-center justify-content-center h-100">
+                                                                <div
+                                                                    class="bg-danger text-white d-flex align-items-center justify-content-center h-100">
                                                                     <i class="fas fa-file-pdf fa-lg"></i>
                                                                 </div>
                                                             @else
@@ -94,17 +96,20 @@
                                                         </span>
                                                     </div>
                                                     <div>
-                                                        <form action="{{ route('shipments.upload.documents.destroy', [$shipment->id, $doc->id]) }}"
+                                                        <form
+                                                            action="{{ route('shipments.upload.documents.destroy', [$shipment->id, $doc->id]) }}"
                                                             method="POST" class="d-inline delete-form">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="button" class="btn btn-sm btn-outline-danger delete-btn">
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-outline-danger delete-btn">
                                                                 <i class="fas fa-trash-alt"></i>
                                                             </button>
                                                         </form>
                                                     </div>
                                                 </div>
-                                                <div class="d-flex justify-content-between align-items-center small text-muted">
+                                                <div
+                                                    class="d-flex justify-content-between align-items-center small text-muted">
                                                     <span>
                                                         <i class="fas fa-user me-1"></i>
                                                         {{ $doc->creator->name ?? 'System' }}
@@ -127,8 +132,14 @@
                                     method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <input type="hidden" name="document_type_id" value="{{ $docType->id }}">
+                                    <p class="text-muted small mb-1">
+                                        Allowed file types: <strong>.png, .jpg, .jpeg, .pdf</strong><br>
+                                        Max file size: <strong>5MB per file</strong>
+                                    </p>
+
                                     <div class="input-group input-group-sm">
-                                        <input type="file" name="attachment[]" multiple class="form-control" accept=".png, .jpg, .jpeg, .pdf" required>
+                                        <input type="file" name="attachment[]" multiple class="form-control"
+                                            accept=".png, .jpg, .jpeg, .pdf" required>
                                         <button type="submit" class="btn btn-primary">
                                             <i class="fas fa-upload me-1"></i> Upload
                                         </button>
@@ -155,7 +166,8 @@
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="documentModalLabel">Document Preview</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-0" style="min-height: 70vh;">
                     <div id="documentViewer" class="w-100 h-100 d-flex justify-content-center align-items-center">
@@ -286,7 +298,7 @@
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
                     const form = this.closest('form');
-                    
+
                     Swal.fire({
                         title: 'Delete Document?',
                         text: "You won't be able to revert this!",
