@@ -178,48 +178,59 @@
             </div>
 
             <!-- Mobile Card List -->
+            <!-- Mobile Card List -->
             <div class="d-lg-none mt-3">
                 @forelse ($shipments as $shipment)
-                    <div class="card mb-2">
+                    <div class="card shadow-sm mb-3">
                         <div class="card-body">
-                            <h6 class="fw-bold mb-1">{{ 'Shipment ' . $shipment->shipment_number }}</h6>
-                            <p class="text-muted mb-1">Vessel: {{ $shipment->vessel->vessel_name ?? '-' }}</p>
-                            <p class="text-muted mb-1">Location: {{ $shipment->location }}</p>
-                            <p class="text-muted mb-1">Fuel: {{ $shipment->fuel->fuel_type ?? '-' }}</p>
-                            <p class="text-muted mb-1">Volume: {{ $shipment->volume }} Liter</p>
-                            <p class="text-muted mb-2">
-                                Status: <span
-                                    class="badge bg-secondary">{{ ucfirst(str_replace('_', ' ', $shipment->status_shipment)) }}</span>
-                            </p>
-                            <div class="dropdown float-end">
-                                <button class="btn btn-link text-dark" type="button" data-bs-toggle="dropdown">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <button class="dropdown-item text-info view-details"
-                                            data-id="{{ $shipment->id }}">
-                                            <i class="fas fa-eye me-1"></i> View Details
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item text-primary"
-                                            href="{{ route('shipments.edit', $shipment->id) }}">
-                                            <i class="fas fa-edit me-1"></i> Edit
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <form action="{{ route('shipments.destroy', $shipment->id) }}" method="POST"
-                                            onsubmit="return confirmDelete(event)">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="dropdown-item text-danger">
-                                                <i class="fas fa-trash-alt me-1"></i> Delete
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h6 class="fw-bold mb-1 text-primary">Shipment {{ $shipment->shipment_number }}</h6>
+                                    <span class="badge bg-secondary small">
+                                        {{ ucfirst(str_replace('_', ' ', $shipment->status_shipment)) }}
+                                    </span>
+                                </div>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-light border" type="button" data-bs-toggle="dropdown">
+                                        <i class="fas fa-ellipsis-v text-muted"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <button class="dropdown-item text-info view-details"
+                                                data-id="{{ $shipment->id }}">
+                                                <i class="fas fa-eye me-1"></i> View Details
                                             </button>
-                                        </form>
-                                    </li>
-                                </ul>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item text-primary"
+                                                href="{{ route('shipments.edit', $shipment->id) }}">
+                                                <i class="fas fa-edit me-1"></i> Edit
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <form action="{{ route('shipments.destroy', $shipment->id) }}" method="POST"
+                                                onsubmit="return confirmDelete(event)">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="dropdown-item text-danger">
+                                                    <i class="fas fa-trash-alt me-1"></i> Delete
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
+
+                            <ul class="list-unstyled small mb-0">
+                                <li class="mb-1"><strong>Termin:</strong>
+                                    {{ 'Termin ' . $shipment->termin->termin_number ?? '-' }}</li>
+                                <li class="mb-1"><strong>Vessel:</strong> {{ $shipment->vessel->vessel_name ?? '-' }}
+                                </li>
+                                <li class="mb-1"><strong>SPK:</strong> {{ $shipment->spk->spk_number ?? '-' }}</li>
+                                <li class="mb-1"><strong>Location:</strong> {{ $shipment->location }}</li>
+                                <li class="mb-1"><strong>Fuel:</strong> {{ $shipment->fuel->fuel_type ?? '-' }}</li>
+                                <li><strong>Volume:</strong> {{ number_format($shipment->volume, 0, ',', '.') }} Liter</li>
+                            </ul>
                         </div>
                     </div>
                 @empty
@@ -235,6 +246,7 @@
                     </div>
                 @endforelse
             </div>
+
         </div>
     </div>
 
