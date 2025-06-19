@@ -80,7 +80,7 @@
                                                 class="text-muted">{{ $spk->created_at ? $spk->created_at->format('d M Y H:i') : '-' }}</small>
                                         </td>
                                         <td>
-                                            <a href="{{ asset('storage/' . $spk->spk_file) }}" target="_blank"
+                                            <a href="{{ url('storage/' . $spk->spk_file) }}" target="_blank"
                                                 class="text-primary">View</a>
                                         </td>
                                         <td>
@@ -145,7 +145,7 @@
                                             <small
                                                 class="text-muted">{{ $spk->created_at ? $spk->created_at->format('d M Y H:i') : '-' }}</small>
                             <p class="text-muted mt-2">
-                                <a href="{{ asset('storage/' . $spk->spk_file) }}" target="_blank"
+                                <a href="{{ url('storage/' . $spk->spk_file) }}" target="_blank"
                                     class="text-primary">View PDF</a>
                             </p>
                             <div class="dropdown float-end">

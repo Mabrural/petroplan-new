@@ -149,7 +149,7 @@
                                             </button>
                                         </td>
                                         <td>{{ $shipment->vessel->vessel_name ?? '-' }}</td>
-                                        <td><a href="{{ asset('storage/' . $shipment->spk->spk_file) }}"
+                                        <td><a href="{{ url('storage/' . $shipment->spk->spk_file) }}"
                                                 target="_blank">{{ $shipment->spk->spk_number ?? '-' }}</a></td>
                                         <td>{{ $shipment->location }}</td>
                                         <td>{{ $shipment->fuel->fuel_type ?? '-' }}</td>
@@ -279,7 +279,7 @@
                                 <li class="mb-1"><strong>Vessel:</strong> {{ $shipment->vessel->vessel_name ?? '-' }}
                                 </li>
                                 <li class="mb-1"><strong>SPK:</strong> <a
-                                        href="{{ asset('storage/' . $shipment->spk->spk_file) }}"
+                                        href="{{ url('storage/' . $shipment->spk->spk_file) }}"
                                         target="_blank">{{ $shipment->spk->spk_number ?? '-' }}</a></li>
                                 <li class="mb-1"><strong>Location:</strong> {{ $shipment->location }}</li>
                                 <li class="mb-1"><strong>Fuel:</strong> {{ $shipment->fuel->fuel_type ?? '-' }}</li>
