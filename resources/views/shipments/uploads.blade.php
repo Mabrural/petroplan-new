@@ -51,51 +51,57 @@
             @endif
 
             <!-- Document Upload Cards -->
+            <!-- Document Upload Cards -->
             <div class="row">
                 @foreach ($documentTypes as $index => $docType)
                     <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card shadow-sm h-100">
+                        <div class="card shadow-sm h-100 d-flex flex-column">
                             <div class="card-body d-flex flex-column">
                                 <h6 class="fw-bold mb-2">{{ $docType->document_name }}</h6>
 
-                                <div class="mb-2">
-                                    @php
-                                        $uploadedList = \App\Models\UploadShipmentDocument::where(
-                                            'shipment_id',
-                                            $shipment->id,
-                                        )
-                                            ->where('document_type_id', $docType->id)
-                                            ->where('period_id', session('active_period_id'))
-                                            ->get();
-                                    @endphp
+                                @php
+                                    $uploadedList = \App\Models\UploadShipmentDocument::where(
+                                        'shipment_id',
+                                        $shipment->id,
+                                    )
+                                        ->where('document_type_id', $docType->id)
+                                        ->where('period_id', session('active_period_id'))
+                                        ->get();
+                                @endphp
 
-                                    @if ($uploadedList->isNotEmpty())
-                                        <span class="badge bg-success mb-1">Uploaded
-                                            ({{ $uploadedList->count() }})
-                                        </span><br>
+                                @if ($uploadedList->isNotEmpty())
+                                    <div class="badge bg-success mb-2">
+                                        {{ $uploadedList->count() }} file{{ $uploadedList->count() > 1 ? 's' : '' }}
+                                        uploaded
+                                    </div>
+
+                                    <div class="uploaded-doc-list small mb-3" style="max-height: 100px; overflow-y: auto;">
                                         @foreach ($uploadedList as $doc)
-                                            <button type="button" class="btn btn-sm px-0 text-primary view-doc-btn mb-1"
-                                                data-url="{{ asset('storage/' . $doc->attachment) }}"
-                                                data-name="{{ $docType->document_name }}">
-                                                <i class="fas fa-eye me-1"></i> View Document
-                                            </button><br>
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <span class="text-truncate" style="max-width: 80%;">
+                                                    📄 {{ basename($doc->attachment) }}
+                                                </span>
+                                                <button type="button" class="btn btn-sm btn-outline-primary view-doc-btn"
+                                                    data-url="{{ asset('storage/' . $doc->attachment) }}"
+                                                    data-name="{{ $docType->document_name }}">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </div>
                                         @endforeach
-                                    @else
-                                        <span class="badge bg-warning text-dark">Not Uploaded</span>
-                                    @endif
-
-
-                                </div>
+                                    </div>
+                                @else
+                                    <div class="mb-3">
+                                        <span class="badge bg-warning text-dark">No file uploaded</span>
+                                    </div>
+                                @endif
 
                                 <form action="{{ route('shipments.upload.documents.store', $shipment->id) }}"
                                     method="POST" enctype="multipart/form-data" class="mt-auto">
                                     @csrf
                                     <input type="hidden" name="document_type_id" value="{{ $docType->id }}">
-                                    <div class="input-group">
-                                        <input type="file" name="attachment[]" multiple
-                                            class="form-control form-control-sm" required>
-
-                                        <button type="submit" class="btn btn-sm btn-primary">Upload</button>
+                                    <div class="input-group input-group-sm">
+                                        <input type="file" name="attachment[]" multiple class="form-control" required>
+                                        <button type="submit" class="btn btn-primary">Upload</button>
                                     </div>
                                 </form>
                             </div>
@@ -103,6 +109,7 @@
                     </div>
                 @endforeach
             </div>
+
 
             <!-- Back Button -->
             <div class="mt-4">
