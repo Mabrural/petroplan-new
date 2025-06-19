@@ -43,7 +43,8 @@
     @include('layouts.script')
     @stack('scripts')
 
-    @if (!session('active_period_id'))
+    @if (!session('active_period_id') && isset($allPeriods))
+
         <!-- Active Period Selection Modal -->
         <div class="modal fade" id="periodModal" tabindex="-1" aria-labelledby="periodModalLabel" aria-hidden="true"
             data-bs-backdrop="static" data-bs-keyboard="false">
@@ -71,12 +72,13 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            @if (!session('active_period_id'))
+            @if (!session('active_period_id') && isset($allPeriods))
                 var periodModal = new bootstrap.Modal(document.getElementById('periodModal'));
                 periodModal.show();
             @endif
         });
     </script>
+
 
 
 </body>

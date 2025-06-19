@@ -8,6 +8,7 @@ use App\Models\Termin;
 use App\Models\Vessel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Periode;
 
 class DashboardController extends Controller
 {
@@ -15,17 +16,32 @@ class DashboardController extends Controller
     {
         $activePeriodId = session('active_period_id');
 
+        // Ambil semua periode untuk modal
+        $allPeriods = Periode::orderBy('year', 'desc')->get();
+
         if (!$activePeriodId) {
-            return redirect()->route('set.period')->with('error', 'Please select a period first.');
+            // Default value (kosong) untuk menghindari error
+            $totalVessels = 0;
+            $totalSPK = 0;
+            $totalTermin = 0;
+            $totalShipment = 0;
+            $onlineUsers = 0;
+
+            return view('dashboard.index', compact(
+                'totalVessels',
+                'totalSPK',
+                'totalTermin',
+                'totalShipment',
+                'onlineUsers',
+                'allPeriods'
+            ));
         }
 
-        // Data ringkasan
+        // Data ringkasan jika periodenya sudah dipilih
         $totalVessels = Vessel::count();
         $totalSPK = Spk::where('period_id', $activePeriodId)->count();
         $totalTermin = Termin::where('period_id', $activePeriodId)->count();
         $totalShipment = Shipment::where('period_id', $activePeriodId)->count();
-
-        // Statistik pengguna online hanya dummy (contoh)
         $onlineUsers = 17;
 
         return view('dashboard.index', compact(
@@ -33,7 +49,8 @@ class DashboardController extends Controller
             'totalSPK',
             'totalTermin',
             'totalShipment',
-            'onlineUsers'
+            'onlineUsers',
+            'allPeriods'
         ));
     }
 
