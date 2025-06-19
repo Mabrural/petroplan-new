@@ -121,6 +121,9 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
     // vessel activity chart
     Route::get('/vessel-activity-chart', [DashboardController::class, 'vesselActivityChart'])->name('vessel.activity.chart');
 
+    // bbm usage analysis
+    Route::get('/fuel-usage-analysis', [DashboardController::class, 'fuelUsageAnalysis'])->name('fuel.usage.analysis');
+
 
 
 });

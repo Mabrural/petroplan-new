@@ -97,19 +97,15 @@
 
                 <li
                     class="nav-item 
-    {{ request()->is('shipment-summary-report') ||
-    request()->is('vessel-activity-chart') ||
-    request()->is('bbm-usage-analysis') ||
-    request()->is('export-data') ||
-    request()->is('print-report')
-        ? 'active'
-        : '' }}">
+                        {{ request()->is('shipment-summary-report') ||
+                        request()->is('vessel-activity-chart') ||
+                        request()->is('fuel-usage-analysis')
+                            ? 'active'
+                            : '' }}">
                     <a data-bs-toggle="collapse" href="#reportAnalytics"
                         class="{{ request()->is('shipment-summary-report') ||
                         request()->is('vessel-activity-chart') ||
-                        request()->is('bbm-usage-analysis') ||
-                        request()->is('export-data') ||
-                        request()->is('print-report')
+                        request()->is('fuel-usage-analysis')
                             ? ''
                             : 'collapsed' }}">
                         <i class="fas fa-chart-bar"></i>
@@ -117,13 +113,11 @@
                         <span class="caret"></span>
                     </a>
                     <div class="collapse 
-        {{ request()->is('shipment-summary-report') ||
-        request()->is('vessel-activity-chart') ||
-        request()->is('bbm-usage-analysis') ||
-        request()->is('export-data') ||
-        request()->is('print-report')
-            ? 'show'
-            : '' }}"
+                        {{ request()->is('shipment-summary-report') ||
+                        request()->is('vessel-activity-chart') ||
+                        request()->is('fuel-usage-analysis')
+                            ? 'show'
+                            : '' }}"
                         id="reportAnalytics">
                         <ul class="nav nav-collapse">
                             <li class="{{ request()->is('shipment-summary-report') ? 'active' : '' }}">
@@ -136,19 +130,9 @@
                                     <span class="sub-item">Vessel Activity Chart</span>
                                 </a>
                             </li>
-                            <li class="{{ request()->is('bbm-usage-analysis') ? 'active' : '' }}">
-                                <a href="{{ url('/bbm-usage-analysis') }}">
-                                    <span class="sub-item">BBM Usage Analysis</span>
-                                </a>
-                            </li>
-                            <li class="{{ request()->is('export-data') ? 'active' : '' }}">
-                                <a href="{{ url('/export-data') }}">
-                                    <span class="sub-item">Export Data (Excel/CSV)</span>
-                                </a>
-                            </li>
-                            <li class="{{ request()->is('print-report') ? 'active' : '' }}">
-                                <a href="{{ url('/print-report') }}">
-                                    <span class="sub-item">Print Reports (PDF)</span>
+                            <li class="{{ request()->is('fuel-usage-analysis') ? 'active' : '' }}">
+                                <a href="{{ url('/fuel-usage-analysis') }}">
+                                    <span class="sub-item">Fuel Usage Analysis</span>
                                 </a>
                             </li>
                         </ul>

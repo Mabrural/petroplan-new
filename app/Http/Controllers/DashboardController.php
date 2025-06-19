@@ -38,22 +38,43 @@ class DashboardController extends Controller
     }
 
     public function vesselActivityChart()
-{
-    $activePeriodId = session('active_period_id');
+    {
+        $activePeriodId = session('active_period_id');
 
-    if (!$activePeriodId) {
-        return redirect()->route('set.period')->with('error', 'Please select a period first.');
+        if (!$activePeriodId) {
+            return redirect()->route('set.period')->with('error', 'Please select a period first.');
+        }
+
+        $activityData = Shipment::select('vessel_id', DB::raw('COUNT(*) as shipment_count'))
+            ->where('period_id', $activePeriodId)
+            ->groupBy('vessel_id')
+            ->with('vessel')
+            ->get();
+
+        $labels = $activityData->pluck('vessel.vessel_name');
+        $counts = $activityData->pluck('shipment_count');
+
+        return view('reports.vessel-activity-chart', compact('labels', 'counts'));
     }
 
-    $activityData = Shipment::select('vessel_id', DB::raw('COUNT(*) as shipment_count'))
-        ->where('period_id', $activePeriodId)
-        ->groupBy('vessel_id')
-        ->with('vessel')
-        ->get();
+    public function fuelUsageAnalysis()
+    {
+        $activePeriodId = session('active_period_id');
 
-    $labels = $activityData->pluck('vessel.vessel_name');
-    $counts = $activityData->pluck('shipment_count');
+        if (!$activePeriodId) {
+            return redirect()->route('set.period')->with('error', 'Please select a period first.');
+        }
 
-    return view('reports.vessel-activity-chart', compact('labels', 'counts'));
-}
+        // Group volume per vessel
+        $usageData = Shipment::select('vessel_id', DB::raw('SUM(volume) as total_volume'))
+            ->where('period_id', $activePeriodId)
+            ->groupBy('vessel_id')
+            ->with('vessel')
+            ->get();
+
+        $labels = $usageData->pluck('vessel.vessel_name');
+        $volumes = $usageData->pluck('total_volume');
+
+        return view('reports.fuel-usage-analysis', compact('labels', 'volumes'));
+    }
 }
