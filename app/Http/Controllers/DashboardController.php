@@ -2,12 +2,37 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Shipment;
+use App\Models\Spk;
+use App\Models\Termin;
+use App\Models\Vessel;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        return view('dashboard.index');
+        $activePeriodId = session('active_period_id');
+
+        if (!$activePeriodId) {
+            return redirect()->route('set.period')->with('error', 'Please select a period first.');
+        }
+
+        // Data ringkasan
+        $totalVessels = Vessel::count();
+        $totalSPK = Spk::where('period_id', $activePeriodId)->count();
+        $totalTermin = Termin::where('period_id', $activePeriodId)->count();
+        $totalShipment = Shipment::where('period_id', $activePeriodId)->count();
+
+        // Statistik pengguna online hanya dummy (contoh)
+        $onlineUsers = 17;
+
+        return view('dashboard.index', compact(
+            'totalVessels',
+            'totalSPK',
+            'totalTermin',
+            'totalShipment',
+            'onlineUsers'
+        ));
     }
 }
