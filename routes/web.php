@@ -89,6 +89,9 @@ Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {
     Route::get('/shipments/{id}/upload-documents', [ShipmentController::class, 'uploadDocuments'])->name('shipments.upload.documents');
     Route::post('/shipments/{id}/upload-documents', [ShipmentController::class, 'storeUploadedDocument'])->name('shipments.upload.documents.store');
 
+    Route::delete('shipments/{id}/uploaded-documents/{documentId}', [ShipmentController::class, 'destroyUploadedDocument'])
+    ->name('shipments.upload.documents.destroy');
+
 
 });
 

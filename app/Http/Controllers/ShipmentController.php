@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\DocumentType;
 use App\Models\UploadShipmentDocument;
+use Illuminate\Support\Facades\Storage;
 
 class ShipmentController extends Controller
 {
@@ -274,6 +275,21 @@ class ShipmentController extends Controller
         return back()->with('success', 'Documents uploaded successfully.');
     }
 
+    public function destroyUploadedDocument($id, $documentId)
+{
+    $document = UploadShipmentDocument::where('shipment_id', $id)
+        ->where('id', $documentId)
+        ->firstOrFail();
+
+    // Hapus file dari storage
+    if ($document->attachment && Storage::disk('public')->exists($document->attachment)) {
+        Storage::disk('public')->delete($document->attachment);
+    }
+
+    $document->delete();
+
+    return back()->with('success', 'Document deleted successfully.');
+}
 
 }
 

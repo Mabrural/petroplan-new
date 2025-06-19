@@ -78,14 +78,32 @@
                                     <div class="uploaded-doc-list small mb-3" style="max-height: 100px; overflow-y: auto;">
                                         @foreach ($uploadedList as $doc)
                                             <div class="d-flex justify-content-between align-items-center mb-1">
-                                                <span class="text-truncate" style="max-width: 80%;">
-                                                    📄 {{ basename($doc->attachment) }}
-                                                </span>
-                                                <button type="button" class="btn btn-sm btn-outline-primary view-doc-btn"
-                                                    data-url="{{ asset('storage/' . $doc->attachment) }}"
-                                                    data-name="{{ $docType->document_name }}">
-                                                    <i class="fas fa-eye"></i>
-                                                </button>
+                                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                                    <span class="text-truncate" style="max-width: 65%;">
+                                                        📄 {{ basename($doc->attachment) }}
+                                                    </span>
+
+                                                    <div class="d-flex gap-1">
+                                                        <button type="button"
+                                                            class="btn btn-sm btn-outline-primary view-doc-btn"
+                                                            data-url="{{ asset('storage/' . $doc->attachment) }}"
+                                                            data-name="{{ $docType->document_name }}">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+
+                                                        <form
+                                                            action="{{ route('shipments.upload.documents.destroy', [$shipment->id, $doc->id]) }}"
+                                                            method="POST"
+                                                            onsubmit="return confirm('Are you sure you want to delete this document?')">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button class="btn btn-sm btn-outline-danger">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         @endforeach
                                     </div>
