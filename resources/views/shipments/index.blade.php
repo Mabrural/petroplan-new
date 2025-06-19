@@ -184,6 +184,13 @@
                                                             </button>
                                                         </form>
                                                     </li>
+                                                    <li>
+                                                        <a class="dropdown-item text-warning"
+                                                            href="{{ route('shipments.upload.documents', $shipment->id) }}">
+                                                            <i class="fas fa-upload me-1"></i> Upload Document
+                                                        </a>
+                                                    </li>
+
                                                 </ul>
                                             </div>
                                         </td>
@@ -217,8 +224,8 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <div>
-                                    <h6 class="dropdown-item text-primary view-details"
-                                                data-id="{{ $shipment->id }}">Shipment {{ $shipment->shipment_number }}</h6>
+                                    <h6 class="dropdown-item text-primary view-details" data-id="{{ $shipment->id }}">
+                                        Shipment {{ $shipment->shipment_number }}</h6>
                                     <span class="badge bg-secondary small">
                                         {{ ucfirst(str_replace('_', ' ', $shipment->status_shipment)) }}
                                     </span>

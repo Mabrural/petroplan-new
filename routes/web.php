@@ -86,7 +86,9 @@ Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {
     Route::get('/shipments/{shipment}/details', [ShipmentController::class, 'showDetails'])->name('shipments.details');
     Route::get('/get-termins/{periodId}', [ShipmentController::class, 'getTermins']);
 
-    
+    Route::get('/shipments/{id}/upload-documents', [ShipmentController::class, 'uploadDocuments'])->name('shipments.upload.documents');
+    Route::post('/shipments/{id}/upload-documents', [ShipmentController::class, 'storeUploadedDocument'])->name('shipments.upload.documents.store');
+
 
 });
 
