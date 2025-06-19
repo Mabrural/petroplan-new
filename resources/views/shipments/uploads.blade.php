@@ -56,9 +56,11 @@
                                 <h6 class="fw-bold mb-2">{{ $docType->document_name }}</h6>
 
                                 @php
-                                    $uploadedList = \App\Models\UploadShipmentDocument::where('shipment_id', $shipment->id)
+                                    $uploadedList = \App\Models\UploadShipmentDocument::with('creator')
+                                        ->where('shipment_id', $shipment->id)
                                         ->where('document_type_id', $docType->id)
                                         ->where('period_id', session('active_period_id'))
+                                        ->orderBy('created_at', 'desc')
                                         ->get();
                                 @endphp
 
@@ -67,38 +69,50 @@
                                         {{ $uploadedList->count() }} file{{ $uploadedList->count() > 1 ? 's' : '' }} uploaded
                                     </div>
 
-                                    <div class="uploaded-doc-list small mb-3" style="max-height: 120px; overflow-y: auto;">
+                                    <div class="uploaded-doc-list small mb-3" style="max-height: 150px; overflow-y: auto;">
                                         @foreach ($uploadedList as $doc)
-                                            <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded">
-                                                <div class="d-flex align-items-center gap-2" style="width: 70%;">
-                                                    <div class="thumbnail-preview cursor-pointer" 
-                                                        style="width: 50px; height: 50px; overflow: hidden;"
-                                                        data-bs-toggle="modal" data-bs-target="#documentModal"
-                                                        data-url="{{ asset('storage/' . $doc->attachment) }}"
-                                                        data-type="{{ pathinfo($doc->attachment, PATHINFO_EXTENSION) }}"
-                                                        data-title="{{ basename($doc->attachment) }}">
-                                                        @if (Str::endsWith($doc->attachment, ['.pdf']))
-                                                            <div class="bg-danger text-white d-flex align-items-center justify-content-center h-100">
-                                                                <i class="fas fa-file-pdf fa-lg"></i>
-                                                            </div>
-                                                        @else
-                                                            <img src="{{ asset('storage/' . $doc->attachment) }}"
-                                                                class="img-fluid h-100 w-100 object-fit-cover">
-                                                        @endif
+                                            <div class="d-flex flex-column mb-2 p-2 bg-light rounded">
+                                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                                    <div class="d-flex align-items-center gap-2" style="width: 70%;">
+                                                        <div class="thumbnail-preview cursor-pointer" 
+                                                            style="width: 50px; height: 50px; overflow: hidden;"
+                                                            data-bs-toggle="modal" data-bs-target="#documentModal"
+                                                            data-url="{{ asset('storage/' . $doc->attachment) }}"
+                                                            data-type="{{ pathinfo($doc->attachment, PATHINFO_EXTENSION) }}"
+                                                            data-title="{{ basename($doc->attachment) }}">
+                                                            @if (Str::endsWith($doc->attachment, ['.pdf']))
+                                                                <div class="bg-danger text-white d-flex align-items-center justify-content-center h-100">
+                                                                    <i class="fas fa-file-pdf fa-lg"></i>
+                                                                </div>
+                                                            @else
+                                                                <img src="{{ asset('storage/' . $doc->attachment) }}"
+                                                                    class="img-fluid h-100 w-100 object-fit-cover">
+                                                            @endif
+                                                        </div>
+                                                        <span class="text-truncate">
+                                                            {{ basename($doc->attachment) }}
+                                                        </span>
                                                     </div>
-                                                    <span class="text-truncate">
-                                                        {{ basename($doc->attachment) }}
-                                                    </span>
+                                                    <div>
+                                                        <form action="{{ route('shipments.upload.documents.destroy', [$shipment->id, $doc->id]) }}"
+                                                            method="POST" class="d-inline delete-form">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="button" class="btn btn-sm btn-outline-danger delete-btn">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <form action="{{ route('shipments.upload.documents.destroy', [$shipment->id, $doc->id]) }}"
-                                                        method="POST" class="d-inline delete-form">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="button" class="btn btn-sm btn-outline-danger delete-btn">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </button>
-                                                    </form>
+                                                <div class="d-flex justify-content-between align-items-center small text-muted">
+                                                    <span>
+                                                        <i class="fas fa-user me-1"></i>
+                                                        {{ $doc->creator->name ?? 'System' }}
+                                                    </span>
+                                                    <span>
+                                                        <i class="fas fa-clock me-1"></i>
+                                                        {{ $doc->created_at->format('d M Y H:i') }}
+                                                    </span>
                                                 </div>
                                             </div>
                                         @endforeach
