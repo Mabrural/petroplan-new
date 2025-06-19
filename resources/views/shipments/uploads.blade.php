@@ -48,19 +48,15 @@
             </div>
 
             <!-- Document Upload Cards -->
-            <!-- Document Upload Cards -->
             <div class="row">
-                @foreach ($documentTypes as $index => $docType)
+                @foreach ($documentTypes as $docType)
                     <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card shadow-sm h-100 d-flex flex-column">
-                            <div class="card-body d-flex flex-column">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-body">
                                 <h6 class="fw-bold mb-2">{{ $docType->document_name }}</h6>
 
                                 @php
-                                    $uploadedList = \App\Models\UploadShipmentDocument::where(
-                                        'shipment_id',
-                                        $shipment->id,
-                                    )
+                                    $uploadedList = \App\Models\UploadShipmentDocument::where('shipment_id', $shipment->id)
                                         ->where('document_type_id', $docType->id)
                                         ->where('period_id', session('active_period_id'))
                                         ->get();
@@ -68,39 +64,42 @@
 
                                 @if ($uploadedList->isNotEmpty())
                                     <div class="badge bg-success mb-2">
-                                        {{ $uploadedList->count() }} file{{ $uploadedList->count() > 1 ? 's' : '' }}
-                                        uploaded
+                                        {{ $uploadedList->count() }} file{{ $uploadedList->count() > 1 ? 's' : '' }} uploaded
                                     </div>
 
-                                    <div class="uploaded-doc-list small mb-3" style="max-height: 100px; overflow-y: auto;">
+                                    <div class="uploaded-doc-list small mb-3" style="max-height: 120px; overflow-y: auto;">
                                         @foreach ($uploadedList as $doc)
-                                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                                    <span class="text-truncate" style="max-width: 65%;">
-                                                        📄 {{ basename($doc->attachment) }}
-                                                    </span>
-
-                                                    <div class="d-flex gap-1">
-                                                        <button type="button"
-                                                            class="btn btn-sm btn-outline-primary view-doc-btn"
-                                                            data-url="{{ asset('storage/' . $doc->attachment) }}"
-                                                            data-name="{{ $docType->document_name }}">
-                                                            <i class="fas fa-eye"></i>
-                                                        </button>
-
-                                                        <form
-                                                            action="{{ route('shipments.upload.documents.destroy', [$shipment->id, $doc->id]) }}"
-                                                            method="POST"
-                                                            onsubmit="return confirm('Are you sure you want to delete this document?')">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button class="btn btn-sm btn-outline-danger">
-                                                                <i class="fas fa-trash-alt"></i>
-                                                            </button>
-                                                        </form>
+                                            <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded">
+                                                <div class="d-flex align-items-center gap-2" style="width: 70%;">
+                                                    <div class="thumbnail-preview cursor-pointer" 
+                                                        style="width: 50px; height: 50px; overflow: hidden;"
+                                                        data-bs-toggle="modal" data-bs-target="#documentModal"
+                                                        data-url="{{ asset('storage/' . $doc->attachment) }}"
+                                                        data-type="{{ pathinfo($doc->attachment, PATHINFO_EXTENSION) }}"
+                                                        data-title="{{ basename($doc->attachment) }}">
+                                                        @if (Str::endsWith($doc->attachment, ['.pdf']))
+                                                            <div class="bg-danger text-white d-flex align-items-center justify-content-center h-100">
+                                                                <i class="fas fa-file-pdf fa-lg"></i>
+                                                            </div>
+                                                        @else
+                                                            <img src="{{ asset('storage/' . $doc->attachment) }}"
+                                                                class="img-fluid h-100 w-100 object-fit-cover">
+                                                        @endif
                                                     </div>
+                                                    <span class="text-truncate">
+                                                        {{ basename($doc->attachment) }}
+                                                    </span>
                                                 </div>
-
+                                                <div>
+                                                    <form action="{{ route('shipments.upload.documents.destroy', [$shipment->id, $doc->id]) }}"
+                                                        method="POST" class="d-inline delete-form">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" class="btn btn-sm btn-outline-danger delete-btn">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         @endforeach
                                     </div>
@@ -111,12 +110,14 @@
                                 @endif
 
                                 <form action="{{ route('shipments.upload.documents.store', $shipment->id) }}"
-                                    method="POST" enctype="multipart/form-data" class="mt-auto">
+                                    method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <input type="hidden" name="document_type_id" value="{{ $docType->id }}">
                                     <div class="input-group input-group-sm">
                                         <input type="file" name="attachment[]" multiple class="form-control" required>
-                                        <button type="submit" class="btn btn-primary">Upload</button>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-upload me-1"></i> Upload
+                                        </button>
                                     </div>
                                 </form>
                             </div>
@@ -124,7 +125,6 @@
                     </div>
                 @endforeach
             </div>
-
 
             <!-- Back Button -->
             <div class="mt-4">
@@ -135,50 +135,47 @@
         </div>
     </div>
 
-    <!-- Offcanvas Slider -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="documentSlider" aria-labelledby="documentSliderLabel">
-        <div class="offcanvas-header bg-light">
-            <h5 class="offcanvas-title" id="documentSliderLabel">Document Viewer</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <!-- Document Preview Modal -->
+    <div class="modal fade" id="documentModal" tabindex="-1" aria-labelledby="documentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="documentModalLabel">Document Preview</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0" style="min-height: 70vh;">
+                    <div id="documentViewer" class="w-100 h-100 d-flex justify-content-center align-items-center">
+                        <div class="text-center p-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2">Loading document...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> Close
+                    </button>
+                    <a id="downloadBtn" href="#" class="btn btn-primary" download>
+                        <i class="fas fa-download me-1"></i> Download
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="offcanvas-body p-0" id="documentViewerBody" style="height: 100dvh; overflow: hidden;">
-            <iframe id="documentFrame" src="" width="100%" height="100%" frameborder="0"
-                style="border: none;"></iframe>
-        </div>
-
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const viewButtons = document.querySelectorAll('.view-doc-btn');
-            const documentSlider = new bootstrap.Offcanvas(document.getElementById('documentSlider'));
-            const documentFrame = document.getElementById('documentFrame');
-            const documentLabel = document.getElementById('documentSliderLabel');
-
-            viewButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const url = this.getAttribute('data-url');
-                    const name = this.getAttribute('data-name');
-
-                    documentFrame.src = url;
-                    documentLabel.innerText = name;
-                    documentSlider.show();
-                });
-            });
-        });
-    </script>
 
     <!-- SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
+        // Alert notification system
         @if (session('success'))
             showAlert('success', '{{ session('success') }}');
         @endif
-
         @if (session('error'))
             showAlert('error', '{{ session('error') }}');
         @endif
-
         @if ($errors->any())
             showAlert('error', '{{ $errors->first() }}');
         @endif
@@ -199,12 +196,12 @@
                 '<i class="fas fa-exclamation-circle me-2"></i>';
 
             alertEl.innerHTML = `
-            <div class="d-flex align-items-center">
-                <div style="font-size: 1.5rem; color: ${type === 'success' ? '#28a745' : '#dc3545'};">${icon}</div>
-                <div><strong>${type.charAt(0).toUpperCase() + type.slice(1)}!</strong> ${message}</div>
-            </div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        `;
+                <div class="d-flex align-items-center">
+                    <div style="font-size: 1.5rem; color: ${type === 'success' ? '#28a745' : '#dc3545'};">${icon}</div>
+                    <div><strong>${type.charAt(0).toUpperCase() + type.slice(1)}!</strong> ${message}</div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
 
             alertContainer.appendChild(alertEl);
 
@@ -217,39 +214,98 @@
             }, 5000);
         }
 
-        // Tambahkan SweetAlert untuk konfirmasi hapus dokumen
-        document.querySelectorAll('form[action*="upload.documents.destroy"]').forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                Swal.fire({
-                    title: 'Delete Document?',
-                    text: "This action cannot be undone!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Yes, delete it!',
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    }
+        // Document Modal Handler
+        document.addEventListener('DOMContentLoaded', function() {
+            const documentModal = new bootstrap.Modal(document.getElementById('documentModal'));
+            const documentViewer = document.getElementById('documentViewer');
+            const documentModalLabel = document.getElementById('documentModalLabel');
+            const downloadBtn = document.getElementById('downloadBtn');
+
+            // Handle thumbnail clicks
+            document.querySelectorAll('.thumbnail-preview').forEach(thumbnail => {
+                thumbnail.addEventListener('click', function() {
+                    const url = this.getAttribute('data-url');
+                    const type = this.getAttribute('data-type').toLowerCase();
+                    const title = this.getAttribute('data-title');
+
+                    documentModalLabel.textContent = title;
+                    downloadBtn.setAttribute('href', url);
+                    downloadBtn.setAttribute('download', title);
+
+                    // Show loading state
+                    documentViewer.innerHTML = `
+                        <div class="text-center p-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2">Loading document...</p>
+                        </div>
+                    `;
+
+                    // Load content based on type
+                    setTimeout(() => {
+                        if (type === 'pdf') {
+                            documentViewer.innerHTML = `
+                                <embed src="${url}" type="application/pdf" 
+                                    style="width: 100%; height: 70vh; border: none;" />
+                            `;
+                        } else if (['jpg', 'jpeg', 'png', 'gif'].includes(type)) {
+                            documentViewer.innerHTML = `
+                                <img src="${url}" class="img-fluid" style="max-height: 70vh; object-fit: contain;">
+                            `;
+                        } else {
+                            documentViewer.innerHTML = `
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Preview not available for this file type. Please download to view.
+                                </div>
+                            `;
+                        }
+                    }, 300);
+
+                    documentModal.show();
+                });
+            });
+
+            // Delete confirmation
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const form = this.closest('form');
+                    
+                    Swal.fire({
+                        title: 'Delete Document?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'Cancel',
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
                 });
             });
         });
 
-        // Keyframe for slide in/out
+        // Keyframe animations
         const style = document.createElement('style');
         style.innerHTML = `
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes fadeOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
-        }
-    `;
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes fadeOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            .cursor-pointer { cursor: pointer; }
+            .object-fit-cover { object-fit: cover; }
+        `;
         document.head.appendChild(style);
     </script>
 @endsection
