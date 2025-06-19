@@ -23,7 +23,8 @@
                 <div class="card-body">
                     <form id="filterForm" method="GET" action="{{ route('shipments.index') }}">
                         <div class="row g-3">
-                            <div class="col-md-2">
+                            <!-- Baris Pertama (6 filter) -->
+                            <div class="col-6 col-md-4 col-lg-2">
                                 <label for="termin_id" class="form-label">Termin</label>
                                 <select class="form-select" id="termin_id" name="termin_id">
                                     <option value="">All Termin</option>
@@ -35,7 +36,8 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-2">
+
+                            <div class="col-6 col-md-4 col-lg-2">
                                 <label for="spk_id" class="form-label">SPK</label>
                                 <select class="form-select" id="spk_id" name="spk_id">
                                     <option value="">All SPK</option>
@@ -47,7 +49,8 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-2">
+
+                            <div class="col-6 col-md-4 col-lg-2">
                                 <label for="vessel_id" class="form-label">Vessel</label>
                                 <select class="form-select" id="vessel_id" name="vessel_id">
                                     <option value="">All Vessel</option>
@@ -59,7 +62,8 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-2">
+
+                            <div class="col-6 col-md-4 col-lg-2">
                                 <label for="fuel_id" class="form-label">Fuel</label>
                                 <select class="form-select" id="fuel_id" name="fuel_id">
                                     <option value="">All Fuel</option>
@@ -71,7 +75,8 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-2">
+
+                            <div class="col-6 col-md-4 col-lg-2">
                                 <label for="status_shipment" class="form-label">Status</label>
                                 <select class="form-select" id="status_shipment" name="status_shipment">
                                     <option value="">All Status</option>
@@ -83,14 +88,32 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-2 d-flex align-items-end">
-                                <a href="{{ route('shipments.index') }}" class="btn btn-secondary">
+
+                            <div class="col-6 col-md-4 col-lg-2">
+                                <label for="per_page" class="form-label">Show</label>
+                                <select class="form-select" id="per_page" name="per_page" onchange="this.form.submit()">
+                                    @foreach ([10, 20, 30, 100, 1000] as $option)
+                                        <option value="{{ $option }}"
+                                            {{ request('per_page', 10) == $option ? 'selected' : '' }}>
+                                            {{ $option }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Baris Kedua (Reset Button) -->
+                            <div class="col-12 col-lg-2 d-flex align-items-end">
+                                <a href="{{ route('shipments.index') }}" class="btn btn-secondary w-100">
                                     <i class="fas fa-sync-alt me-1"></i> Reset
                                 </a>
                             </div>
                         </div>
                     </form>
                 </div>
+            </div>
+            <div class="mb-2 text-muted small">
+                Showing {{ $shipments->firstItem() }}–{{ $shipments->lastItem() }} of {{ $totalShipments }}
+                shipments
             </div>
 
             <!-- Desktop Table -->
@@ -115,7 +138,7 @@
                             <tbody>
                                 @forelse ($shipments as $shipment)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $shipments->firstItem() + $loop->index }}</td>
                                         <td>{{ 'Termin ' . $shipment->termin->termin_number ?? '-' }}</td>
                                         <td>{{ 'Shipment ' . $shipment->shipment_number ?? '-' }}</td>
                                         <td>{{ $shipment->vessel->vessel_name ?? '-' }}</td>
@@ -175,9 +198,12 @@
                         </table>
                     </div>
                 </div>
+                <div class="p-3">
+                    {{ $shipments->links('pagination::bootstrap-5') }}
+                </div>
+
             </div>
 
-            <!-- Mobile Card List -->
             <!-- Mobile Card List -->
             <div class="d-lg-none mt-3">
                 @forelse ($shipments as $shipment)
@@ -245,6 +271,9 @@
                         </div>
                     </div>
                 @endforelse
+                <div class="p-3">
+                    {{ $shipments->links('pagination::bootstrap-5') }}
+                </div>
             </div>
 
         </div>
