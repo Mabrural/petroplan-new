@@ -18,6 +18,67 @@
                 </div>
             </div>
 
+            <!-- Filter Section -->
+            <div class="card mt-3">
+                <div class="card-body">
+                    <form id="filterForm" method="GET" action="{{ route('upload-shipment-documents.index') }}">
+                        <div class="row g-3">
+                            <!-- Shipment Filter -->
+                            <div class="col-6 col-md-4 col-lg-3">
+                                <label for="shipment_id" class="form-label">Shipment</label>
+                                <select class="form-select" id="shipment_id" name="shipment_id">
+                                    <option value="">All Shipments</option>
+                                    @foreach ($shipments as $shipment)
+                                        <option value="{{ $shipment->id }}"
+                                            {{ request('shipment_id') == $shipment->id ? 'selected' : '' }}>
+                                            Shipment {{ $shipment->shipment_number }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Document Type Filter -->
+                            <div class="col-6 col-md-4 col-lg-3">
+                                <label for="document_type_id" class="form-label">Document Type</label>
+                                <select class="form-select" id="document_type_id" name="document_type_id">
+                                    <option value="">All Types</option>
+                                    @foreach ($documentTypes as $type)
+                                        <option value="{{ $type->id }}"
+                                            {{ request('document_type_id') == $type->id ? 'selected' : '' }}>
+                                            {{ $type->document_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Items Per Page -->
+                            <div class="col-6 col-md-4 col-lg-2">
+                                <label for="per_page" class="form-label">Show</label>
+                                <select class="form-select" id="per_page" name="per_page" onchange="this.form.submit()">
+                                    @foreach ([10, 20, 30, 50, 100] as $option)
+                                        <option value="{{ $option }}"
+                                            {{ request('per_page', 10) == $option ? 'selected' : '' }}>
+                                            {{ $option }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Reset Button -->
+                            <div class="col-6 col-md-4 col-lg-2 d-flex align-items-end">
+                                <a href="{{ route('upload-shipment-documents.index') }}" class="btn btn-secondary w-100">
+                                    <i class="fas fa-sync-alt me-1"></i> Reset
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="mb-2 text-muted small">
+                Showing {{ $documents->firstItem() }}–{{ $documents->lastItem() }} of {{ $totalDocuments }} documents
+            </div>
+
             <!-- Desktop Table -->
             <div class="card d-none d-lg-block mt-3">
                 <div class="card-body p-0">
@@ -26,27 +87,31 @@
                             <thead class="bg-light">
                                 <tr>
                                     <th width="5%">#</th>
-                                    <th>Period</th>
                                     <th>Shipment</th>
                                     <th>Document Type</th>
                                     <th>Attachment</th>
-                                    <th>Uploaded By</th>
+                                    <th>Uploaded By/At</th>
                                     <th width="15%">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($documents as $document)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $document->period->name ?? '-' }}</td>
-                                        <td>{{ 'Shipment '.$document->shipment->shipment_number ?? '-' }}</td>
+                                        <td>{{ $documents->firstItem() + $loop->index }}</td>
+                                        <td>{{ 'Shipment ' . $document->shipment->shipment_number ?? '-' }}</td>
                                         <td>{{ $document->documentType->document_name ?? '-' }}</td>
                                         <td>
-                                            <a href="{{ asset('storage/' . $document->attachment) }}" target="_blank" class="text-decoration-underline">View</a>
+                                            <a href="{{ asset('storage/' . $document->attachment) }}" target="_blank"
+                                                class="text-decoration-underline">View</a>
                                         </td>
-                                        <td>{{ $document->creator->name ?? '-' }}</td>
                                         <td>
-                                            <form action="{{ route('upload-shipment-documents.destroy', $document->id) }}" method="POST" onsubmit="return confirmDelete(event)">
+                                            <div class="fw-bold">{{ $document->creator->name ?? '-' }}</div>
+                                            <small
+                                                class="text-muted">{{ $document->created_at ? $document->created_at->format('d M Y H:i') : '-' }}</small>
+                                        </td>
+                                        <td>
+                                            <form action="{{ route('upload-shipment-documents.destroy', $document->id) }}"
+                                                method="POST" onsubmit="return confirmDelete(event)">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger">
@@ -59,7 +124,8 @@
                                     <tr>
                                         <td colspan="7" class="text-center py-4">
                                             <div class="d-flex flex-column align-items-center">
-                                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state" style="height: 120px; opacity: 0.7;" class="mb-3">
+                                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state"
+                                                    style="height: 120px; opacity: 0.7;" class="mb-3">
                                                 <h5 class="text-muted">No Documents Found</h5>
                                                 <p class="text-muted mb-3">No uploaded documents available yet</p>
                                             </div>
@@ -70,6 +136,9 @@
                         </table>
                     </div>
                 </div>
+                <div class="p-3">
+                    {{ $documents->links('pagination::bootstrap-5') }}
+                </div>
             </div>
 
             <!-- Mobile Card List -->
@@ -79,9 +148,14 @@
                         <div class="card-body">
                             <h6 class="fw-bold mb-1">{{ $document->documentType->document_name ?? 'Unknown' }}</h6>
                             <p class="text-muted mb-1">Shipment: {{ $document->shipment->shipment_number ?? '-' }}</p>
-                            <p class="text-muted mb-1">Uploaded by: {{ $document->creator->name ?? '-' }}</p>
-                            <a href="{{ asset('storage/' . $document->attachment) }}" target="_blank" class="btn btn-sm btn-outline-primary me-2">View</a>
-                            <form action="{{ route('upload-shipment-documents.destroy', $document->id) }}" method="POST" class="d-inline" onsubmit="return confirmDelete(event)">
+                            <p class="text-muted mb-0 mt-1">Uploaded by: </p>
+                            <div class="fw-bold">{{ $document->creator->name ?? '-' }}</div>
+                            <small
+                                class="text-muted">{{ $document->created_at ? $document->created_at->format('d M Y H:i') : '-' }}</small><br>
+                            <a href="{{ asset('storage/' . $document->attachment) }}" target="_blank"
+                                class="btn btn-sm btn-outline-primary me-2">View</a>
+                            <form action="{{ route('upload-shipment-documents.destroy', $document->id) }}" method="POST"
+                                class="d-inline" onsubmit="return confirmDelete(event)">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
@@ -92,13 +166,17 @@
                     <div class="card">
                         <div class="card-body text-center py-4">
                             <div class="d-flex flex-column align-items-center">
-                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state" style="height: 100px; opacity: 0.7;" class="mb-3">
+                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state"
+                                    style="height: 100px; opacity: 0.7;" class="mb-3">
                                 <h5 class="text-muted">No Documents Available</h5>
                                 <p class="text-muted mb-3">Start uploading shipment documents</p>
                             </div>
                         </div>
                     </div>
                 @endforelse
+                <div class="p-3">
+                    {{ $documents->links('pagination::bootstrap-5') }}
+                </div>
             </div>
         </div>
     </div>
@@ -134,9 +212,9 @@
                 margin-bottom: 10px;
             `;
 
-            let icon = type === 'success'
-                ? '<i class="fas fa-check-circle me-2"></i>'
-                : '<i class="fas fa-exclamation-circle me-2"></i>';
+            let icon = type === 'success' ?
+                '<i class="fas fa-check-circle me-2"></i>' :
+                '<i class="fas fa-exclamation-circle me-2"></i>';
 
             alertEl.innerHTML = `
                 <div class="d-flex align-items-center">
@@ -171,13 +249,27 @@
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, delete it!',
-                customClass: { popup: 'animated bounceIn' }
+                customClass: {
+                    popup: 'animated bounceIn'
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     form.submit();
                 }
             });
         }
+
+        // Auto-submit form when filter changes (except per_page which has its own onchange)
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterForm = document.getElementById('filterForm');
+            const filterSelects = filterForm.querySelectorAll('select:not(#per_page)');
+
+            filterSelects.forEach(select => {
+                select.addEventListener('change', function() {
+                    filterForm.submit();
+                });
+            });
+        });
 
         const style = document.createElement('style');
         style.innerHTML = `

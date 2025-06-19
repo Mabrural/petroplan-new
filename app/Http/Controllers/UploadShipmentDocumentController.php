@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 
 class UploadShipmentDocumentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $activePeriodId = session('active_period_id');
 
@@ -20,12 +20,30 @@ class UploadShipmentDocumentController extends Controller
             return redirect()->route('set.period')->with('error', 'Please select a period first.');
         }
 
-        $documents = UploadShipmentDocument::with(['shipment', 'documentType', 'period'])
-                        ->where('period_id', $activePeriodId)
-                        ->latest()
-                        ->get();
+        $perPage = $request->input('per_page', 10);
+        
+        $documents = UploadShipmentDocument::with(['shipment', 'documentType', 'period', 'creator'])
+                        ->where('period_id', $activePeriodId);
 
-        return view('upload-shipment-documents.index', compact('documents'));
+        // Add filters
+        if ($request->filled('shipment_id')) {
+            $documents->where('shipment_id', $request->shipment_id);
+        }
+
+        if ($request->filled('document_type_id')) {
+            $documents->where('document_type_id', $request->document_type_id);
+        }
+
+        $documents = $documents->latest()->paginate($perPage)->withQueryString();
+        $totalDocuments = $documents->total();
+
+        // Get filter options
+        $shipments = Shipment::where('period_id', $activePeriodId)->get();
+        $documentTypes = DocumentType::all();
+
+        return view('upload-shipment-documents.index', compact(
+            'documents', 'shipments', 'documentTypes', 'perPage', 'totalDocuments'
+        ));
     }
 
 
