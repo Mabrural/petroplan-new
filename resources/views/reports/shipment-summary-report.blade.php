@@ -111,6 +111,11 @@
                 Showing {{ $shipments->firstItem() }}–{{ $shipments->lastItem() }} of {{ $totalShipments }}
                 shipments
             </div>
+            <a href="{{ route('shipment.summary.export', request()->all()) }}" target="_blank"
+                class="btn btn-outline-dark btn-sm">
+                <i class="fas fa-file-pdf me-1"></i> Print / Download PDF
+            </a>
+
 
             <!-- Desktop Table -->
             <div class="card d-none d-lg-block mt-3">
@@ -191,43 +196,6 @@
                                     <span class="badge bg-secondary small">
                                         {{ ucfirst(str_replace('_', ' ', $shipment->status_shipment)) }}
                                     </span>
-                                </div>
-                                <div class="dropdown">
-                                    <button class="btn btn-sm btn-light border" type="button" data-bs-toggle="dropdown">
-                                        <i class="fas fa-ellipsis-v text-muted"></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li>
-                                            <button class="dropdown-item text-info view-details"
-                                                data-id="{{ $shipment->id }}">
-                                                <i class="fas fa-eye me-1"></i> View Details
-                                            </button>
-                                        </li>
-                                        @if (Auth::check() && Auth::user()->rolePermissions->contains('permission', 'admin_officer'))
-                                            <li>
-                                                <a class="dropdown-item text-primary"
-                                                    href="{{ route('shipments.edit', $shipment->id) }}">
-                                                    <i class="fas fa-edit me-1"></i> Edit
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <form action="{{ route('shipments.destroy', $shipment->id) }}"
-                                                    method="POST" onsubmit="return confirmDelete(event)">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="dropdown-item text-danger">
-                                                        <i class="fas fa-trash-alt me-1"></i> Delete
-                                                    </button>
-                                                </form>
-                                            </li>
-                                        @endif
-                                        <li>
-                                            <a class="dropdown-item text-warning"
-                                                href="{{ route('shipments.upload.documents', $shipment->id) }}">
-                                                <i class="fas fa-upload me-1"></i> Upload Document
-                                            </a>
-                                        </li>
-                                    </ul>
                                 </div>
                             </div>
 

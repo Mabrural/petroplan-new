@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\ShipmentSummaryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UploadShipmentDocumentController;
 use App\Http\Controllers\DocumentTypeController;
@@ -114,7 +115,9 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
 
 
     //report
-    Route::get('/shipment-summary-report', [App\Http\Controllers\ShipmentSummaryController::class, 'index'])->name('shipment.summary');
+    Route::get('/shipment-summary-report', [ShipmentSummaryController::class, 'index'])->name('shipment.summary');
+    Route::get('/shipment-summary/export', [ShipmentSummaryController::class, 'exportShipmentSummary'])->name('shipment.summary.export');
+
 
 });
 
