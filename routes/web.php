@@ -82,28 +82,36 @@ Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {
 
     Route::resource('spks', SpkController::class);
 
-    Route::resource('shipments', ShipmentController::class);
-    Route::get('/shipments/{shipment}/details', [ShipmentController::class, 'showDetails'])->name('shipments.details');
+    // Route::resource('shipments', ShipmentController::class);
+    
     Route::get('/get-termins/{periodId}', [ShipmentController::class, 'getTermins']);
-
-    Route::get('/shipments/{id}/upload-documents', [ShipmentController::class, 'uploadDocuments'])->name('shipments.upload.documents');
-    Route::post('/shipments/{id}/upload-documents', [ShipmentController::class, 'storeUploadedDocument'])->name('shipments.upload.documents.store');
-
-    Route::delete('shipments/{id}/uploaded-documents/{documentId}', [ShipmentController::class, 'destroyUploadedDocument'])
-    ->name('shipments.upload.documents.destroy');
 
 
 });
 
 // admin officer
 Route::middleware(['auth', 'verified', 'active', 'admin_officer'])->group(function () {
-
+    Route::get('shipments/create', [ShipmentController::class, 'create'])->name('shipments.create');
+    Route::post('shipments', [ShipmentController::class, 'store'])->name('shipments.store');
+    Route::get('shipments/{shipment}/edit', [ShipmentController::class, 'edit'])->name('shipments.edit');
+    Route::put('shipments/{shipment}', [ShipmentController::class, 'update'])->name('shipments.update');
+    Route::delete('shipments/{shipment}', [ShipmentController::class, 'destroy'])->name('shipments.destroy');
 });
 
-// operasion
+
+// all roles
 Route::middleware(['auth', 'verified', 'active'])->group(function () {
     Route::resource('upload-shipment-documents', UploadShipmentDocumentController::class);
     Route::get('/get-shipments/{periodId}', [UploadShipmentDocumentController::class, 'getShipments']);
+
+    Route::get('shipments', [ShipmentController::class, 'index'])->name('shipments.index');
+    Route::get('/shipments/{shipment}/details', [ShipmentController::class, 'showDetails'])->name('shipments.details');
+
+    Route::get('/shipments/{id}/upload-documents', [ShipmentController::class, 'uploadDocuments'])->name('shipments.upload.documents');
+    Route::post('/shipments/{id}/upload-documents', [ShipmentController::class, 'storeUploadedDocument'])->name('shipments.upload.documents.store');
+
+    Route::delete('shipments/{id}/uploaded-documents/{documentId}', [ShipmentController::class, 'destroyUploadedDocument'])
+    ->name('shipments.upload.documents.destroy');
 });
 
 require __DIR__.'/auth.php';
