@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UploadShipmentDocumentController;
 use App\Http\Controllers\DocumentTypeController;
 use App\Http\Controllers\ShipmentController;
@@ -19,9 +20,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard.index');
-})->middleware(['auth', 'verified', 'active'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard.index');
+// })->middleware(['auth', 'verified', 'active'])->name('dashboard');
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified', 'active'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
