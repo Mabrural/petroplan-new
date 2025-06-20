@@ -43,41 +43,65 @@
     @include('layouts.script')
     @stack('scripts')
 
-    @if (!session('active_period_id') && isset($allPeriods))
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        <!-- Active Period Selection Modal -->
-        <div class="modal fade" id="periodModal" tabindex="-1" aria-labelledby="periodModalLabel" aria-hidden="true"
-            data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered"> {{-- Center the modal vertically --}}
-                <form action="{{ route('set.period') }}" method="POST" class="modal-content shadow">
-                    @csrf
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="periodModalLabel">Select Active Period</h5>
-                    </div>
-                    <div class="modal-body">
-                        <select name="period_id" class="form-select" required>
-                            <option value="">-- Choose Period --</option>
-                            @foreach ($allPeriods as $periode)
-                                <option value="{{ $periode->id }}">{{ $periode->name }} </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Set Period</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+    @if (!session('active_period_id') && isset($allPeriods))
+        <form id="setPeriodForm" action="{{ route('set.period') }}" method="POST" style="display:none;">
+            @csrf
+            <input type="hidden" name="period_id" id="selectedPeriodId">
+        </form>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const periods = @json($allPeriods);
+
+                let htmlContent = '<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem;">';
+
+                periods.forEach(p => {
+                    htmlContent += `
+                    <div class="period-card" data-id="${p.id}"
+                        style="
+                            border: 1px solid #ddd;
+                            border-radius: 10px;
+                            padding: 1rem;
+                            min-width: 150px;
+                            text-align: center;
+                            cursor: pointer;
+                            background-color: #f8f9fa;
+                            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                            transition: all 0.3s;
+                        "
+                        onmouseover="this.style.backgroundColor='#e2e6ea'"
+                        onmouseout="this.style.backgroundColor='#f8f9fa'"
+                    >
+                        <strong>${p.name}</strong>
+                    </div>`;
+                });
+
+                htmlContent += '</div>';
+
+                Swal.fire({
+                    title: 'Select Active Period',
+                    html: htmlContent,
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        document.querySelectorAll('.period-card').forEach(card => {
+                            card.addEventListener('click', function() {
+                                const selectedId = this.getAttribute('data-id');
+                                document.getElementById('selectedPeriodId').value =
+                                    selectedId;
+                                document.getElementById('setPeriodForm').submit();
+                            });
+                        });
+                    }
+                });
+            });
+        </script>
     @endif
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            @if (!session('active_period_id') && isset($allPeriods))
-                var periodModal = new bootstrap.Modal(document.getElementById('periodModal'));
-                periodModal.show();
-            @endif
-        });
-    </script>
 
 
 
