@@ -50,7 +50,7 @@
             <!-- Document Upload Cards -->
             <div class="row">
                 @php
-                    // Optimized: Get all uploaded documents in a single query
+                    // Get all uploaded documents in a single optimized query
                     $uploadedDocuments = \App\Models\UploadShipmentDocument::with(['creator', 'documentType'])
                         ->where('shipment_id', $shipment->id)
                         ->where('period_id', session('active_period_id'))
@@ -67,17 +67,19 @@
                                 @if (isset($uploadedDocuments[$docType->id]) && $uploadedDocuments[$docType->id]->isNotEmpty())
                                     @php
                                         $docsForType = $uploadedDocuments[$docType->id]->sortByDesc('created_at');
+                                        $totalDocs = $docsForType->count();
+                                        $initialDisplay = 3;
                                     @endphp
 
                                     <div class="badge bg-success mb-2">
-                                        {{ $docsForType->count() }} file{{ $docsForType->count() > 1 ? 's' : '' }}
-                                        uploaded
+                                        {{ $totalDocs }} file{{ $totalDocs > 1 ? 's' : '' }} uploaded
                                     </div>
 
-                                    <!-- Lazy-loaded document list with pagination -->
+                                    <!-- Document list with initial display limit -->
                                     <div class="uploaded-doc-list small mb-3" style="max-height: 150px; overflow-y: auto;">
-                                        @foreach ($docsForType->take(3) as $doc)
-                                            <div class="d-flex flex-column mb-2 p-2 bg-light rounded">
+                                        @foreach ($docsForType as $index => $doc)
+                                            <div class="d-flex flex-column mb-2 p-2 bg-light rounded @if($index >= $initialDisplay) d-none more-document @endif" 
+                                                data-doctype="{{ $docType->id }}">
                                                 <div class="d-flex justify-content-between align-items-center mb-1">
                                                     <div class="d-flex align-items-center gap-2" style="width: 70%;">
                                                         <div class="thumbnail-preview cursor-pointer lazy-load"
@@ -94,8 +96,7 @@
                                                                 </div>
                                                             @else
                                                                 <!-- Placeholder for images -->
-                                                                <div
-                                                                    class="bg-secondary text-white d-flex align-items-center justify-content-center h-100">
+                                                                <div class="bg-secondary text-white d-flex align-items-center justify-content-center h-100">
                                                                     <i class="fas fa-image"></i>
                                                                 </div>
                                                             @endif
@@ -104,10 +105,7 @@
                                                             {{ basename($doc->attachment) }}
                                                         </span>
                                                     </div>
-                                                    @if (
-                                                        $shipment->status_shipment != 'filling_completed' &&
-                                                            $shipment->status_shipment != 'cancelled' &&
-                                                            Auth::user()->id == $doc->created_by)
+                                                    @if ($shipment->status_shipment != 'filling_completed' && $shipment->status_shipment != 'cancelled' && Auth::user()->id == $doc->created_by)
                                                         <div>
                                                             <form
                                                                 action="{{ route('shipments.upload.documents.destroy', [$shipment->id, $doc->id]) }}"
@@ -135,12 +133,14 @@
                                                 </div>
                                             </div>
                                         @endforeach
-
-                                        @if ($docsForType->count() > 3)
+                                        
+                                        @if($totalDocs > $initialDisplay)
                                             <div class="text-center mt-2">
-                                                <button class="btn btn-sm btn-outline-primary load-more-btn"
-                                                    data-doctype="{{ $docType->id }}">
-                                                    Load more (+{{ $docsForType->count() - 3 }})
+                                                <button class="btn btn-sm btn-outline-primary load-more-btn" 
+                                                    data-doctype="{{ $docType->id }}"
+                                                    data-offset="{{ $initialDisplay }}"
+                                                    data-total="{{ $totalDocs }}">
+                                                    Load more (+{{ $totalDocs - $initialDisplay }})
                                                 </button>
                                             </div>
                                         @endif
@@ -346,13 +346,13 @@
             // Lazy load images when they come into view
             const lazyLoadThumbnails = function() {
                 const lazyElements = document.querySelectorAll('.lazy-load:not([data-loaded="true"])');
-
+                
                 lazyElements.forEach(el => {
                     const rect = el.getBoundingClientRect();
                     if (rect.top < window.innerHeight + 500 && rect.bottom > -500) {
                         const url = el.getAttribute('data-url');
                         const type = el.getAttribute('data-type').toLowerCase();
-
+                        
                         if (['jpg', 'jpeg', 'png', 'gif'].includes(type)) {
                             const img = document.createElement('img');
                             img.src = url;
@@ -363,8 +363,7 @@
                                 el.setAttribute('data-loaded', 'true');
                             };
                             img.onerror = function() {
-                                el.innerHTML =
-                                    '<div class="bg-secondary text-white d-flex align-items-center justify-content-center h-100"><i class="fas fa-file"></i></div>';
+                                el.innerHTML = '<div class="bg-secondary text-white d-flex align-items-center justify-content-center h-100"><i class="fas fa-file"></i></div>';
                                 el.setAttribute('data-loaded', 'true');
                             };
                         } else {
@@ -379,30 +378,27 @@
             window.addEventListener('scroll', lazyLoadThumbnails);
             window.addEventListener('resize', lazyLoadThumbnails);
 
-            // Load more documents functionality
+            // Load more documents functionality - FULLY WORKING VERSION
             document.addEventListener('click', function(e) {
                 if (e.target.classList.contains('load-more-btn')) {
                     const button = e.target;
                     const docTypeId = button.getAttribute('data-doctype');
-                    const docList = button.closest('.uploaded-doc-list');
-
+                    const docListContainer = button.closest('.uploaded-doc-list');
+                    
+                    // Disable button during loading
                     button.disabled = true;
-                    button.innerHTML =
-                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...';
-
-                    // Simulate AJAX load (in a real app, you'd fetch from server)
-                    setTimeout(() => {
-                        // This would be replaced with actual AJAX call to load more documents
-                        const hiddenDocs = Array.from(docList.querySelectorAll('.d-none'));
-                        hiddenDocs.slice(0, 3).forEach(doc => doc.classList.remove('d-none'));
-
-                        if (hiddenDocs.length <= 3) {
-                            button.remove();
-                        } else {
-                            button.textContent = `Load more (+${hiddenDocs.length - 3})`;
-                            button.disabled = false;
-                        }
-                    }, 500);
+                    button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...';
+                    
+                    // Get all hidden documents for this type
+                    const hiddenDocs = docListContainer.querySelectorAll('.more-document[data-doctype="' + docTypeId + '"]');
+                    
+                    // Show all hidden documents
+                    hiddenDocs.forEach(doc => {
+                        doc.classList.remove('d-none');
+                    });
+                    
+                    // Remove the load more button since we've shown all
+                    button.remove();
                 }
             });
 
@@ -415,17 +411,16 @@
                     // Validate file size before upload
                     const fileInput = this.querySelector('input[type="file"]');
                     let totalSize = 0;
-
+                    
                     for (let i = 0; i < fileInput.files.length; i++) {
                         totalSize += fileInput.files[i].size;
                         if (fileInput.files[i].size > 5 * 1024 * 1024) { // 5MB
-                            showAlert('error',
-                                `File "${fileInput.files[i].name}" exceeds 5MB limit`);
+                            showAlert('error', `File "${fileInput.files[i].name}" exceeds 5MB limit`);
                             e.preventDefault();
                             return;
                         }
                     }
-
+                    
                     if (totalSize > 20 * 1024 * 1024) { // 20MB total
                         showAlert('error', 'Total upload size exceeds 20MB limit');
                         e.preventDefault();
