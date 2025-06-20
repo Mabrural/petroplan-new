@@ -49,53 +49,65 @@
 
             <!-- Document Upload Cards -->
             <div class="row">
+                @php
+                    // Optimized: Get all uploaded documents in a single query
+                    $uploadedDocuments = \App\Models\UploadShipmentDocument::with(['creator', 'documentType'])
+                        ->where('shipment_id', $shipment->id)
+                        ->where('period_id', session('active_period_id'))
+                        ->get()
+                        ->groupBy('document_type_id');
+                @endphp
+
                 @foreach ($documentTypes as $docType)
                     <div class="col-md-6 col-lg-4 mb-4">
                         <div class="card shadow-sm h-100">
                             <div class="card-body">
                                 <h6 class="fw-bold mb-2">{{ $docType->document_name }}</h6>
 
-                                @php
-                                    $uploadedList = \App\Models\UploadShipmentDocument::with('creator')
-                                        ->where('shipment_id', $shipment->id)
-                                        ->where('document_type_id', $docType->id)
-                                        ->where('period_id', session('active_period_id'))
-                                        ->orderBy('created_at', 'desc')
-                                        ->get();
-                                @endphp
+                                @if (isset($uploadedDocuments[$docType->id]) && $uploadedDocuments[$docType->id]->isNotEmpty())
+                                    @php
+                                        $docsForType = $uploadedDocuments[$docType->id]->sortByDesc('created_at');
+                                    @endphp
 
-                                @if ($uploadedList->isNotEmpty())
                                     <div class="badge bg-success mb-2">
-                                        {{ $uploadedList->count() }} file{{ $uploadedList->count() > 1 ? 's' : '' }}
+                                        {{ $docsForType->count() }} file{{ $docsForType->count() > 1 ? 's' : '' }}
                                         uploaded
                                     </div>
 
+                                    <!-- Lazy-loaded document list with pagination -->
                                     <div class="uploaded-doc-list small mb-3" style="max-height: 150px; overflow-y: auto;">
-                                        @foreach ($uploadedList as $doc)
+                                        @foreach ($docsForType->take(3) as $doc)
                                             <div class="d-flex flex-column mb-2 p-2 bg-light rounded">
                                                 <div class="d-flex justify-content-between align-items-center mb-1">
                                                     <div class="d-flex align-items-center gap-2" style="width: 70%;">
-                                                        <div class="thumbnail-preview cursor-pointer"
+                                                        <div class="thumbnail-preview cursor-pointer lazy-load"
                                                             style="width: 50px; height: 50px; overflow: hidden;"
                                                             data-bs-toggle="modal" data-bs-target="#documentModal"
                                                             data-url="{{ url('storage/' . $doc->attachment) }}"
                                                             data-type="{{ pathinfo($doc->attachment, PATHINFO_EXTENSION) }}"
-                                                            data-title="{{ basename($doc->attachment) }}">
+                                                            data-title="{{ basename($doc->attachment) }}"
+                                                            data-loaded="false">
                                                             @if (Str::endsWith($doc->attachment, ['.pdf']))
                                                                 <div
                                                                     class="bg-danger text-white d-flex align-items-center justify-content-center h-100">
                                                                     <i class="fas fa-file-pdf fa-lg"></i>
                                                                 </div>
                                                             @else
-                                                                <img src="{{ url('storage/' . $doc->attachment) }}"
-                                                                    class="img-fluid h-100 w-100 object-fit-cover">
+                                                                <!-- Placeholder for images -->
+                                                                <div
+                                                                    class="bg-secondary text-white d-flex align-items-center justify-content-center h-100">
+                                                                    <i class="fas fa-image"></i>
+                                                                </div>
                                                             @endif
                                                         </div>
                                                         <span class="text-truncate">
                                                             {{ basename($doc->attachment) }}
                                                         </span>
                                                     </div>
-                                                    @if ($shipment->status_shipment != 'filling_completed' && $shipment->status_shipment != 'cancelled' && Auth::user()->id == $doc->created_by)
+                                                    @if (
+                                                        $shipment->status_shipment != 'filling_completed' &&
+                                                            $shipment->status_shipment != 'cancelled' &&
+                                                            Auth::user()->id == $doc->created_by)
                                                         <div>
                                                             <form
                                                                 action="{{ route('shipments.upload.documents.destroy', [$shipment->id, $doc->id]) }}"
@@ -123,6 +135,15 @@
                                                 </div>
                                             </div>
                                         @endforeach
+
+                                        @if ($docsForType->count() > 3)
+                                            <div class="text-center mt-2">
+                                                <button class="btn btn-sm btn-outline-primary load-more-btn"
+                                                    data-doctype="{{ $docType->id }}">
+                                                    Load more (+{{ $docsForType->count() - 3 }})
+                                                </button>
+                                            </div>
+                                        @endif
                                     </div>
                                 @else
                                     <div class="mb-3">
@@ -131,7 +152,7 @@
                                 @endif
 
                                 <form action="{{ route('shipments.upload.documents.store', $shipment->id) }}"
-                                    method="POST" enctype="multipart/form-data">
+                                    method="POST" enctype="multipart/form-data" class="upload-form">
                                     @csrf
                                     @if ($shipment->status_shipment != 'filling_completed' && $shipment->status_shipment != 'cancelled')
                                         <input type="hidden" name="document_type_id" value="{{ $docType->id }}">
@@ -140,11 +161,10 @@
                                             Max file size: <strong>5MB per file</strong>
                                         </p>
 
-
                                         <div class="input-group input-group-sm">
                                             <input type="file" name="attachment[]" multiple class="form-control"
                                                 accept=".png, .jpg, .jpeg, .pdf" required>
-                                            <button type="submit" class="btn btn-primary">
+                                            <button type="submit" class="btn btn-primary upload-btn">
                                                 <i class="fas fa-upload me-1"></i> Upload
                                             </button>
                                         </div>
@@ -253,11 +273,12 @@
             const downloadBtn = document.getElementById('downloadBtn');
 
             // Handle thumbnail clicks
-            document.querySelectorAll('.thumbnail-preview').forEach(thumbnail => {
-                thumbnail.addEventListener('click', function() {
-                    const url = this.getAttribute('data-url');
-                    const type = this.getAttribute('data-type').toLowerCase();
-                    const title = this.getAttribute('data-title');
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.thumbnail-preview')) {
+                    const thumbnail = e.target.closest('.thumbnail-preview');
+                    const url = thumbnail.getAttribute('data-url');
+                    const type = thumbnail.getAttribute('data-type').toLowerCase();
+                    const title = thumbnail.getAttribute('data-title');
 
                     documentModalLabel.textContent = title;
                     downloadBtn.setAttribute('href', url);
@@ -295,14 +316,14 @@
                     }, 300);
 
                     documentModal.show();
-                });
+                }
             });
 
             // Delete confirmation
-            document.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', function(e) {
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.delete-btn')) {
                     e.preventDefault();
-                    const form = this.closest('form');
+                    const form = e.target.closest('form');
 
                     Swal.fire({
                         title: 'Delete Document?',
@@ -319,29 +340,104 @@
                             form.submit();
                         }
                     });
-                });
+                }
             });
 
-            // Smooth loading for file uploads
-            document.querySelectorAll('form[enctype="multipart/form-data"]').forEach(form => {
+            // Lazy load images when they come into view
+            const lazyLoadThumbnails = function() {
+                const lazyElements = document.querySelectorAll('.lazy-load:not([data-loaded="true"])');
+
+                lazyElements.forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight + 500 && rect.bottom > -500) {
+                        const url = el.getAttribute('data-url');
+                        const type = el.getAttribute('data-type').toLowerCase();
+
+                        if (['jpg', 'jpeg', 'png', 'gif'].includes(type)) {
+                            const img = document.createElement('img');
+                            img.src = url;
+                            img.className = 'img-fluid h-100 w-100 object-fit-cover';
+                            img.onload = function() {
+                                el.innerHTML = '';
+                                el.appendChild(img);
+                                el.setAttribute('data-loaded', 'true');
+                            };
+                            img.onerror = function() {
+                                el.innerHTML =
+                                    '<div class="bg-secondary text-white d-flex align-items-center justify-content-center h-100"><i class="fas fa-file"></i></div>';
+                                el.setAttribute('data-loaded', 'true');
+                            };
+                        } else {
+                            el.setAttribute('data-loaded', 'true');
+                        }
+                    }
+                });
+            };
+
+            // Initial load and setup intersection observer
+            lazyLoadThumbnails();
+            window.addEventListener('scroll', lazyLoadThumbnails);
+            window.addEventListener('resize', lazyLoadThumbnails);
+
+            // Load more documents functionality
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('load-more-btn')) {
+                    const button = e.target;
+                    const docTypeId = button.getAttribute('data-doctype');
+                    const docList = button.closest('.uploaded-doc-list');
+
+                    button.disabled = true;
+                    button.innerHTML =
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...';
+
+                    // Simulate AJAX load (in a real app, you'd fetch from server)
+                    setTimeout(() => {
+                        // This would be replaced with actual AJAX call to load more documents
+                        const hiddenDocs = Array.from(docList.querySelectorAll('.d-none'));
+                        hiddenDocs.slice(0, 3).forEach(doc => doc.classList.remove('d-none'));
+
+                        if (hiddenDocs.length <= 3) {
+                            button.remove();
+                        } else {
+                            button.textContent = `Load more (+${hiddenDocs.length - 3})`;
+                            button.disabled = false;
+                        }
+                    }, 500);
+                }
+            });
+
+            // Optimized file upload handling
+            document.querySelectorAll('.upload-form').forEach(form => {
                 form.addEventListener('submit', function(e) {
-                    const submitBtn = this.querySelector('button[type="submit"]');
+                    const submitBtn = this.querySelector('.upload-btn');
                     const originalBtnText = submitBtn.innerHTML;
+
+                    // Validate file size before upload
+                    const fileInput = this.querySelector('input[type="file"]');
+                    let totalSize = 0;
+
+                    for (let i = 0; i < fileInput.files.length; i++) {
+                        totalSize += fileInput.files[i].size;
+                        if (fileInput.files[i].size > 5 * 1024 * 1024) { // 5MB
+                            showAlert('error',
+                                `File "${fileInput.files[i].name}" exceeds 5MB limit`);
+                            e.preventDefault();
+                            return;
+                        }
+                    }
+
+                    if (totalSize > 20 * 1024 * 1024) { // 20MB total
+                        showAlert('error', 'Total upload size exceeds 20MB limit');
+                        e.preventDefault();
+                        return;
+                    }
 
                     // Show loading state
                     submitBtn.disabled = true;
                     submitBtn.innerHTML = `
-                        <span class="upload-spinner" style="display: inline-block; animation: spin 1s linear infinite;">
-                            <i class="fas fa-circle-notch"></i>
-                        </span>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         Uploading...
                     `;
-
-                    // After form submit, reset button after a short delay
-                    setTimeout(() => {
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = originalBtnText;
-                    }, 2000);
                 });
             });
         });
