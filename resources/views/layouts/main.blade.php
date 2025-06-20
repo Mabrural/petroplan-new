@@ -58,7 +58,7 @@
                         <select name="period_id" class="form-select" required>
                             <option value="">-- Choose Period --</option>
                             @foreach ($allPeriods as $periode)
-                                <option value="{{ $periode->id }}">{{ $periode->name }} ({{ $periode->year }})</option>
+                                <option value="{{ $periode->id }}">{{ $periode->name }} </option>
                             @endforeach
                         </select>
                     </div>
