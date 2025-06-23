@@ -421,8 +421,8 @@
                         }
                     }
                     
-                    if (totalSize > 20 * 1024 * 1024) { // 20MB total
-                        showAlert('error', 'Total upload size exceeds 20MB limit');
+                    if (totalSize > 50 * 1024 * 1024) { // 20MB total
+                        showAlert('error', 'Total upload size exceeds 50MB limit');
                         e.preventDefault();
                         return;
                     }
