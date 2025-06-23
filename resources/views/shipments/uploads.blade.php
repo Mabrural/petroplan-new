@@ -159,7 +159,6 @@
                                         <p class="text-muted small mb-1">
                                             Allowed file types: <strong>.png, .jpg, .jpeg, .pdf</strong><br>
                                             Max file size: <strong>5MB per file</strong>
-                                            Max total size: <strong>100MB per upload</strong>
                                         </p>
 
                                         <div class="input-group input-group-sm">
@@ -422,8 +421,8 @@
                         }
                     }
                     
-                    if (totalSize > 100 * 1024 * 1024) { // 100MB total
-                        showAlert('error', 'Total upload size exceeds 100MB limit');
+                    if (totalSize > 20 * 1024 * 1024) { // 20MB total
+                        showAlert('error', 'Total upload size exceeds 20MB limit');
                         e.preventDefault();
                         return;
                     }

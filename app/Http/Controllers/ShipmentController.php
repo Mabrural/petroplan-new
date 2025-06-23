@@ -248,41 +248,6 @@ class ShipmentController extends Controller
     }
 
 
-    // public function storeUploadedDocument(Request $request, $id)
-    // {
-    //     $shipment = Shipment::findOrFail($id);
-    //     $activePeriodId = session('active_period_id');
-
-    //     if (!$activePeriodId) {
-    //         return redirect()->route('set.period')->with('error', 'Please select a period first.');
-    //     }
-
-    //     $request->validate([
-    //         'document_type_id' => 'required|exists:document_types,id',
-    //         'attachment.*' => 'required|file|max:5120|mimes:png,jpg,jpeg,pdf',
-    //     ]);
-
-    //     foreach ($request->file('attachment') as $file) {
-    //         // Ambil nama asli dan beri timestamp agar unik
-    //         $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-    //         $extension = $file->getClientOriginalExtension();
-    //         $safeName = Str::slug($originalName); // Biar rapi dan aman
-    //         $filename = $safeName . '-' . now()->format('YmdHis') . '.' . $extension;
-
-    //         // Simpan file dengan nama yang sudah diformat
-    //         $path = $file->storeAs('shipment_documents', $filename, 'public');
-
-    //         UploadShipmentDocument::create([
-    //             'shipment_id' => $shipment->id,
-    //             'document_type_id' => $request->document_type_id,
-    //             'period_id' => $activePeriodId,
-    //             'attachment' => $path,
-    //             'created_by' => auth()->id(),
-    //         ]);
-    //     }
-
-    //     return back()->with('success', 'Documents uploaded successfully.');
-    // }
     public function storeUploadedDocument(Request $request, $id)
     {
         $shipment = Shipment::findOrFail($id);
@@ -297,24 +262,14 @@ class ShipmentController extends Controller
             'attachment.*' => 'required|file|max:5120|mimes:png,jpg,jpeg,pdf',
         ]);
 
-        // Check total size of all files
-        $totalSize = 0;
         foreach ($request->file('attachment') as $file) {
-            $totalSize += $file->getSize();
-        }
-
-        if ($totalSize > 100 * 1024 * 1024) { // 100MB
-            return back()->with('error', 'Total upload size exceeds 100MB limit');
-        }
-
-        foreach ($request->file('attachment') as $file) {
-            // Generate unique filename
+            // Ambil nama asli dan beri timestamp agar unik
             $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             $extension = $file->getClientOriginalExtension();
-            $safeName = Str::slug($originalName);
+            $safeName = Str::slug($originalName); // Biar rapi dan aman
             $filename = $safeName . '-' . now()->format('YmdHis') . '.' . $extension;
 
-            // Store file
+            // Simpan file dengan nama yang sudah diformat
             $path = $file->storeAs('shipment_documents', $filename, 'public');
 
             UploadShipmentDocument::create([
@@ -328,6 +283,51 @@ class ShipmentController extends Controller
 
         return back()->with('success', 'Documents uploaded successfully.');
     }
+    // public function storeUploadedDocument(Request $request, $id)
+    // {
+    //     $shipment = Shipment::findOrFail($id);
+    //     $activePeriodId = session('active_period_id');
+
+    //     if (!$activePeriodId) {
+    //         return redirect()->route('set.period')->with('error', 'Please select a period first.');
+    //     }
+
+    //     $request->validate([
+    //         'document_type_id' => 'required|exists:document_types,id',
+    //         'attachment.*' => 'required|file|max:5120|mimes:png,jpg,jpeg,pdf',
+    //     ]);
+
+    //     // Check total size of all files
+    //     $totalSize = 0;
+    //     foreach ($request->file('attachment') as $file) {
+    //         $totalSize += $file->getSize();
+    //     }
+
+    //     if ($totalSize > 100 * 1024 * 1024) { // 100MB
+    //         return back()->with('error', 'Total upload size exceeds 100MB limit');
+    //     }
+
+    //     foreach ($request->file('attachment') as $file) {
+    //         // Generate unique filename
+    //         $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+    //         $extension = $file->getClientOriginalExtension();
+    //         $safeName = Str::slug($originalName);
+    //         $filename = $safeName . '-' . now()->format('YmdHis') . '.' . $extension;
+
+    //         // Store file
+    //         $path = $file->storeAs('shipment_documents', $filename, 'public');
+
+    //         UploadShipmentDocument::create([
+    //             'shipment_id' => $shipment->id,
+    //             'document_type_id' => $request->document_type_id,
+    //             'period_id' => $activePeriodId,
+    //             'attachment' => $path,
+    //             'created_by' => auth()->id(),
+    //         ]);
+    //     }
+
+    //     return back()->with('success', 'Documents uploaded successfully.');
+    // }
 
 
     public function destroyUploadedDocument($id, $documentId)
