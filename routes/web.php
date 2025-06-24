@@ -37,8 +37,12 @@ Route::get('/storage/{folder}/{filename}', function ($folder, $filename) {
     return response()->file($path);
 })->where('filename', '.*');
 
+Route::middleware(['auth', 'verified', 'active'])->group(function () {
+    Route::get('/select-period', [PeriodeController::class, 'showSelectPeriod'])->name('select.period');
+    Route::post('/set-period', [PeriodeController::class, 'setActivePeriod'])->name('set.period');
+});
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified', 'active'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified', 'active', 'period'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -47,7 +51,7 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::post('/set-period', [PeriodeController::class, 'setActivePeriod'])->name('set.period')->middleware(['auth', 'verified', 'active', 'period']);
+// Route::post('/set-period', [PeriodeController::class, 'setActivePeriod'])->name('set.period')->middleware(['auth', 'verified', 'active', 'period']);
 
 
 Route::middleware(['auth', 'verified', 'active', 'admin'])->group(function () {

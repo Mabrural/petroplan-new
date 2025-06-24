@@ -43,67 +43,7 @@
     @include('layouts.script')
     @stack('scripts')
 
-    <!-- SweetAlert2 CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    @if (!session('active_period_id') && isset($allPeriods))
-        <form id="setPeriodForm" action="{{ route('set.period') }}" method="POST" style="display:none;">
-            @csrf
-            <input type="hidden" name="period_id" id="selectedPeriodId">
-        </form>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const periods = @json($allPeriods);
-
-                let htmlContent = '<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem;">';
-
-                periods.forEach(p => {
-                    htmlContent += `
-                    <div class="period-card" data-id="${p.id}"
-                        style="
-                            border: 1px solid #ddd;
-                            border-radius: 10px;
-                            padding: 1rem;
-                            min-width: 150px;
-                            text-align: center;
-                            cursor: pointer;
-                            background-color: #f8f9fa;
-                            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                            transition: all 0.3s;
-                        "
-                        onmouseover="this.style.backgroundColor='#e2e6ea'"
-                        onmouseout="this.style.backgroundColor='#f8f9fa'"
-                    >
-                        <strong>${p.name}</strong>
-                    </div>`;
-                });
-
-                htmlContent += '</div>';
-
-                Swal.fire({
-                    title: 'Select Active Period',
-                    html: htmlContent,
-                    showConfirmButton: false,
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    didOpen: () => {
-                        document.querySelectorAll('.period-card').forEach(card => {
-                            card.addEventListener('click', function() {
-                                const selectedId = this.getAttribute('data-id');
-                                document.getElementById('selectedPeriodId').value =
-                                    selectedId;
-                                document.getElementById('setPeriodForm').submit();
-                            });
-                        });
-                    }
-                });
-            });
-        </script>
-    @endif
-
-
-
+   
 
 </body>
 

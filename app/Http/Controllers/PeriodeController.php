@@ -120,4 +120,17 @@ class PeriodeController extends Controller
         return back()->with('success', 'Period changed successfully');
     }
 
+    public function showSelectPeriod()
+    {
+        // Jika sudah ada period aktif, redirect ke dashboard
+        if (session('active_period_id')) {
+            return redirect()->route('dashboard');
+        }
+
+        $allPeriods = \App\Models\Periode::orderBy('year', 'desc')->get();
+
+        return view('period.select', compact('allPeriods'));
+    }
+
+
 }
