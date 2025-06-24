@@ -94,4 +94,53 @@ class DashboardController extends Controller
 
         return view('reports.fuel-usage-analysis', compact('labels', 'volumes'));
     }
+
+    public function fuelUsageTrend()
+{
+    $activePeriodId = session('active_period_id');
+
+    if (!$activePeriodId) {
+        return redirect()->route('set.period')->with('error', 'Please select a period first.');
+    }
+
+    // Ambil data berdasarkan tanggal completion
+    $shipments = Shipment::where('period_id', $activePeriodId)
+        ->whereNotNull('completion_date')
+        ->with('vessel')
+        ->orderBy('completion_date')
+        ->get();
+
+    $grouped = [];
+
+    foreach ($shipments as $shipment) {
+        $vesselName = $shipment->vessel->vessel_name ?? 'Unknown Vessel';
+        $date = \Carbon\Carbon::parse($shipment->completion_date)->toDateString();
+
+        $grouped[$vesselName][$date] = ($grouped[$vesselName][$date] ?? 0) + $shipment->volume;
+    }
+
+    $labels = collect($shipments)->pluck('completion_date')->unique()->sort()->values()->map(fn($d) => \Carbon\Carbon::parse($d)->toDateString());
+
+    $datasets = [];
+    foreach ($grouped as $vessel => $dateVolumes) {
+        $data = [];
+        foreach ($labels as $labelDate) {
+            $data[] = $dateVolumes[$labelDate] ?? 0;
+        }
+
+        $datasets[] = [
+            'label' => $vessel,
+            'data' => $data,
+            'borderColor' => 'rgba(' . rand(0,255) . ',' . rand(0,255) . ',' . rand(0,255) . ',1)',
+            'backgroundColor' => 'rgba(' . rand(0,255) . ',' . rand(0,255) . ',' . rand(0,255) . ',0.2)',
+            'fill' => true,
+        ];
+    }
+
+    return view('reports.fuel-usage-trend', [
+        'labels' => $labels,
+        'datasets' => $datasets,
+    ]);
+}
+
 }

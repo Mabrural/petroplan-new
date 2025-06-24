@@ -135,6 +135,11 @@
                                     <span class="sub-item">Fuel Usage Analysis</span>
                                 </a>
                             </li>
+                            <li class="{{ request()->is('fuel-usage-trend') ? 'active' : '' }}">
+                                <a href="{{ url('/fuel-usage-trend') }}">
+                                    <span class="sub-item">Fuel Usage Tracking</span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </li>

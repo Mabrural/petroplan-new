@@ -145,6 +145,9 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
     // bbm usage analysis
     Route::get('/fuel-usage-analysis', [DashboardController::class, 'fuelUsageAnalysis'])->name('fuel.usage.analysis');
 
+    Route::get('/fuel-usage-trend', [DashboardController::class, 'fuelUsageTrend'])->name('fuel.usage.trend');
+
+
 
 
 });
