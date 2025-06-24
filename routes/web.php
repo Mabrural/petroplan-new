@@ -22,7 +22,7 @@ Route::get('/', function () {
 });
 
 Route::get('/storage/{folder}/{filename}', function ($folder, $filename) {
-    $allowedFolders = ['shipment_documents', 'spk_files'];
+    $allowedFolders = ['shipment_documents', 'spk_files', 'vessels'];
 
     if (!in_array($folder, $allowedFolders)) {
         abort(403);
