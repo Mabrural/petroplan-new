@@ -74,14 +74,19 @@ class ShipmentController extends Controller
             return redirect()->route('set.period')->with('error', 'Please select a period first.');
         }
 
-        // Ambil jumlah shipment pada periode aktif
+        // Next shipment number
         $shipmentCount = Shipment::where('period_id', $activePeriodId)->count();
         $nextShipmentNumber = $shipmentCount + 1;
 
+        // Get related data
         $termins = Termin::where('period_id', $activePeriodId)->get();
-        $spks = Spk::where('period_id', $activePeriodId)->get();
+        $spks = Spk::where('period_id', $activePeriodId)->orderBy('created_at', 'desc')->get();
         $vessels = Vessel::all();
         $fuels = Fuel::all();
+
+        // Determine the most recent entries
+        $latestTerminId = $termins->last()?->id;
+        $latestSpkId = $spks->first()?->id;
 
         return view('shipments.create', compact(
             'termins',
@@ -89,9 +94,12 @@ class ShipmentController extends Controller
             'vessels',
             'fuels',
             'activePeriodId',
-            'nextShipmentNumber'
+            'nextShipmentNumber',
+            'latestTerminId',
+            'latestSpkId'
         ));
     }
+
 
 
 
@@ -153,7 +161,7 @@ class ShipmentController extends Controller
         $shipment->completion_date = date('Y-m-d', strtotime($shipment->completion_date));
 
         $termins = Termin::where('period_id', $activePeriodId)->get();
-        $spks = Spk::where('period_id', $activePeriodId)->get();
+        $spks = Spk::where('period_id', $activePeriodId)->orderBy('id', 'desc')->get();
 
         return view('shipments.edit', [
             'shipment' => $shipment,

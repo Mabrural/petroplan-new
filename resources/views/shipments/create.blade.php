@@ -44,11 +44,13 @@
                                         id="termin_id" name="termin_id" required>
                                     <option value="">-- Choose Termin --</option>
                                     @foreach ($termins as $termin)
-                                        <option value="{{ $termin->id }}" {{ old('termin_id') == $termin->id ? 'selected' : '' }}>
+                                        <option value="{{ $termin->id }}"
+                                            {{ old('termin_id', $latestTerminId) == $termin->id ? 'selected' : '' }}>
                                             Termin {{ $termin->termin_number }}
                                         </option>
                                     @endforeach
                                 </select>
+
                                 @error('termin_id')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
@@ -88,11 +90,13 @@
                                         id="spk_id" name="spk_id" required>
                                     <option value="">-- Choose SPK --</option>
                                     @foreach ($spks as $spk)
-                                        <option value="{{ $spk->id }}" {{ old('spk_id') == $spk->id ? 'selected' : '' }}>
+                                        <option value="{{ $spk->id }}"
+                                            {{ old('spk_id', $latestSpkId) == $spk->id ? 'selected' : '' }}>
                                             {{ $spk->spk_number }}
                                         </option>
                                     @endforeach
                                 </select>
+
                                 @error('spk_id')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
