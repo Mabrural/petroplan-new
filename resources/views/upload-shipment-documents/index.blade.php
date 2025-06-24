@@ -55,7 +55,7 @@
                             <div class="col-6 col-md-4 col-lg-2">
                                 <label for="per_page" class="form-label">Show</label>
                                 <select class="form-select" id="per_page" name="per_page" onchange="this.form.submit()">
-                                    @foreach ([10, 20, 30, 50, 100] as $option)
+                                    @foreach ([10, 20, 30, 100, 1000] as $option)
                                         <option value="{{ $option }}"
                                             {{ request('per_page', 10) == $option ? 'selected' : '' }}>
                                             {{ $option }}
