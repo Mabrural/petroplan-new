@@ -115,7 +115,8 @@
                     <div class="collapse 
                         {{ request()->is('shipment-summary-report') ||
                         request()->is('vessel-activity-chart') ||
-                        request()->is('fuel-usage-analysis')
+                        request()->is('fuel-usage-analysis') ||
+                        request()->is('fuel-usage-trend')
                             ? 'show'
                             : '' }}"
                         id="reportAnalytics">
