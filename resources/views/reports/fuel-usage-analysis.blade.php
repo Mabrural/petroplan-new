@@ -4,7 +4,7 @@
     <style>
         #fuelChartContainer {
             position: relative;
-            height: 400px;
+            height: 600px;
         }
 
         #fuelChartContainer:fullscreen {

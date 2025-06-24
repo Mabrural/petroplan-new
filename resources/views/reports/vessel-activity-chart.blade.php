@@ -4,7 +4,7 @@
     <style>
         #chartContainer {
             position: relative;
-            height: 400px;
+            height: 600px;
         }
 
         #chartContainer:fullscreen {
