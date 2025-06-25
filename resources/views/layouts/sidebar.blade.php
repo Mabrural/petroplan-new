@@ -169,13 +169,13 @@
                     </li>
 
 
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a href="#">
                             <i class="fas fa-cogs"></i>
                             <p class="d-inline">Settings</p>
                             <span class="badge bg-secondary ms-2">Coming Soon</span>
                         </a>
-                    </li>
+                    </li> --}}
                 @endif
 
             </ul>
