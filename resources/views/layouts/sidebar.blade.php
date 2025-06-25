@@ -116,7 +116,7 @@
                         {{ request()->is('shipment-summary-report') ||
                         request()->is('vessel-activity-chart') ||
                         request()->is('fuel-usage-analysis') ||
-                        request()->is('fuel-usage-trend')
+                        request()->is('vessel-fuel-refill-tracking')
                             ? 'show'
                             : '' }}"
                         id="reportAnalytics">
@@ -136,9 +136,9 @@
                                     <span class="sub-item">Fuel Usage Analysis</span>
                                 </a>
                             </li>
-                            <li class="{{ request()->is('fuel-usage-trend') ? 'active' : '' }}">
-                                <a href="{{ url('/fuel-usage-trend') }}">
-                                    <span class="sub-item">Fuel Usage Tracking</span>
+                            <li class="{{ request()->is('vessel-fuel-refill-tracking') ? 'active' : '' }}">
+                                <a href="{{ url('/vessel-fuel-refill-tracking') }}">
+                                    <span class="sub-item">Vessel Fuel Refill Tracking</span>
                                 </a>
                             </li>
                         </ul>
