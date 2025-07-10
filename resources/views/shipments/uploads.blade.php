@@ -163,7 +163,7 @@
 
                                         <div class="input-group input-group-sm">
                                             <input type="file" name="attachment[]" multiple class="form-control"
-                                                accept=".png, .jpg, .jpeg, .pdf" required>
+                                                 required>
                                             <button type="submit" class="btn btn-primary upload-btn">
                                                 <i class="fas fa-upload me-1"></i> Upload
                                             </button>
