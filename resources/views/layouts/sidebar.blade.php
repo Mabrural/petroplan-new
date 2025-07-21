@@ -11,7 +11,7 @@
                     <i class="fas fa-bars"></i>
                 </button>
                 <button class="btn btn-toggle sidenav-toggler">
-                    <i class="fas fa-times"></i>
+                    <i class="fas fa-bars"></i>
                 </button>
             </div>
             <button class="topbar-toggler more">
