@@ -2,7 +2,7 @@
 <div class="sidebar" data-background-color="dark">
     <div class="sidebar-logo">
         <div class="logo-header" data-background-color="dark">
-            <a href="index.html" class="logo text-white text-decoration-none fw-bold d-flex align-items-center"
+            <a href="{{ route('dashboard') }}" class="logo text-white text-decoration-none fw-bold d-flex align-items-center"
                 style="font-size: 20px;">
                 <i class="fas fa-gas-pump me-2"></i> PetroPlan
             </a>
