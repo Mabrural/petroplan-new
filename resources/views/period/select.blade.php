@@ -31,11 +31,33 @@
     <link rel="stylesheet" href="{{ asset('assets/css/kaiadmin.min.css') }}" />
 
     <style>
-        html, body {
+        /* html, body {
             height: 100%;
             margin: 0;
             overflow: hidden;
             background-color: #f0f2f5;
+        } */
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        body {
+            position: relative;
+            background-color: #f0f2f5;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: url('assets/img/bunkering.webp') no-repeat center center/cover;
+            opacity: 0.15;
+            filter: blur(0px);
+            z-index: -1;
         }
 
         .login-page {
