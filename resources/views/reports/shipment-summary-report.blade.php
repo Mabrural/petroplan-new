@@ -135,6 +135,7 @@
                                     <th>P (L)</th>
                                     <th>A (L)</th>
                                     <th>B (L)</th>
+                                    <th>Filling Date</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -158,6 +159,7 @@
                                         <td>{{ number_format($shipment->p, 0, ',', '.') }}</td>
                                         <td>{{ number_format($shipment->a, 0, ',', '.') }}</td>
                                         <td>{{ number_format($shipment->b, 0, ',', '.') }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($shipment->completion_date)->format('d M Y') }}</td>
                                         <td><span
                                                 class="badge bg-secondary">{{ ucfirst(str_replace('_', ' ', $shipment->status_shipment)) }}</span>
                                         </td>
@@ -209,7 +211,8 @@
                                         target="_blank">{{ $shipment->spk->spk_number ?? '-' }}</a></li>
                                 <li class="mb-1"><strong>Location:</strong> {{ $shipment->location }}</li>
                                 <li class="mb-1"><strong>Fuel:</strong> {{ $shipment->fuel->fuel_type ?? '-' }}</li>
-                                <li><strong>Volume:</strong> {{ number_format($shipment->volume, 0, ',', '.') }} Liter</li>
+                                <li class="mb-1"><strong>Volume:</strong> {{ number_format($shipment->volume, 0, ',', '.') }} Liter</li>
+                                <li><strong>Filling Date:</strong> {{ \Carbon\Carbon::parse($shipment->completion_date)->format('d M Y') }}</li>
                             </ul>
                         </div>
                     </div>

@@ -53,6 +53,7 @@
                 <th>P</th>
                 <th>A</th>
                 <th>B</th>
+                <th>Filling Date</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -70,6 +71,7 @@
                     <td>{{ number_format($shipment->p, 0, ',', '.') }}</td>
                     <td>{{ number_format($shipment->a, 0, ',', '.') }}</td>
                     <td>{{ number_format($shipment->b, 0, ',', '.') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($shipment->completion_date)->format('d M Y') }}</td>
                     <td>{{ ucfirst(str_replace('_', ' ', $shipment->status_shipment)) }}</td>
                 </tr>
             @endforeach
