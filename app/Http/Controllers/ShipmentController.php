@@ -26,7 +26,7 @@ class ShipmentController extends Controller
             return redirect()->route('set.period')->with('error', 'Please select a period first.');
         }
 
-        $perPage = $request->input('per_page', 10); // default 10
+        $perPage = $request->input('per_page', 1000); // default 1000
         $shipments = Shipment::with(['period', 'termin', 'vessel', 'spk', 'fuel', 'creator'])
             ->where('period_id', $activePeriodId);
 
