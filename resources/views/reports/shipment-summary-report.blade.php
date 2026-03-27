@@ -157,8 +157,8 @@
                                 <thead class="bg-light">
                                     <tr>
                                         <th>#</th>
-                                        <th>Termin Number</th>
-                                        <th>Shipment Number</th>
+                                        <th>Termin</th>
+                                        <th>Shipment</th>
                                         <th>Vessel</th>
                                         <th>SPK</th>
                                         <th>Location</th>

@@ -160,8 +160,8 @@
                                 <thead class="bg-light">
                                     <tr>
                                         <th>#</th>
-                                        <th>Termin Number</th>
-                                        <th>Shipment Number</th>
+                                        <th>Termin</th>
+                                        <th>Shipment</th>
                                         <th>Vessel</th>
                                         <th>SPK</th>
                                         <th>Location</th>
@@ -201,10 +201,10 @@
                                                         Open
                                                     </a>
                                                     @if (Auth::check() && Auth::user()->rolePermissions->contains('permission', 'admin_officer'))
-                                                    <button class="btn btn-link text-dark" type="button"
+                                                    {{-- <button class="btn btn-link text-dark" type="button"
                                                         data-bs-toggle="dropdown">
                                                         <i class="fas fa-ellipsis-v"></i>
-                                                    </button>
+                                                    </button> --}}
                                                     <ul class="dropdown-menu">
                                                         {{-- <li>
                                                             <button class="dropdown-item text-info view-details"
