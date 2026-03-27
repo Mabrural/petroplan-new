@@ -200,18 +200,18 @@
                                                         class="btn btn-sm btn-primary">
                                                         Open
                                                     </a>
+                                                    @if (Auth::check() && Auth::user()->rolePermissions->contains('permission', 'admin_officer'))
                                                     <button class="btn btn-link text-dark" type="button"
                                                         data-bs-toggle="dropdown">
                                                         <i class="fas fa-ellipsis-v"></i>
                                                     </button>
                                                     <ul class="dropdown-menu">
-                                                        <li>
+                                                        {{-- <li>
                                                             <button class="dropdown-item text-info view-details"
                                                                 data-id="{{ $shipment->id }}">
                                                                 <i class="fas fa-eye me-1"></i> View Details
                                                             </button>
-                                                        </li>
-                                                        @if (Auth::check() && Auth::user()->rolePermissions->contains('permission', 'admin_officer'))
+                                                        </li> --}}
                                                             <li>
                                                                 <a class="dropdown-item text-primary"
                                                                     href="{{ route('shipments.edit', $shipment->id) }}">
@@ -230,15 +230,15 @@
                                                                     </button>
                                                                 </form>
                                                             </li>
-                                                        @endif
-                                                        <li>
-                                                            <a class="dropdown-item text-warning"
+                                                            {{-- <li>
+                                                                <a class="dropdown-item text-warning"
                                                                 href="{{ route('shipments.upload.documents', $shipment->id) }}">
                                                                 <i class="fas fa-upload me-1"></i> Upload Document
                                                             </a>
-                                                        </li>
-
+                                                        </li> --}}
+                                                        
                                                     </ul>
+                                                    @endif
                                                 </div>
                                             </td>
                                         </tr>
