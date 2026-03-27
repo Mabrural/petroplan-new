@@ -117,12 +117,12 @@ Route::middleware(['auth', 'verified', 'active', 'admin_officer'])->group(functi
     Route::get('shipments/{shipment}/edit', [ShipmentController::class, 'edit'])->name('shipments.edit');
     Route::put('shipments/{shipment}', [ShipmentController::class, 'update'])->name('shipments.update');
     Route::delete('shipments/{shipment}', [ShipmentController::class, 'destroy'])->name('shipments.destroy');
+    Route::resource('upload-shipment-documents', UploadShipmentDocumentController::class);
 });
 
 
 // all roles
 Route::middleware(['auth', 'verified', 'active'])->group(function () {
-    Route::resource('upload-shipment-documents', UploadShipmentDocumentController::class);
     Route::get('/get-shipments/{periodId}', [UploadShipmentDocumentController::class, 'getShipments']);
 
     Route::get('shipments', [ShipmentController::class, 'index'])->name('shipments.index');

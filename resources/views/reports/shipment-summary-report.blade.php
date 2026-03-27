@@ -90,7 +90,7 @@
                                 <select class="form-select" id="per_page" name="per_page" onchange="this.form.submit()">
                                     @foreach ([10, 20, 30, 100, 1000] as $option)
                                         <option value="{{ $option }}"
-                                            {{ request('per_page', 10) == $option ? 'selected' : '' }}>
+                                            {{ request('per_page', 1000) == $option ? 'selected' : '' }}>
                                             {{ $option }}
                                         </option>
                                     @endforeach
@@ -116,122 +116,158 @@
                 <i class="fas fa-file-pdf me-1"></i> Print / Download PDF
             </a>
 
+            <style>
+                /* EXTREME COMPACT MODE (TD ONLY)*/
 
-            <!-- Desktop Table -->
-            <div class="card d-none d-lg-block mt-3">
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0">
-                            <thead class="bg-light">
-                                <tr>
-                                    <th>#</th>
-                                    <th>Termin Number</th>
-                                    <th>Shipment Number</th>
-                                    <th>Vessel</th>
-                                    <th>SPK</th>
-                                    <th>Location</th>
-                                    <th>Fuel</th>
-                                    <th>Volume (L)</th>
-                                    <th>P (L)</th>
-                                    <th>A (L)</th>
-                                    <th>B (L)</th>
-                                    <th>Filling Date</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($shipments as $shipment)
+                /* Jangan ubah header */
+                #reportShipment .table thead th {
+                    padding: 0.5rem 0.75rem !important;
+                    /* normal bootstrap */
+                    line-height: 1.3 !important;
+                }
+
+                /* Paksa hanya TD yang super dempet */
+                #reportShipment .table tbody td {
+                    padding: 1px 6px !important;
+                    line-height: 1 !important;
+                    vertical-align: middle !important;
+                }
+
+                /* Perkecil tinggi baris body saja */
+                #reportShipment .table tbody tr {
+                    height: 20px !important;
+                }
+
+                /* Hilangkan spacing tambahan */
+                #reportShipment .table tbody td .badge,
+                #reportShipment .table tbody td i,
+                #reportShipment .table tbody td .btn {
+                    margin: 0 !important;
+                    padding-top: 1px !important;
+                    padding-bottom: 1px !important;
+                }
+            </style>
+
+            <div id="reportShipment">
+                <!-- Desktop Table -->
+                <div class="card d-none d-lg-block mt-3">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="bg-light">
                                     <tr>
-                                        <td>{{ $shipments->firstItem() + $loop->index }}</td>
-                                        <td>{{ 'Termin ' . $shipment->termin->termin_number ?? '-' }}</td>
-                                        <td>
-                                            <button class="dropdown-item text-info view-details"
-                                                data-id="{{ $shipment->id }}">
-                                                {{ 'Shipment ' . $shipment->shipment_number ?? '-' }}
-                                            </button>
-                                        </td>
-                                        <td>{{ $shipment->vessel->vessel_name ?? '-' }}</td>
-                                        <td><a href="{{ url('storage/' . $shipment->spk->spk_file) }}"
-                                                target="_blank">{{ $shipment->spk->spk_number ?? '-' }}</a></td>
-                                        <td>{{ $shipment->location }}</td>
-                                        <td>{{ $shipment->fuel->fuel_type ?? '-' }}</td>
-                                        <td>{{ number_format($shipment->volume, 0, ',', '.') }}</td>
-                                        <td>{{ number_format($shipment->p, 0, ',', '.') }}</td>
-                                        <td>{{ number_format($shipment->a, 0, ',', '.') }}</td>
-                                        <td>{{ number_format($shipment->b, 0, ',', '.') }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($shipment->completion_date)->format('d M Y') }}</td>
-                                        <td><span
-                                                class="badge bg-secondary">{{ ucfirst(str_replace('_', ' ', $shipment->status_shipment)) }}</span>
-                                        </td>
+                                        <th>#</th>
+                                        <th>Termin Number</th>
+                                        <th>Shipment Number</th>
+                                        <th>Vessel</th>
+                                        <th>SPK</th>
+                                        <th>Location</th>
+                                        <th>Fuel</th>
+                                        <th>Volume (L)</th>
+                                        <th>P (L)</th>
+                                        <th>A (L)</th>
+                                        <th>B (L)</th>
+                                        <th>Filling Date</th>
+                                        <th>Status</th>
                                     </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="12" class="text-center py-4">
-                                            <div class="d-flex flex-column align-items-center">
-                                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state"
-                                                    style="height: 120px; opacity: 0.7;" class="mb-3">
-                                                <h5 class="text-muted">No Shipments Found</h5>
-                                                <p class="text-muted mb-3">You haven't added any Shipments yet</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @forelse ($shipments as $shipment)
+                                        <tr>
+                                            <td>{{ $shipments->firstItem() + $loop->index }}</td>
+                                            <td>{{ 'Termin ' . $shipment->termin->termin_number ?? '-' }}</td>
+                                            <td>
+                                                <button class="dropdown-item text-info view-details"
+                                                    data-id="{{ $shipment->id }}">
+                                                    {{ 'Shipment ' . $shipment->shipment_number ?? '-' }}
+                                                </button>
+                                            </td>
+                                            <td>{{ $shipment->vessel->vessel_name ?? '-' }}</td>
+                                            <td><a href="{{ url('storage/' . $shipment->spk->spk_file) }}"
+                                                    target="_blank">{{ $shipment->spk->spk_number ?? '-' }}</a></td>
+                                            <td>{{ $shipment->location }}</td>
+                                            <td>{{ $shipment->fuel->fuel_type ?? '-' }}</td>
+                                            <td>{{ number_format($shipment->volume, 0, ',', '.') }}</td>
+                                            <td>{{ number_format($shipment->p, 0, ',', '.') }}</td>
+                                            <td>{{ number_format($shipment->a, 0, ',', '.') }}</td>
+                                            <td>{{ number_format($shipment->b, 0, ',', '.') }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($shipment->completion_date)->format('d M Y') }}</td>
+                                            <td><span
+                                                    class="badge bg-secondary">{{ ucfirst(str_replace('_', ' ', $shipment->status_shipment)) }}</span>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="12" class="text-center py-4">
+                                                <div class="d-flex flex-column align-items-center">
+                                                    <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state"
+                                                        style="height: 120px; opacity: 0.7;" class="mb-3">
+                                                    <h5 class="text-muted">No Shipments Found</h5>
+                                                    <p class="text-muted mb-3">You haven't added any Shipments yet</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+                    <div class="p-3">
+                        {{ $shipments->links('pagination::bootstrap-5') }}
+                    </div>
+    
                 </div>
-                <div class="p-3">
-                    {{ $shipments->links('pagination::bootstrap-5') }}
-                </div>
-
-            </div>
-
-            <!-- Mobile Card List -->
-            <div class="d-lg-none mt-3">
-                @forelse ($shipments as $shipment)
-                    <div class="card shadow-sm mb-3">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <div>
-                                    <h6 class="dropdown-item text-primary view-details" data-id="{{ $shipment->id }}">
-                                        Shipment {{ $shipment->shipment_number }}</h6>
-                                    <span class="badge bg-secondary small">
-                                        {{ ucfirst(str_replace('_', ' ', $shipment->status_shipment)) }}
-                                    </span>
+    
+                <!-- Mobile Card List -->
+                <div class="d-lg-none mt-3">
+                    @forelse ($shipments as $shipment)
+                        <div class="card shadow-sm mb-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        <h6 class="dropdown-item text-primary view-details" data-id="{{ $shipment->id }}">
+                                            Shipment {{ $shipment->shipment_number }}</h6>
+                                        <span class="badge bg-secondary small">
+                                            {{ ucfirst(str_replace('_', ' ', $shipment->status_shipment)) }}
+                                        </span>
+                                    </div>
+                                </div>
+    
+                                <ul class="list-unstyled small mb-0">
+                                    <li class="mb-1"><strong>Termin:</strong>
+                                        {{ 'Termin ' . $shipment->termin->termin_number ?? '-' }}</li>
+                                    <li class="mb-1"><strong>Vessel:</strong> {{ $shipment->vessel->vessel_name ?? '-' }}
+                                    </li>
+                                    <li class="mb-1"><strong>SPK:</strong> <a
+                                            href="{{ url('storage/' . $shipment->spk->spk_file) }}"
+                                            target="_blank">{{ $shipment->spk->spk_number ?? '-' }}</a></li>
+                                    <li class="mb-1"><strong>Location:</strong> {{ $shipment->location }}</li>
+                                    <li class="mb-1"><strong>Fuel:</strong> {{ $shipment->fuel->fuel_type ?? '-' }}</li>
+                                    <li class="mb-1"><strong>Volume:</strong> {{ number_format($shipment->volume, 0, ',', '.') }} Liter</li>
+                                    <li><strong>Filling Date:</strong> {{ \Carbon\Carbon::parse($shipment->completion_date)->format('d M Y') }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="card">
+                            <div class="card-body text-center py-4">
+                                <div class="d-flex flex-column align-items-center">
+                                    <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state"
+                                        style="height: 100px; opacity: 0.7;" class="mb-3">
+                                    <h5 class="text-muted">No Shipments Available</h5>
+                                    <p class="text-muted mb-3">Get started by adding a new Shipment</p>
                                 </div>
                             </div>
-
-                            <ul class="list-unstyled small mb-0">
-                                <li class="mb-1"><strong>Termin:</strong>
-                                    {{ 'Termin ' . $shipment->termin->termin_number ?? '-' }}</li>
-                                <li class="mb-1"><strong>Vessel:</strong> {{ $shipment->vessel->vessel_name ?? '-' }}
-                                </li>
-                                <li class="mb-1"><strong>SPK:</strong> <a
-                                        href="{{ url('storage/' . $shipment->spk->spk_file) }}"
-                                        target="_blank">{{ $shipment->spk->spk_number ?? '-' }}</a></li>
-                                <li class="mb-1"><strong>Location:</strong> {{ $shipment->location }}</li>
-                                <li class="mb-1"><strong>Fuel:</strong> {{ $shipment->fuel->fuel_type ?? '-' }}</li>
-                                <li class="mb-1"><strong>Volume:</strong> {{ number_format($shipment->volume, 0, ',', '.') }} Liter</li>
-                                <li><strong>Filling Date:</strong> {{ \Carbon\Carbon::parse($shipment->completion_date)->format('d M Y') }}</li>
-                            </ul>
                         </div>
+                    @endforelse
+                    <div class="p-3">
+                        {{ $shipments->links('pagination::bootstrap-5') }}
                     </div>
-                @empty
-                    <div class="card">
-                        <div class="card-body text-center py-4">
-                            <div class="d-flex flex-column align-items-center">
-                                <img src="{{ asset('assets/img/empty-box.png') }}" alt="Empty state"
-                                    style="height: 100px; opacity: 0.7;" class="mb-3">
-                                <h5 class="text-muted">No Shipments Available</h5>
-                                <p class="text-muted mb-3">Get started by adding a new Shipment</p>
-                            </div>
-                        </div>
-                    </div>
-                @endforelse
-                <div class="p-3">
-                    {{ $shipments->links('pagination::bootstrap-5') }}
                 </div>
+
             </div>
+
+
 
         </div>
     </div>

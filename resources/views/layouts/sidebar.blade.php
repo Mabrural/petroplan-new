@@ -2,8 +2,8 @@
 <div class="sidebar" data-background-color="dark">
     <div class="sidebar-logo">
         <div class="logo-header" data-background-color="dark">
-            <a href="{{ route('dashboard') }}" class="logo text-white text-decoration-none fw-bold d-flex align-items-center"
-                style="font-size: 20px;">
+            <a href="{{ route('dashboard') }}"
+                class="logo text-white text-decoration-none fw-bold d-flex align-items-center" style="font-size: 20px;">
                 <i class="fas fa-gas-pump me-2"></i> PetroPlan
             </a>
             <div class="nav-toggle">
@@ -77,14 +77,14 @@
                             <p>Document Types</p>
                         </a>
                     </li>
-                @endif
 
-                <li class="nav-item {{ request()->routeIs('upload-shipment-documents.*') ? 'active' : '' }}">
-                    <a href="{{ route('upload-shipment-documents.index') }}">
-                        <i class="fas fa-upload"></i>
-                        <p>Document Uploads</p>
-                    </a>
-                </li>
+                    <li class="nav-item {{ request()->routeIs('upload-shipment-documents.*') ? 'active' : '' }}">
+                        <a href="{{ route('upload-shipment-documents.index') }}">
+                            <i class="fas fa-upload"></i>
+                            <p>Document Uploads</p>
+                        </a>
+                    </li>
+                @endif
 
                 @if (Auth::user()->is_admin == true)
                     <li class="nav-item {{ request()->routeIs('fuels.*') ? 'active' : '' }}">
